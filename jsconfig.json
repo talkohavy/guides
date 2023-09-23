@@ -4,6 +4,7 @@
     "target": "ESNext", // default value is "ES3"
     "module": "ESNext",
     "importsNotUsedAsValues": "error", 
+    "jsx": "react-jsx", // You previously used `react`, but since upgrading from vite 3 to vite 4, you need to use the react-jsx option to solve the error of "'React' refers to a UMD global, but the current file is a module. Consider adding an import instead. ts(2686)"
     "ignoreDeprecations": "5.0",
     "isolatedModules": true, // <--- Setting the isolatedModules flag tells TypeScript to warn you if you write certain code that can’t be correctly interpreted by a single-file transpilation process.
     "esModuleInterop": true,
