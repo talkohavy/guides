@@ -1,5 +1,4 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
+const { APP_URLS } = require('./utils/appConstants.js');
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
@@ -74,7 +73,7 @@ const config = {
             position: 'left',
             label: 'Guides',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
+          { to: APP_URLS.blogs, label: 'Blogs', position: 'left' },
           {
             href: 'https://github.com/facebook/docusaurus',
             label: 'GitHub',
@@ -90,7 +89,7 @@ const config = {
             items: [
               {
                 label: 'Tutorial',
-                to: '/docs/intro',
+                to: APP_URLS.guides.intro,
               },
             ],
           },
@@ -116,7 +115,7 @@ const config = {
             items: [
               {
                 label: 'Blog',
-                to: '/blog',
+                to: APP_URLS.blogs,
               },
               {
                 label: 'GitHub',
