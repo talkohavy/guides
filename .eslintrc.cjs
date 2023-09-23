@@ -88,7 +88,7 @@ module.exports = {
     // Rule Set 3: import rules
     // ########################
     'import/no-duplicates': 'error', // merges when two import lines import from the same file!
-    'import/no-unresolved': 'error', // Turns on errors for missing imports. # import/no-unresolved: [2, { commonjs: true, amd: true }] // This rules catches unresolved imports, but you don't need it since typescript also catches unresolved imports.
+    'import/no-unresolved': 'error', // { ignore: ['^@site', '^@theme', '^@docusaurus', '^@generated', 'unist', 'mdast'] } Turns on errors for missing imports. # import/no-unresolved: [2, { commonjs: true, amd: true }] // This rules catches unresolved imports, but you don't need it since typescript also catches unresolved imports.
     'import/newline-after-import': ['error', { count: 1, considerComments: true }], // must use a newline between all imports and next line of code. Options object defaults to { count: 1, considerComments: false }.
     'import/first': 'error', // I want the imports to be the first thing to appear in every file.
     'import/exports-last': 'error', // Ensure all exports appear after other statements.
