@@ -1,9 +1,9 @@
 ---
-sidebar_label: 'Hi!'
-sidebar_position: 5
+sidebar_label: 'Node'
+sidebar_position: 0
 ---
 
-# Hello
+# Node.js
 
 This is my **first Docusaurus document**!
 

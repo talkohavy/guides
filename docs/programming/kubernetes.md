@@ -1,11 +1,11 @@
 ---
-sidebar_label: 'Hi!'
-sidebar_position: 5
+sidebar_label: 'Kubernetes'
+sidebar_position: 1
 ---
 
-# Hello
+# Kubernetes Guide
 
-This is my **first Docusaurus document**!
+This is my **Kubernetes** guide!
 
 
 :::tip My tip
