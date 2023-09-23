@@ -81,11 +81,20 @@ const config = {
           { to: APP_URLS.blogs, label: 'Blogs', position: 'left' },
           {
             href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
             position: 'right',
+            className: 'header-github-link',
           },
         ],
       },
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
+      },
+      // announcementBar: {
+      //   content:
+      //     '⭐️ If you like DocSearch, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/algolia/docsearch">GitHub</a>! ⭐️',
+      // },
       footer: {
         style: 'dark',
         links: [
