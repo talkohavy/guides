@@ -57,3 +57,69 @@ html[data-theme='dark'] .releaseSidebarHeading {
   border-top-style: solid;
   border-top-width: 1px;
 }
+
+/* ----------------------------------------------------- */
+/* Custom design for sidebar Collapse and Expand buttons */
+/* ----------------------------------------------------- */
+
+/* Makes the Expand Button visible on Top  */
+aside.theme-doc-sidebar-container {
+  position: relative;
+  clip-path: inset(0px -140px);
+  cursor: default;
+}
+
+/* Collapse Button on Light Mode */
+.theme-doc-sidebar-container button[title='Collapse sidebar'] {
+  position: absolute;
+  top: 75vh;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 4px;
+  z-index: 10;
+  border: none;
+  background-color: #dadde1;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z' fill='%23181818'/%3E%3C/svg%3E");
+  background-size: 16px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Expand Button on Light Mode */
+.theme-doc-sidebar-container div[title='Expand sidebar'] {
+  position: absolute;
+  top: 75vh;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 4px;
+  z-index: 10;
+  border: none;
+  background-color: #dadde1;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.293 4.293a1 1 0 0 0 0 1.414L14.586 12l-6.293 6.293a1 1 0 1 0 1.414 1.414l7-7a1 1 0 0 0 0-1.414l-7-7a1 1 0 0 0-1.414 0Z' fill='%23181818'/%3E%3C/svg%3E");
+  background-size: 16px;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* Collapse Button on Dark Mode */
+html[data-theme='dark'] .theme-doc-sidebar-container button[title='Collapse sidebar'] {
+  background-color: #2e2e2e;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z' fill='%23ffffff'/%3E%3C/svg%3E");
+}
+
+/* Expand Button on Dark Mode */
+html[data-theme='dark'] .theme-doc-sidebar-container div[title='Expand sidebar'] {
+  background-color: #2e2e2e;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.293 4.293a1 1 0 0 0 0 1.414L14.586 12l-6.293 6.293a1 1 0 1 0 1.414 1.414l7-7a1 1 0 0 0 0-1.414l-7-7a1 1 0 0 0-1.414 0Z' fill='%23ffffff'/%3E%3C/svg%3E");
+  /* background-color: #1a8870; */
+}
+
+/* Hide default Expand & Collapse Arrows */
+.theme-doc-sidebar-container :is(div[title='Expand sidebar'], button[title='Collapse sidebar']) svg {
+  display: none;
+}

@@ -91,6 +91,11 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
+      docs: {
+        sidebar: {
+          hideable: true,
+        },
+      },
       // announcementBar: {
       //   content:
       //     '⭐️ If you like DocSearch, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/algolia/docsearch">GitHub</a>! ⭐️',
