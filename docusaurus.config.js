@@ -1,24 +1,21 @@
 const { APP_URLS } = require('./utils/appConstants.js');
+const { IMAGES } = require('./utils/images/index.js');
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+  // -------------------------
+  // Category 1: Site Metadata
+  // -------------------------
   title: 'Full Stack Developer',
   tagline: 'Super Guides',
-  favicon: 'img/favicon.ico',
+  favicon: IMAGES.favicon,
 
   // Set the production url of your site here
   url: 'https://your-docusaurus-test-site.com',
   // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -31,6 +28,9 @@ const config = {
     locales: ['en', 'he'],
   },
 
+  // ---------------------------------
+  // Category 2: Presets Configuration
+  // ---------------------------------
   presets: [
     [
       'classic',
@@ -55,17 +55,22 @@ const config = {
     ],
   ],
 
+  // --------------------------------
+  // Category 3: Plugin Configuration
+  // --------------------------------
+  // plugins: [],
+
+  // -------------------------------
+  // Category 4: Theme Configuration
+  // -------------------------------
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     {
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: IMAGES.docusaurusSocialCard,
       navbar: {
         title: 'Home',
-        logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
-        },
+        logo: { alt: 'My Site Logo', src: IMAGES.siteLogo },
         items: [
           {
             type: 'docSidebar',
@@ -86,12 +91,7 @@ const config = {
         links: [
           {
             title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: APP_URLS.guides.intro,
-              },
-            ],
+            items: [{ label: 'Tutorial', to: APP_URLS.guides.intro }],
           },
           {
             title: 'Community',
@@ -131,6 +131,22 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     },
+
+  // ------------------------------------
+  // Category 5: Deployment Configuration
+  // ------------------------------------
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
+  organizationName: 'talkohavy', // Usually your GitHub org/user name.
+  projectName: 'guides', // Usually your repo name.
+  // For GitHub pages deployment, it is often '/<projectName>/'
+  baseUrl: '/',
+  // deploymentBranch: 'master',
+
+  // --------------------------------
+  // Category 6: Custom Configuration
+  // --------------------------------
+  // customFields: {},
 };
 
 module.exports = config;
