@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkmy_website=self.webpackChunkmy_website||[]).push([[431],{4851:e=>{e.exports=JSON.parse('{"title":"Programming","description":"All the Programming Guides in one place!","slug":"/category/programming","permalink":"/guides/docs/category/programming","navigation":{"next":{"title":"Node","permalink":"/guides/docs/programming/node"}}}')}}]);
