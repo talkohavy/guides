@@ -1,0 +1,10 @@
+{
+  "label": "Photoshop",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Welcome to the Photoshop Guide"
+  },
+  "collapsed": true,
+  "collapsible": true
+}

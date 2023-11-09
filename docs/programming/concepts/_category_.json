@@ -1,0 +1,11 @@
+{
+  "label": "Software Concepts",
+  "position": 0,
+  "link": {
+    "type": "generated-index",
+    "title": "Software Concepts - overview",
+    "description": "All the important programming concepts you need to know."
+  },
+  "collapsed": true,
+  "collapsible": true
+}
