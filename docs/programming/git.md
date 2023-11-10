@@ -7,11 +7,23 @@ sidebar_position: 3
 
 ## 1. Path of .gitconfig
 
-The gitconfig, on all operating machines, is found at:
+There are 3 Levels of `.gitconfig`: `project`, `global` & `system`.  
+The .gitconfig, on all operating machines, is found at:
 
 ```bash
+# - Project Level
+code .git/config
+
+# - Global Level
 code ~/.gitconfig
+
+# - System Level (What about windows?)
+code /etc/gitconfig
 ```
+
+I always use the gitconfig in the `global` level.  
+That's where I usually put my "globally" configs.  
+So like `user.name`, `user.email`, all of my `aliases`, the `git-split-diffs`, etc.  
 
 As of today, here's how my .gitconfig looks:
 
@@ -191,3 +203,121 @@ git config split-diffs.min-line-width 40
 ```
 
 This defaults to `80`, so screens below `160` characters will display unified diffs. Set it to `0` to always show split diffs.
+
+
+---
+
+
+## 4. How to set User & Email on git config
+
+In order to check what your current email & username are use:
+
+```bash
+# - Level 1: Project Level
+git config --get user.name
+git config --get user.email
+
+# - Level 2: Global Level
+git config --global --get user.name
+git config --global --get user.email
+
+# - Level 3: System Level
+git config --system --get user.name
+git config --system --get user.email
+```
+
+In order to set new values use:
+
+```bash
+# - Level 1: Project Level
+git config user.name "Tal Kohavy"
+git config user.email "talkohavy@gmail.com"
+
+# - Level 2: Global Level
+git config --global user.name "Tal Kohavy"
+git config --global user.email "talkohavy@gmail.com"
+
+# - Level 3: System Level
+git config --system user.name "Tal Kohavy"
+git config --system user.email "talkohavy@gmail.com"
+```
+
+Why would you care about the user & email?
+
+**Without a user & an email you cannot perform commits!**
+
+
+---
+
+
+## 5. Upload a local git repo to a remote repo
+
+Follow these 3 simple steps:
+
+### - Step 1: Create a remote repo on some git providers
+
+Choose either Github or Bitbucket or whatever, and create a remote git repo.  
+Get the **URL**!
+
+### - Step 2: Add a remote origin to the local project
+
+Now, we need to add a `remote` repository to our local project.  
+The remote repository is represented by `name` and a `url`.  
+When you do a git push, the default name taken is `origin`.  
+
+Use this command to add a new remote repository url named `origin`:
+
+```bash
+git remote add origin PASTE_URL_HERE
+```
+
+Check that it's been added successfully using:
+
+```bash
+git config --get remote.origin.url
+```
+
+To watch all remote urls that are defined on a project use:
+
+```bash
+git remote -v
+```
+
+To remove a remote repository you need to provide its name:
+
+```bash
+git remote rm origin
+# Or...
+git remote remove origin
+```
+
+They are the same command! *rm* is short for *remove*.  
+
+The `remote` sub-command has 3 useful sub-commands:
+1. `add`
+2. `remove`
+3. `set-url`
+
+We've already seen the `add` and `remove`.  
+But there's also `set-url`.  
+
+```bash
+git remote set-url origin git://new.url.here
+```
+
+With `set-url` you can edit just the `url` part of the remote repo.  
+It's useful in cases you made a typo.
+
+
+### - Step 3: push your work to remote 
+
+Run this code:
+
+```bash
+git push --force -u origin master
+```
+
+:::caution
+Note! Without the force you'll get an error!
+:::
+
