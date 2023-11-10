@@ -1,0 +1,50 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Programming": {
+    "message": "Programming",
+    "description": "The label for category Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Programming.link.generated-index.title": {
+    "message": "Programming Guides - overview",
+    "description": "The generated-index page title for category Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Programming.link.generated-index.description": {
+    "message": "All the Programming Guides in one place!",
+    "description": "The generated-index page description for category Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Software Concepts": {
+    "message": "Software Concepts",
+    "description": "The label for category Software Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Software Concepts.link.generated-index.title": {
+    "message": "Software Concepts - overview",
+    "description": "The generated-index page title for category Software Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Software Concepts.link.generated-index.description": {
+    "message": "All the important programming concepts you need to know.",
+    "description": "The generated-index page description for category Software Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Photoshop": {
+    "message": "Photoshop",
+    "description": "The label for category Photoshop in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Photoshop.link.generated-index.description": {
+    "message": "Welcome to the Photoshop Guide",
+    "description": "The generated-index page description for category Photoshop in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Basics": {
+    "message": "Tutorial - Basics",
+    "description": "The label for category Tutorial - Basics in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Basics.link.generated-index.description": {
+    "message": "5 minutes to learn the most important Docusaurus concepts.",
+    "description": "The generated-index page description for category Tutorial - Basics in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Extras": {
+    "message": "Tutorial - Extras",
+    "description": "The label for category Tutorial - Extras in sidebar tutorialSidebar"
+  }
+}
