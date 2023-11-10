@@ -169,7 +169,7 @@ cat ~/.ssh/id_rsa.pub
 **Two different `accounts`, on the same git provider, CANNOT share the same `public key`!!!**
 
 
-### The background story
+### - The background story
 
 You have an `account` on a git provider (Bitbucket / Github / etc. ).  
 You want to clone a project from that `account`, to your `computer`.  

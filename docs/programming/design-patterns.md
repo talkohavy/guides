@@ -218,10 +218,10 @@ If you think about it, you have a Chat Room, which is an Observable, and then yo
 
 ## **3. Decorator Pattern**
 
-## - Definition
+### - Definition
 The Decorator Pattern attaches additional responsibilities to an object dynamically. Decorators provide a flexible alternative to sub-classing, or to extending functionality.
 
-## - Simple Explanation
+### - Simple Explanation
 You have an object, and instead of sending messages to this object, like for instance `speak()`, and then you expect to get something back, let's say `hello world!`.  
 Decorator Pattern is saying: if I want to change the thing that's returned, if I want to change the behavior of this method, I could actually do that at runtime, without changing the contents of this particular object. The important thing to realize is that the change occurs at **runtime**, and not at **compilation time**.  
 So, with Decorator Pattern, what we do instead is we say "Let's actually wrap this object in another object. And when I send the message `speak()`, i'll send the message to the outer object, who will send the message to the inner object, who will send the message back to the outer object, who will return it back to me.  And it will keep on doing that indefinitely.  
@@ -254,7 +254,7 @@ We will talk about 2 versions of the Factory Pattern:
 2. `Abstract Factory`
 
 
-## A. Factory Method Pattern
+### A. Factory Method Pattern
 Let's first start with a little bit of narrative. Why do we need the Factory Method Pattern? Why do we need a concept called a Factory?  
 Think about it this way... In our code, we use lots of different objects. In Object Oriented Programming we have classes, and we instantiate objects from these classes, and then we use these objects in a bunch of different ways.  
 Now, earlier in the course we discussed `Dependency Injection` (in the [Strategy Pattern](#1-strategy-pattern "Go to the Strategy Pattern")), and what we were doing there is programming by wishful thinking. We were saying "When i'm in this particular method, instead of constructing some logic right there and then, let's imagine that I already have a thing that does such and such, and that thing was passed to me via the constructor, and use that instead.  
@@ -324,7 +324,7 @@ Lets create the UML:
   </div>
 </div>
 
-## B. Abstract Factory Pattern
+### B. Abstract Factory Pattern
 
 **<font size="5">Intro</font>**
 
