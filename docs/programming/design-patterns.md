@@ -451,16 +451,69 @@ And most importantly, they take no arguments. Because the command itself has enc
 The concrete `Command` has an instance of the `Receiver` stored within it. We pass the receiver to the constructor.
 
 ```javascript
+/** @implements {ICommand} */
 class Command {
-  /**
-   * @private
-   */ 
-  receiver
+  /** @private */ 
+  receiver;
 
   constructor({receiver}){
+    this.receiver = receiver;
+  }
 
+  execute(){
+    this.receiver.on();
+  }
+
+  execute(){
+    this.receiver.off();
   }
 }
+```
+
+The `Invoker` is not actually part of the pattern.  
+Only the `Command` and the `ICommand` are the actual pattern, but nevertheless, let's look at how the `Invoker` class would look like anyway:
+
+```javascript
+class Invoker {
+  /** @type {ICommand} */
+  on
+  /** @type {ICommand} */
+  off
+  /** @type {ICommand} */
+  dimUp
+  /** @type {ICommand} */
+  dimDown
+  
+  constructor({on,off,up,down}){
+    this.on = on;
+    this.off = off;
+    this.up = up;
+    this.down = down;
+  }
+
+  clickOn(){
+    this.on.execute();
+  }
+
+  clickOff(){
+    this.off.execute();
+  }
+
+  clickUp(){
+    this.up.execute();
+  }
+
+  clickDown(){
+    this.down.execute();
+  }
+}
+
+const light = new Receiver()
+const invoker = new Invoker({
+  on: new LightOnCommand(light),
+  off: new LightOffCommand(light),
+  ...
+});
 ```
 
 
