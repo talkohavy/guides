@@ -218,10 +218,10 @@ If you think about it, you have a Chat Room, which is an Observable, and then yo
 
 ## **3. Decorator Pattern**
 
-### - Definition
+### - A. Definition
 The Decorator Pattern attaches additional responsibilities to an object dynamically. Decorators provide a flexible alternative to sub-classing, or to extending functionality.
 
-### - Simple Explanation
+### - B. Simple Explanation
 You have an object, and instead of sending messages to this object, like for instance `speak()`, and then you expect to get something back, let's say `hello world!`.  
 Decorator Pattern is saying: if I want to change the thing that's returned, if I want to change the behavior of this method, I could actually do that at runtime, without changing the contents of this particular object. The important thing to realize is that the change occurs at **runtime**, and not at **compilation time**.  
 So, with Decorator Pattern, what we do instead is we say "Let's actually wrap this object in another object. And when I send the message `speak()`, i'll send the message to the outer object, who will send the message to the inner object, who will send the message back to the outer object, who will return it back to me.  And it will keep on doing that indefinitely.  
@@ -254,7 +254,7 @@ We will talk about 2 versions of the Factory Pattern:
 2. `Abstract Factory`
 
 
-### A. Factory Method Pattern
+### - A. Factory Method Pattern
 Let's first start with a little bit of narrative. Why do we need the Factory Method Pattern? Why do we need a concept called a Factory?  
 Think about it this way... In our code, we use lots of different objects. In Object Oriented Programming we have classes, and we instantiate objects from these classes, and then we use these objects in a bunch of different ways.  
 Now, earlier in the course we discussed `Dependency Injection` (in the [Strategy Pattern](#1-strategy-pattern "Go to the Strategy Pattern")), and what we were doing there is programming by wishful thinking. We were saying "When i'm in this particular method, instead of constructing some logic right there and then, let's imagine that I already have a thing that does such and such, and that thing was passed to me via the constructor, and use that instead.  
@@ -324,7 +324,7 @@ Lets create the UML:
   </div>
 </div>
 
-### B. Abstract Factory Pattern
+### - B. Abstract Factory Pattern
 
 **<font size="5">Intro</font>**
 
@@ -353,15 +353,15 @@ So now, instead of having 1 factory for each product, we have 1 factory for each
 
 ## **5. Singleton Pattern**
 
-### A. Formal Definition
+### - A. Formal Definition
 
 The Singleton Pattern a class has only 1 instance, and provides a global point of access to it.
 
-### B. Simple Explanation
+### - B. Simple Explanation
 
 So the Singleton Pattern helps you to make it impossible to instantiate a class, except for a single time. And whenever you want an instance, you will inevitably have to use that instance. The way it works it such that whenever you ask for an instance, you always get the same instance. S2 there's actually two points to it: one is about making sure that you only ever have a single instance, and the other is providing a global access to that instance.
 
-### C. Reasons Why You should Never Use It
+### - C. Reasons Why You should Never Use It
 
 Many people argue that you should never use the Singleton Pattern.  
 Why?  
@@ -369,7 +369,7 @@ Well, one of the first things we learn when we talk about programming is to avoi
 But probably more importantly, whenever you leak something into the global namespace, and make it globally accessible, that thing might change without you knowing it. It's much harder to reason about your program, when you don't have control of the scope of the variable that you're interacting with, anyone within that whole program might change that variable, assuming it's change-able of course.  
 The second point about making sure that you only have a single instance, that too is kind of an absurd idea. If you think about it, that's an assumption! You're *assuming* that in the future I will only ever ever need a single instance of this particular class. That isn't necessarily true! Especially if your application is growing. For an example, think about a chat application. So at first you might think that a Chat is a singleton. Like, you want to be able to reference the chat in which users are, wherever in the program. So to make it convenient for yourself, you make a singleton, with a global point of access, to this instance of the Chat, but then as time progresses, you start to realize that actually, we're being very successful with this chat
 
-### D. How to implement a singleton pattern
+### - D. How to implement a singleton pattern
 The key about singleton pattern is that the constructor of the singleton we make private. This was crazy back in the day, because the constructor is public so that you can construct instances of the object. But, you can actually make the constructor of a class private. Which means that from the outside people can't construct that class. The can't say "new Singleton()". Only singletons can instantiate Singletons. But if you can't make a Singleton but saying "new Singleton()", then you have no singletons that can make singleton. So now you're in a situation where you're saying "well, then how do I create the first singleton?"  
 That's when **Static methods** come in.  
 Once again, a lot of people argue you should never use static methods.  
@@ -427,9 +427,9 @@ public class Singleton {
 ore 
 ## **6. Action Pattern**
 
-### A. Description
+### - A. Description
 
-### B. More Details
+### - B. More Details
 We construct the command, we inject the command, into the invoker, and whenever the invoker invokes the command, we execute that command, and that command might do something to something else. In the book they call this *something else* the **Receiver**. You can have tons of invoker, that are just coupled to command. Any command can do anything it wants to any particular receiver. And if you're sharing interfaces with receivers maybe you could even use the same receiver for multiple commands.
 Let's talk about the diagram:  
 We have an `Invoker` and a `Command`.  
@@ -522,7 +522,7 @@ const invoker = new Invoker({
 
 ## **7. Adapter Pattern**
 
-### Introduction
+### - A. Introduction
 
 There are 4 patterns that are easily get confused are:
 1. Adapter Pattern
@@ -537,14 +537,14 @@ The `Adapter Pattern` is also known as a (simple) Wrapper.
 The `Adapter Pattern` sort of wraps something, 
 
 
-### Definition
+### - B. Formal Definition
 
 The `Adapter Pattern` converts the interface of a class into another interface which the client expects. Adapter lets classes work together that couldn't other-wise because of incompatible interfaces.
 
-```javascript
-class Client {
+### - C. Code Implementation
 
-}
+```javascript
+class Client {}
 
 /** @implements {ITarget} */
 class Adapter {
@@ -584,14 +584,33 @@ Here's an example of something that looks like an adapter but isn't an adapter.
 Different countries have different voltages in the outlets. In europe they have one voltage in the wall outlet, and in the USA you have a different voltage coming out of the outlet. Now, probably in any modern device there's a charger which contains a transformer. The point is, if we did have this transformer it would be potentially dangerous for our devices to simply stick an adapter, on the pins and then connect to the socket, unless we didn't have this transformer to also transform the voltage to what was expected by our device. So, if that were the case, if we didn't have this transformer, and we needed to, in other words, alter the behavior, then we're not talking about an adapter. We're talking about something else. Potentially, we're talking about a decorator. The transformer is not an adapter.
 
 
+--- 
+
+
+## **8. Facade Pattern**
+
+### - A. Introduction
+
+Facade pattern is really really easy.  
+If you've got a bunch of things, which let's from now own call classes.  
+And you have a bunch of different interactions between those classes.  
+Now, let's imagine that outside you've got a `client`, not in the sense of a user, but in the sense of a particular piece of code, and this client wants to use some of the classes within this cluster.  
+
+### - B. Definition
+
+The Facade Pattern provide a unified interface to a set of interfaces in a sub-system. Facade defines a higher level interface that make the sub-system easier to use.
+
+
 
 --- 
 
+
+
 ## **999. Bridge Pattern**
-### A. What is the Goal of the Bridge Pattern?
+### - A. What is the Goal of the Bridge Pattern?
 The intent of the Bride Pattern is to decouple an abstraction from its implementation so that the two can vary independently.  
 
-### B. The interface segregation principle
+### - B. The interface segregation principle
 The interface segregation principle states that clients should not be forced to depend on method that they do not use.  
 For example, Book should no be forced to depend on the method getBio, just because Artist wants to have the method getBio. because books don't have biographies. Authors of books have biographies. So that might be a good reason for not mixing Artist & Book, and leave them as separate.  
 
