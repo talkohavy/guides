@@ -602,7 +602,95 @@ The Facade Pattern provide a unified interface to a set of interfaces in a sub-s
 
 
 
---- 
+---
+
+
+
+## **9. Proxy Pattern**
+
+### - A. Definition
+
+The proxy pattern provides a surrogate, or a placeholder, for another object to control access to it.
+
+So basically, with the proxy pattern we're trying to solve a specific set of problems that are all access-related. So, you put a proxy in front of something that you want to allow people to access, but you have the proxy so that you can control who has access to that thing.
+
+In the books, they talk about 3 ways of approaching this pattern:
+1. A Remote proxy
+2. A Virtual proxy
+3. A Protection proxy
+
+
+### - B. Remote Proxy
+
+A remote proxy is suggested to be used when you want to access a resource that's remote. For example that lives on a different server. So, somehow you have to leave the safe boundary of your application, out into the outside world, in order to retrieve some information back. So this interaction/transaction count be wrapped in a proxy. Your proxy is responsible for this interaction, or for interacting with this remote resource and giving you back the things that you need. If you're familiar with `Promises` that are commonly used in JavaScript, then I like to think of it as in like the proxy is something that would interact with a remote resource but immediately returns/gives you a promise. And this `promise` promises to evaluate to the concrete resource that you were looking for, after a a while.
+
+
+### - C. Virtual Proxy
+
+A virtual proxy controls access to a resource that is expensive to create.  
+This is exactly `caching`, if you think about it.
+
+So you've got some object that you know you want to interact with, but you know that creating that object is expensive, so you put something in front of that object, with which can interact with instead - a virtual proxy. So then, that proxy, makes sure that only when you really really need it, you interact with the actual underlying object.
+So it's kind of like "lazy evaluation".
+
+As opposed to the other 2 types of proxy pattern, we will dig deep into this one - the `virtual proxy pattern`, and see a code example.
+
+Code Example:
+
+```java
+String book = "..."; // <--- a REALLY long string which represents a book!
+
+BookParser bookParser = new BookParser(book);
+
+bookParser.numOfPages();
+bookParser.numOfChapters();
+bookParser.numOfNouns();
+bookParser.numOfAdverbs();
+```
+
+Now let's say that for some reason, these following assumptions take place:
+* You cannot change the implementation of BookParser (perhaps it's a third-party lib)
+* The parsing of a book is computationally heavy
+* The callings for those methods is O(1)
+* There are more than 1 instantiations of the BookParser.
+* There are times where a book is parsed, however none of its methods aren't being called
+
+Given these assumptions, we can understand that we have a performance issue.  
+Probably the rational solution is to refactor the BookParser, and make it *lazy*. I would say that this is the better solution. To make the cost occur in its methods, and not in its instantiation. But, as we said, maybe the BookParser belongs to some third-party library. There could be multiple reason as to why we don't want to change the BookParser.
+
+So, another way of solving this problem would be using proxy pattern.  
+
+Well, first we need to recognize it's a problem. Perhaps you've heard the term `pre-mature optimization`. It's when you attempt to increase the performance of your application before you know you actually have a performance problem.
+
+So how do we do this?  
+What we can do is stick a proxy in-between whoever called the BookParser.  
+So, as usual, you have a client, and this client is used to using the BookParser. Let's say that it first instantiated it, and then it calls one of these methods. And we know that the instantiation one is the costly one, and that the calling is the cheap one. And we also know that we won't always call this "cheaper" method. So, the hypothesis of how we can improve the performance is that we want to say that constructing... should **only** happen, if you actually want to call the method. So we want to defer, we want to make it lazy. And that's why we want to stick a proxy in-between.  
+The solution:
+
+|client|----->|proxy|----->|BookParser|
+|-|-|-|-|-|
+
+So you've got the client, but instead of the client directly interacting with the BookParser, we interact with the proxy, who interacts with the BookParser. So the client actually instantiate a proxy. The proxy *doesn't* instantiate a BookParser, because the proxy says "I don't know if you're actually gonna call any of these methods that require me to parse this book, so I'll until you tell me that I need to parse, because you want some piece of information". It's important to note that the proxy would follow the same interface as the BookParser, that going back to the idea that the proxy has the same interface as the one it's proxy'ing into.
+
+So now, instead of the client calling directly to the BookParser, to instantiate it, it makes the call to the thing that it thinks IS a BookParser, which is actually the proxy, and it would defer the instantiation process for later. Only when the client makes the call to one of the methods (i.e. numOfPages), the proxy would say "Ah! you now actually want some of this information? which requires me to actually do the parsing?" so then the proxy will simply do this call of instantiation, which parses the book, and invoke this heavy expensive computation, and then immediately after that make the call to the cheap method and simply pass the object backwards to the client who made the call.
+
+Now, of course, as you might have guessed, we would construct the proxy to be smart enough to not re-build the BookParser every time we make a new call, because then obviously performance will be worse than in the beginning. The proxy has to cache the BookParser. The proxy builds the BookParser only the first time, and actually maintains a reference to that BookParser, so that the second time we make a call to the same method, or even to another method, then we simply already have a BookParser and we can then simply make that quick call to the BookParser.
+
+
+### - D. Protection Proxy
+
+A protection proxy is sort of an *access management*. It controls access to a resource based on access rights. So, you've got a user, and you're not sure whether your particular user has the rights to access a particular resource. So, you stick this protection proxy in-between, and that protection proxy makes sure that only users that are allowed to access the underlying resource do get access to the underlying resource.
+
+### - B. Differences between...
+
+It's not only about how you string the objects together, it's also about the *intent*.  
+Like, some patterns are mostly different in their intent, rather than in the technicalities. So, they might be doing the same thing on the surface, but what's different is that you are doing it for a different reason. So you might use the word *proxy* to other developers, what kind of problem you're trying to solve, and then  you might use another word to communicate to other developers that you're trying to solve a different kind of problem.
+
+One of the key things of the proxy pattern is that the proxy pattern looks like the remote resource. It looks like the thing that it's proxy'ing to. But if you think about the adapter pattern, an adapter pattern adapts to a different interface. An adapter pattern let's you say that you want to access a thing that has some particular interface but you have a different interface, and you wanna access it via your interface. Proxy pattern however is simply a way of controlling the access, so it doesn't change the interface. So you have something that you want to interact with, that has some particular interface, and you don't want to change the interface, you simply want to intercept the accessing of the thing you want access for some reason, such as security, or caching, or whatever.
+
+What the proxy pattern does is it adds some additional behavior, not in the sense of a decorator pattern, but in the sense that it adds additional behavior with the *intent* of controlling access to the underlying object. So, both proxy and decorator patterns add additional behavior, but decorator is much more general, and is designed so that you can stack decorators one onto another, whereas proxy pattern simply says that... for some reason you need to control access to some underlying object, and because of that, you need to add additional behavior, but! you don't want to change the interface. You want to interact with the thing, in the same way that you've always interacted with the thing, as if it were the real thing, but! you want to add some additional behavior, just before you make calls to it.
+
+---
 
 
 
