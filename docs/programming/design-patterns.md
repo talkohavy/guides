@@ -517,10 +517,71 @@ const invoker = new Invoker({
 ```
 
 
+--- 
 
 
+## **7. Adapter Pattern**
+
+### Introduction
+
+There are 4 patterns that are easily get confused are:
+1. Adapter Pattern
+2. Facade Pattern
+3. Proxy Pattern
+4. Decorator Pattern
+
+We've already seen `Decorator Pattern`.  
+In the lecture we're going to talk about the `Adapter Pattern` only.
+
+The `Adapter Pattern` is also known as a (simple) Wrapper.  
+The `Adapter Pattern` sort of wraps something, 
 
 
+### Definition
+
+The `Adapter Pattern` converts the interface of a class into another interface which the client expects. Adapter lets classes work together that couldn't other-wise because of incompatible interfaces.
+
+```javascript
+class Client {
+
+}
+
+/** @implements {ITarget} */
+class Adapter {
+  constructor({adaptee}){
+    this.adaptee = adaptee;
+  }
+
+  request(){
+    this.adaptee.specificRequest();
+  }
+}
+
+class Adaptee {
+  constructor(){}
+
+  specificRequest(){}
+}
+
+const client = new Adapter({ adaptee: new Adaptee() });
+client.request();
+```
+
+The `Client`, the user of the code, has something of type `ITarget`. This `ITarget` has a method called `request`. The `request` is the standard that we're used to using. But, because we want to use something that has a completely different interface, an `Adaptee`, we can't just call `request`, because `Adaptee` has no method called `request`, `Adaptee` has a method called `specificRequest`. So, what we do is we invoke the `request` method, but! we invoke it on an `Adapter`. The `Adapter` is follows the signature of the thing that we're used to using, it follows the signature `request`. So we can call `request`, and then count on the `Adapter` to call the `Adaptee`. The `Adapter` has an `Adaptee`, so it is responsible for delegating the request down to the `Adaptee`, and then the `Adaptee` can perform that specific action that we're originally interest in.  
+So, for some reason, the `Client` wants to call this `specificRequest`, but! for some other reason it wants to call it using this particular signature of `request`.  
+
+What are some of the reasons that this happens?
+* It could be that this `Adaptee` is an external library that we don't actually have control over, and we're not sure that we're going to use that specific library, forever and ever, so we **wrap** an `Adapter`, we put an `Adapter` in-between the two, so that if we change our mind about what we want to adapt to (change our adaptee) in the future, then we can in a somewhat trivial way change that, because we can switch up the `Adapter`, or we can modify the `Adapter` code itself.
+* It could be that this particular `request` is scattered in many places, so it would be painful for us to go and change it to the style of `specificRequest`.
+* Or, we could in-vision that in the future we might actually want to change the signature of `specificRequest`, so we want to encapsulate this potential change in a place where it would be easy for us to change in the future.
+
+
+**IMPORTANT NOTE**
+
+The intention of the `Adapter Pattern` is to NOT change the underlying behavior. You adapt something. You have an adapter which you stick in-between two things, but the intention is not to add behaviors, or to remove behaviors, it's not to alter behaviors. The intention is really to somewhat blindly just pass on the request. The point is that you have two types of signatures, 2 different types of interfaces, and the interfaces don't connect. They are not inter-operable, so the intention is to make them operable.  
+
+Here's an example of something that looks like an adapter but isn't an adapter.  
+Different countries have different voltages in the outlets. In europe they have one voltage in the wall outlet, and in the USA you have a different voltage coming out of the outlet. Now, probably in any modern device there's a charger which contains a transformer. The point is, if we did have this transformer it would be potentially dangerous for our devices to simply stick an adapter, on the pins and then connect to the socket, unless we didn't have this transformer to also transform the voltage to what was expected by our device. So, if that were the case, if we didn't have this transformer, and we needed to, in other words, alter the behavior, then we're not talking about an adapter. We're talking about something else. Potentially, we're talking about a decorator. The transformer is not an adapter.
 
 
 
