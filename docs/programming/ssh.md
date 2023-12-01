@@ -1,6 +1,6 @@
 ---
 sidebar_label: 'SSH'
-sidebar_position: 5
+sidebar_position: 4
 ---
 
 # Guide for SSH
