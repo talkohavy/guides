@@ -17,11 +17,11 @@ You can prefix your packages, just @redux-toolkit or @babel did, with @someName 
 If you wish to *prefix* your package, you can do manually post initiation, or you can do so during the init process, using the `scope` flag:
 
 ```bash
-npm init --scope=luckylove
+npm init --scope=talkohavy
 ```
 
 This will have your package scoped.  
-For example, the above package would get a prefix of "@luckylove/" added to its name.
+For example, the above package would get a prefix of "@talkohavy/" added to its name.
 
 
 ## 2. Connect project to GitHub
