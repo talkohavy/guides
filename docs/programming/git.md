@@ -72,7 +72,25 @@ git commit --amend --author "Tal Kohavy <talkohavy@gmail.com>"
 ```
 
 
-### `Command 4: Branch out from an old commit`
+### `Command 4: amend - wrong author on all commits`
+
+```bash
+git filter-branch --env-filter '
+OLD_EMAIL="wrong@mail.com"
+NEW_EMAIL="talkohavy@gmail.com"
+if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]
+then
+    export GIT_COMMITTER_EMAIL="$NEW_EMAIL"
+fi
+if [ "$GIT_AUTHOR_EMAIL" = "$OLD_EMAIL" ]
+then
+    export GIT_AUTHOR_EMAIL="$NEW_EMAIL"
+fi
+' --tag-name-filter cat -- --branches --tags
+```
+
+
+### `Command 5: Branch out from an old commit`
 
 ```bash
 git checkout -B <branch-name> <sha-of-commit>
@@ -81,14 +99,14 @@ git checkout -B <branch-name> HEAD~3
 ```
 
 
-### `Command 5: Reset 1 file`
+### `Command 6: Reset 1 file`
 
 ```bash
 git checkout HEAD -- src/client.js
 ```
 
 
-### `Command 6: Change git user name & email – Project level`  
+### `Command 7: Change git user name & email – Project level`  
 Get email & user in Project level (lvl 1).  
 Use this to check who is the current user:  
 ```bash
@@ -105,7 +123,7 @@ git config user.email "tal@seadata.co.il"
 ```
 
 
-### `Command 7: Upload local git to remote repo`  
+### `Command 8: Upload local git to remote repo`  
 First check that you don't already have a remote origin by:  
 
 ```bash
@@ -125,7 +143,7 @@ git push --force -u origin master
 ```
 
 
-### `Command 8: Delete a local branch`
+### `Command 9: Delete a local branch`
 
 ```bash
 git branch --delete "name-of-branch"
@@ -138,7 +156,7 @@ Check out from it if necessary.
 :::
 
 
-### `Command 9: create an alias for a git command`  
+### `Command 10: create an alias for a git command`  
 
 Here are my personal favorites:
 
