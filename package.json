@@ -14,7 +14,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "lint": "eslint -c ./.eslintrc.json '**/*/*.{js,jsx,tsx}' --report-unused-disable-directives --max-warnings 0",
-    "check-format": "prettier . --check --config .prettierrc.js",
+    "check-format": "prettier . --check --config .prettierrc.mjs",
+    "format": "prettier . --write --config .prettierrc.mjs",
     "prepare": "husky install"
   },
   "dependencies": {

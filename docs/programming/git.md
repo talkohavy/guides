@@ -23,7 +23,7 @@ code /etc/gitconfig
 
 I always use the gitconfig in the `global` level.  
 That's where I usually put my "globally" configs.  
-So like `user.name`, `user.email`, all of my `aliases`, the `git-split-diffs`, etc.  
+So like `user.name`, `user.email`, all of my `aliases`, the `git-split-diffs`, etc.
 
 As of today, here's how my .gitconfig looks:
 
@@ -45,9 +45,7 @@ As of today, here's how my .gitconfig looks:
 	pager = git-split-diffs --color | less -RF
 ```
 
-
 ---
-
 
 ## 2. Most Used Commands
 
@@ -58,19 +56,17 @@ git reset HEAD~2
 git commit -am 'newMessage'
 ```
 
-
 ### `Command 2: amend - wrong message (a typo)`
+
 ```bash
 git commit --amend -m 'newMessage'
 ```
-
 
 ### `Command 3: amend - wrong author`
 
 ```bash
 git commit --amend --author "Tal Kohavy <talkohavy@gmail.com>"
 ```
-
 
 ### `Command 4: amend - wrong author on all commits`
 
@@ -89,7 +85,6 @@ fi
 ' --tag-name-filter cat -- --branches --tags
 ```
 
-
 ### `Command 5: Branch out from an old commit`
 
 ```bash
@@ -98,22 +93,24 @@ git checkout -B <branch-name> <sha-of-commit>
 git checkout -B <branch-name> HEAD~3
 ```
 
-
 ### `Command 6: Reset 1 file`
 
 ```bash
 git checkout HEAD -- src/client.js
 ```
 
+### `Command 7: Change git user name & email – Project level`
 
-### `Command 7: Change git user name & email – Project level`  
 Get email & user in Project level (lvl 1).  
-Use this to check who is the current user:  
+Use this to check who is the current user:
+
 ```bash
 git config --get user.name
 git config --get user.email
 ```
-Use this to change the values:  
+
+Use this to change the values:
+
 ```bash
 git config user.name "Tal Kohavy"
 git config user.email talkohavy@gmail.com
@@ -122,26 +119,25 @@ git config user.name "Tal Kochavi"
 git config user.email "tal@seadata.co.il"
 ```
 
+### `Command 8: Upload local git to remote repo`
 
-### `Command 8: Upload local git to remote repo`  
-First check that you don't already have a remote origin by:  
+First check that you don't already have a remote origin by:
 
 ```bash
 git config --get remote.origin.url
 ```
 
-Copy the repository's url, and add it to your remote origin:  
+Copy the repository's url, and add it to your remote origin:
 
 ```bash
 git remote add origin yourRemoteUrlHereUsernameIncluded
 ```
 
-Now push force your code to remote:  
+Now push force your code to remote:
 
 ```bash
 git push --force -u origin master
 ```
-
 
 ### `Command 9: Delete a local branch`
 
@@ -155,8 +151,7 @@ You **can't** delete the branch on which you're current standing on!
 Check out from it if necessary.
 :::
 
-
-### `Command 10: create an alias for a git command`  
+### `Command 10: create an alias for a git command`
 
 Here are my personal favorites:
 
@@ -183,17 +178,15 @@ git config --global alias.unstage "restore --staged ."
 git unstage
 ```
 
+### `Command 10: clean reset for all changes`
 
-### `Command 10: clean reset for all changes`  
 The best way to reset all changes is:
 
 ```bash
 git clean -df
 ```
 
-
 ---
-
 
 ## 3. git-split-diffs
 
@@ -222,9 +215,7 @@ git config split-diffs.min-line-width 40
 
 This defaults to `80`, so screens below `160` characters will display unified diffs. Set it to `0` to always show split diffs.
 
-
 ---
-
 
 ## 4. How to set User & Email on git config
 
@@ -264,9 +255,7 @@ Why would you care about the user & email?
 
 **Without a user & an email you cannot perform commits!**
 
-
 ---
-
 
 ## 5. Upload a local git repo to a remote repo
 
@@ -281,7 +270,7 @@ Get the **URL**!
 
 Now, we need to add a `remote` repository to our local project.  
 The remote repository is represented by `name` and a `url`.  
-When you do a git push, the default name taken is `origin`.  
+When you do a git push, the default name taken is `origin`.
 
 Use this command to add a new remote repository url named `origin`:
 
@@ -309,15 +298,16 @@ git remote rm origin
 git remote remove origin
 ```
 
-They are the same command! *rm* is short for *remove*.  
+They are the same command! _rm_ is short for _remove_.
 
 The `remote` sub-command has 3 useful sub-commands:
+
 1. `add`
 2. `remove`
 3. `set-url`
 
 We've already seen the `add` and `remove`.  
-But there's also `set-url`.  
+But there's also `set-url`.
 
 ```bash
 git remote set-url origin git://new.url.here
@@ -326,8 +316,7 @@ git remote set-url origin git://new.url.here
 With `set-url` you can edit just the `url` part of the remote repo.  
 It's useful in cases you made a typo.
 
-
-### - Step 3: push your work to remote 
+### - Step 3: push your work to remote
 
 Run this code:
 
@@ -338,4 +327,3 @@ git push --force -u origin master
 :::caution
 Note! Without the force you'll get an error!
 :::
-

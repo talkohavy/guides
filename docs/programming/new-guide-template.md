@@ -13,7 +13,6 @@ sql, css, typescript, javascript, json, yaml, html, bash, markdown, http
 
 pgsql, scss, php, java, csharp, matlab, r, pascal, powershell, xml, golang, rust, ruby, perl, groovy, django, assembly_x86, lua, applescript, cobol
 
-
 ```javascript title="Javascript"
 
 import Component from 'my-project'
@@ -119,55 +118,54 @@ else:
     print("You are a senior citizen.")
 ```
 
---- 
+---
 
 ## 2. Tables
 
+|                 Parameter                  |                              Type | Description                     |
+| :----------------------------------------: | --------------------------------: | :------------------------------ |
+|                 `api_key`                  |                          `string` | **Required**. Your API key      |
+|        The : decides the alignment         |         So depending where its at | you'll see different alignments |
+|               Aligned Center               |                     Aligned right | Aligned left                    |
+| we can also<br/>break lines<br/> like this | but said backslash N doesn't work | this \N doesn't \n work         |
 
-| Parameter | Type     | Description                |
-| :--------: | -------: | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
-| The : decides the alignment | So depending where its at | you'll see different alignments |
-| Aligned Center | Aligned right | Aligned left |
-| we can also<br/>break lines<br/> like this | but said backslash N doesn't work | this \N doesn't \n work |
-
---- 
+---
 
 ## 3. Badges
 
 Add badges from somewhere like: [shields.io](https://shields.io/)
 
 badge 1:  
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 badge 2:  
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)  
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
 badge 3:  
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)  
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
---- 
+---
 
 ## 4. Custom Badges
 
-<span style={{display:'inline-block', width: 'auto', margin: '10px 0', fontSize: '2rem', fontWeight: 'bold', padding: '0.25rem', cursor:'default',border: '5px solid #999',borderRadius: '10px', color: 'white', backgroundColor: '#686868'}}>Story Time</span>  
+<span style={{display:'inline-block', width: 'auto', margin: '10px 0', fontSize: '2rem', fontWeight: 'bold', padding: '0.25rem', cursor:'default',border: '5px solid #999',borderRadius: '10px', color: 'white', backgroundColor: '#686868'}}>Story Time</span>
 
-|Story Time|
-|-|
+| Story Time |
+| ---------- |
 
---- 
+---
 
 ## 5. Font Resize
 
 **<font size="7">This text is HUGE!!!</font>**
 
---- 
+---
 
 ## 6. Strike Through
 
 ~~Strike through text~~
 
---- 
+---
 
 ## 7. Admonitions
 

@@ -7,7 +7,6 @@ sidebar_position: 0
 
 This is my **first Docusaurus document**!
 
-
 :::tip My tip
 
 Use this awesome feature option

@@ -39,7 +39,6 @@
     { "files": ["*.js", "*.jsx", "*.ts", "*.tsx"], "parser": "@typescript-eslint/parser" }, // i don't know what the default parser is, but it didn't work well. Only with "@typescript-eslint/parser" as the default parser eslint is able to lint these files properly.
     { "files": ["*.d.ts"], "rules": { "no-unused-vars": "off" } } // <--- when declaring a function, of course its parameters are going to be "unused", so we need to turn this rule off.
   ],
-
   "env": {
     "node": true, // Solved "XXX not being recognized". XXX: module, require, process
     "browser": true, // Solved window & document object not being recognized.
@@ -47,7 +46,7 @@
     "es6": true // Solved Promise is not defined.
   },
   "globals": {},
-  "ignorePatterns": ["dist"],
+  "ignorePatterns": ["dist", "build"],
   "rules": {
     // NOTE: This is where you can Override default settings coming from the plugins!
 
@@ -259,54 +258,7 @@
     "tailwindcss/enforces-negative-arbitrary-values": "error",
     "tailwindcss/enforces-shorthand": "error",
     "tailwindcss/no-arbitrary-value": "off", // <-- already off by default! prohibits using w-[5px]
-    "tailwindcss/no-contradicting-classname": "error", // <--- avoids situations where you wrote p-2 & p-3 under the same className.
-    "tailwindcss/no-custom-classname": [
-      "warn",
-      {
-        // only allow classNames from Tailwind CSS and the values from the whitelist option, so put everything you created inside this white list!
-        "whitelist": [
-          "btn-love",
-          "border-0.5",
-          "border-1",
-          "border-1.5",
-          "border-b-1.5",
-          "h-13",
-          "h-15",
-          "h-xs",
-          "h-md",
-          "h-3xl",
-          "h-95/100",
-          "w-15",
-          "w-30",
-          "w-34",
-          "w-2xl",
-          "w-5xl",
-          "w-95/100",
-          "min-w-14",
-          "min-w-28",
-          "min-h-20",
-          "min-h-40",
-          "min-h-sm",
-          "min-h-lg",
-          "max-w-28",
-          "max-w-98/100",
-          "max-h-lg",
-          "max-h-sm",
-          "max-h-90/100",
-          "saturate-70",
-          "translate-x-half",
-          "translate-y-half",
-          "animate-appear",
-          "shadow-mini",
-          "bg-gradient-radial-bottom",
-          "scale-80",
-          "animate-appear-quick",
-          "-top-19",
-          "invert-90",
-          "contrast-90"
-        ]
-      }
-    ]
+    "tailwindcss/no-contradicting-classname": "error" // <--- avoids situations where you wrote p-2 & p-3 under the same className.
 
     // #####################
     // Rule Set 6: Rule Bank

@@ -23,22 +23,6 @@
     }
   },
   "compileOnSave": true,
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "<node_internals>/**",
-    "bin/**"
-  ],
-  "include": [
-    "*.d.ts",
-    "*.js",
-    "*.jsx",
-    "*.cjs",
-    "*.mjs",
-    "**/*/*.ts",
-    "**/*.d.ts",
-    "**/*.js",
-    "**/*.jsx",
-    "**/*.cjs"
-  ]
+  "exclude": ["node_modules", "**/node_modules/*", "<node_internals>/**", "bin/**"],
+  "include": ["*.d.ts", "*.js", "*.jsx", "*.cjs", "*.mjs", "**/*/*.ts", "**/*.d.ts", "**/*.js", "**/*.jsx", "**/*.cjs"]
 }
