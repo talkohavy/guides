@@ -20,7 +20,7 @@
   // Part 3: Javascript Rules
   // ------------------------
   "javascript.preferences.importModuleSpecifier": "relative", // <--- defaults to "shortest"
-  "javascript.preferences.importModuleSpecifierEnding": "auto", // <--- defaults to "auto"
+  "javascript.preferences.importModuleSpecifierEnding": "index", // <--- defaults to "auto"
   "javascript.updateImportsOnFileMove.enabled": "always", // <--- defaults to "prompt"
   "js/ts.implicitProjectConfig.checkJs": true, // <--- defaults to "false". Either this property, or `checkJs` property within your jsconfig must be set to true for type-checkingto work inside js files.
 
@@ -33,33 +33,56 @@
   // --------------------
   // Part 5: Editor Rules
   // --------------------
-  "editor.renderWhitespace": "trailing",
-  "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
+  // "files.autoSave": "off", // Defaults to false. Possible options: off | onFocusChange | afterDelay | onWindowChange
+  // "files.autoSaveDelay": 1000,
+  // "files.refactoring.autoSave": true,
   // "editor.autoSurround": "languageDefined", // defaults to "languageDefined". Defines what to do when text is selected, and you hit ' or [.
+  "editor.dragAndDrop": false, // <--- defaults to "true". Decides if drag and drop of code lines is allowed/possible. I always hated this feature.
   // "editor.minimap.enabled": true, // <--- defaults to "true". The minimap is the mini-code on the right, which you can use to navigate a really long file.
   // "editor.mouseWheelZoom": false, // <--- default to "false".
   // "editor.multiCursorModifier": "alt", // <--- defaults to "alt".
   // "editor.showUnused": true, // <--- defaults to "true". true value marks unreachable code as faded out.
   // "editor.wordWrap": "off", // <--- defaults to "off".
   "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features",
+    // "editor.defaultFormatter": "vscode.json-language-features", // <--- Commented out since I'm using prettier
     "editor.quickSuggestions": { "strings": true },
     "editor.suggest.insertMode": "replace" // defaults to insert
   },
   "[markdown]": {
     "editor.wordWrap": "on",
-    "editor.codeLens": false,
-    "editor.renderWhitespace": "trailing",
+    "editor.renderWhitespace": "all",
     "editor.acceptSuggestionOnEnter": "off"
   },
 
-  // -------------------------
-  // Part 6: Auto fixing Rules
-  // -------------------------
+  // ------------------------------------
+  // Part 6: Linting and Formatting Rules (eslint & prettier)
+  // ------------------------------------
+  // "eslint.options": { "overrideConfigFile": "./.eslintrc.yaml" },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.addMissingImports": "never"
+    // "source.fixAll": true, // <--- This is stronger than source.fixAll.eslint! because it also aggresively removes unreachable code!
+    // "source.organizeImports": true, // <--- This also removes unused imports. I disabled it, since I'm already using eslint for that.
+    "source.fixAll.eslint": true,
+    "source.addMissingImports": false
   },
+  // "prettier.configPath": ".prettierrc.js",
+  // Enable eslint for all supported languages
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "json"
+    // "jsonc" // <--- commented out because it errored the eslintrc config file
+    // "yaml" // <--- works badly on yamls
+    // "markdown" // <--- works badly on markdowns
+  ],
+  "css.lint.unknownProperties": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  // "[css]": {
+  //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
+  // },
 
   // -------------------------------------
   // Part 7: IDE Color Customization Rules
@@ -105,19 +128,13 @@
   // "editor.gotoLocation.multipleImplementations": "goto",
   // "editor.gotoLocation.multipleTypeDefinitions": ,
 
-  // -----------------
-  // Part 10: css Rules
-  // -----------------
-  "css.lint.unknownProperties": "ignore",
-  "css.lint.unknownAtRules": "ignore",
-
   // -------------------
-  // Part 11: debug Rules
+  // Part 10: debug Rules
   // -------------------
   "debug.console.acceptSuggestionOnEnter": "on", // finally!!! This drove me mad!!! defaults to off.
 
   // -------------------
-  // Part 12: Misc Rules
+  // Part 11: Misc Rules
   // -------------------
   "window.zoomLevel": 0,
   "search.exclude": {
@@ -127,8 +144,15 @@
     "**/*.code-search": true
     // The custom ones:
   },
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": "**/.github/*.yml"
+
+  // --------------
+  // Part 12: MISC.
+  // --------------
+  "cSpell.words": ["luckylove"],
+  "files.associations": { "*.json": "jsonc" },
+  "explorer.autoReveal": true,
+  "explorer.autoRevealExclude": {
+    "**/node_modules": false, // <--- open/reveal files in node_modules in explorer tree view.
+    "**/bower_components": false
   }
-  // "eslint.options": { "overrideConfigFile": "./.eslintrc.cjs" },
 }
