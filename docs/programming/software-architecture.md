@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Software Architecture'
+sidebar_label: '3. Software Architecture'
 sidebar_position: 1
 ---
 

@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'New guide'
+sidebar_label: '999. New guide'
 sidebar_position: 999
 # sidebar_class_name: specialSidebarLI
 ---

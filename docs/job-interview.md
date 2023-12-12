@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+sidebar_label: '- Job Interview'
 ---
 
 # How To Speak In A Job Interview

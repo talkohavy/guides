@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Design by Contract'
+sidebar_label: '1.2. Design by Contract'
 sidebar_position: 1
 ---
 
