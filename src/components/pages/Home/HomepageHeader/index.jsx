@@ -24,7 +24,7 @@ export default function HomepageHeader() {
           {translate({ id: 'pages.home.tagline', message: "All the tutorials you'll ever need as a developer" })}
         </p>
         <div className={styles.buttons}>
-          <Link className='button button--secondary button--lg' to='/docs/intro'>
+          <Link className='button button--secondary button--lg' to='/docs/programming'>
             {translate({ id: 'pages.home.tagline', message: 'Docusaurus Tutorial - 5min' })}&nbsp;⏱️
           </Link>
         </div>

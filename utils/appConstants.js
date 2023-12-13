@@ -1,8 +1,6 @@
 const APP_URLS = {
   docs: {
-    programming: {
-      index: '/docs/category/programming',
-    },
+    programming: { index: '/docs/programming' },
   },
   blogs: '/blog',
   gitRepositoryURL: 'https://github.com/talkohavy/guides/',
