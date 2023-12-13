@@ -222,3 +222,198 @@ export default {
 If you want to link to static files in your project or stories (e.g., /fonts/XYZ.woff), use the `-s path/to/folder` flag to specify a static folder to serve from when you start up Storybook. To do so, edit the storybook and build-storybook scripts in package.json.
 
 We recommend serving external resources and assets requested in your components statically with Storybook. It ensures that assets are always available to your stories.
+
+## 2. How to write Stories
+
+### Meta
+
+The default export metadata controls how Storybook lists your stories and provides information used by addons. For example, here’s the default export for a story file Button.stories.js|ts:
+
+```js title="Button.stories.js"
+import { Button } from './Button';
+
+export default {
+  component: Button,
+};
+```
+
+:::info
+Starting with Storybook version 7.0, story titles are analyzed statically as part of the build process. The **default** export must contain a _title_ property that can be read statically or a component property from which an automatic title can be computed. Using the id property to customize your story URL must also be statically readable.
+:::
+
+## Defining stories
+
+Use the named exports of a file to define your component’s stories. We recommend you use UpperCamelCase for your story exports. Here’s how to render `Button` in the "primary" state and export a story called `Primary`.
+
+```js title="Button.stories.js"
+import { Button } from './Button';
+
+export default {
+  component: Button,
+};
+
+/*
+ *👇 Render functions are a framework specific feature to allow you control on how the component renders.
+ * See https://storybook.js.org/docs/api/csf
+ * to learn how to use render functions.
+ */
+export const Primary = {
+  render: () => <Button primary label="Button" />,
+};
+```
+
+## Rename stories
+
+You can rename a story to give it a more accurate display name within the Storybook. Here's how you can change the display name of a story:
+
+```js title="Button.stories.js"
+import { Button } from './Button';
+
+/*
+ *👇 Render functions are a framework specific feature to allow you control on how the component renders.
+ * See https://storybook.js.org/docs/api/csf
+ * to learn how to use render functions.
+ */
+const Primary = {
+  name: 'I am the primary',
+  render: () => <Button primary label="Button" />,
+};
+
+export { Primary }
+
+export default {
+  component: Button,
+};
+```
+
+## Actions to enhance args
+
+Addons can enhance args. For instance, [Actions](https://storybook.js.org/docs/essentials/actions) auto-detects which args are callbacks and appends a logging function to them. That way, interactions (like clicks) get logged in the actions panel.
+
+## Using the play function
+
+... complete this part...
+
+Storybook's play function and the [@storybook/addon-interactions](https://storybook.js.org/addons/@storybook/addon-interactions) are convenient helper methods to test component scenarios that otherwise require user intervention. They're small code snippets that execute once your story renders. For example, suppose you wanted to validate a form component, you could write the following story using the play function to check how the component responds when filling in the inputs with information:
+
+```js title="LoginForm.stories.js"
+import { userEvent, within } from '@storybook/testing-library';
+
+import { expect } from '@storybook/jest';
+
+import { LoginForm } from './LoginForm';
+
+export default {
+  component: LoginForm,
+};
+
+export const EmptyForm = {};
+
+/*
+ * See https://storybook.js.org/docs/writing-stories/play-function#working-with-the-canvas
+ * to learn more about using the canvasElement to query the DOM
+ */
+export const FilledForm = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 👇 Simulate interactions with the component
+    await userEvent.type(canvas.getByTestId('email'), 'email@provider.com');
+
+    await userEvent.type(canvas.getByTestId('password'), 'a-random-password');
+
+    // See https://storybook.js.org/docs/essentials/actions#automatically-matching-args to learn how to setup logging in the Actions panel
+    await userEvent.click(canvas.getByRole('button'));
+
+    // 👇 Assert DOM structure
+    await expect(
+      canvas.getByText(
+        'Everything is perfect. Your account is ready and we should probably get you started!'
+      )
+    ).toBeInTheDocument();
+  },
+};
+```
+
+Without the help of the play function and the @storybook/addon-interactions, you had to write your own stories and manually interact with the component to test out each use case scenario possible.
+
+## Using parameters
+
+Parameters are Storybook’s method of defining static metadata for stories. A story’s parameters can be used to provide configuration to various addons at the level of a story or group of stories.
+
+For instance, suppose you wanted to test your Button component against a different set of backgrounds than the other components in your app. You might add a component-level backgrounds parameter:
+
+```js title="Button.stories.js"
+import { Button } from './Button';
+
+export default {
+  component: Button,
+  //👇 Creates specific parameters for the story
+  parameters: {
+    backgrounds: {
+      values: [
+        { name: 'red', value: '#f00' },
+        { name: 'green', value: '#0f0' },
+        { name: 'blue', value: '#00f' },
+      ],
+    },
+  },
+};
+```
+
+## Using decorators
+
+Decorators are a mechanism to wrap a component in arbitrary markup when rendering a story. Components are often created with assumptions about ‘where’ they render. Your styles might expect a theme or layout wrapper, or your UI might expect specific context or data providers.
+
+A simple example is adding padding to a component’s stories. Accomplish this using a decorator that wraps the stories in a `div` with padding, like so:
+
+```js title="Button.stories.js"
+import { Button } from './Button';
+
+export default {
+  component: Button,
+  decorators: [
+    (Story) => (
+      <div style={{ margin: '3em' }}>
+        {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
+        <Story />
+      </div>
+    ),
+  ],
+};
+```
+
+## Component level args
+
+You can also define args at the component level; they will apply to all the component's stories unless you overwrite them. To do so, use the args key on the default export:
+
+```js title="Button.stories.js"
+import { Button } from './Button';
+
+export default {
+  component: Button,
+  //👇 Creates specific argTypes
+  argTypes: {
+    backgroundColor: { control: 'color' },
+  },
+  args: {
+    //👇 Now all Button stories will be primary.
+    primary: true,
+  },
+};
+```
+
+## Global level args
+
+You can also define args at the global level; they will apply to every component's stories unless you overwrite them. To do so, define the args property in the default export of preview.js:
+
+```js title="Button.stories.js"
+export default {
+  // The default value of the theme arg for all stories
+  args: { theme: 'light' },
+};
+```
+
+:::tip
+For most uses of global args, globals are a better tool for defining globally-applied settings, such as a theme. Using globals enables users to change the value with the toolbar menu.
+:::
