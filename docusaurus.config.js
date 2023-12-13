@@ -4,7 +4,6 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import { themes as prismThemes } from 'prism-react-renderer';
 import { APP_URLS } from './utils/appConstants.js';
 import { IMAGES } from './utils/images/index.js';
 
@@ -105,7 +104,7 @@ const config = {
       links: [
         {
           title: 'Docs',
-          items: [{ label: 'Tutorial', to: APP_URLS.docs.intro }],
+          items: [{ label: 'Tutorial', to: APP_URLS.docs.programming.index }],
         },
         {
           title: 'Community',
@@ -133,10 +132,6 @@ const config = {
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-    },
-    prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
     },
   },
 
