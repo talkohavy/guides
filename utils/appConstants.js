@@ -1,6 +1,5 @@
 const APP_URLS = {
   docs: {
-    intro: '/docs/intro',
     programming: {
       index: '/docs/category/programming',
     },
