@@ -151,7 +151,13 @@ You **can't** delete the branch on which you're current standing on!
 Check out from it if necessary.
 :::
 
-### `Command 10: create an alias for a git command`
+### `Command 10: Rename a local branch`
+
+```bash
+ git branch -m %old_name% %new_name%
+```
+
+### `Command 11: create an alias for a git command`
 
 Here are my personal favorites:
 
