@@ -153,8 +153,38 @@ Check out from it if necessary.
 
 ### `Command 10: Rename a local branch`
 
+Renaming a local branch is easy:
+
 ```bash
- git branch -m %old_name% %new_name%
+git branch -m %old_name% %new_name%
+```
+
+### `Command 11: Rename a remote branch`
+
+Renaming a remote branch is actually a 2-step process. While you _can_ actually rename a remote branch using Github Browser in a 1-step, this is probably not what you want. Because, here is what I'm assuming that happened:
+
+- You gave a wrong name to a local branch
+- You pushed that branch with the wrong name to the remote
+  That's the most common scenario.
+
+So, first you need to rename the local branch, then delete the remote branch, and then push the newly-named local branch to the remote.
+
+Step 1: rename the local branch
+
+```bash
+git branch -m %old_name% %new_name%
+```
+
+Step 2: delete the remote branch
+
+```bash
+git push origin :%old_name%
+```
+
+Step 3: push the newly-named branch to the remote branch
+
+```bash
+git push origin %new_name%
 ```
 
 ### `Command 11: create an alias for a git command`
