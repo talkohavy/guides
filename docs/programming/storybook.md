@@ -521,22 +521,40 @@ export default {
 
 You may find yourself in need for fetching resources from a public static folder. Storybook allows you to link to static files in your project or stories.
 
-- **Step 1**
-  create a folder named `public` inside `.storybook`.
+- **Step 1**  
+  Either create a folder named `public` inside `.storybook`, or use your frontend project's public directory (depending on where your storbook project lives).
 
-- **Step 2**
-  Add `-s public` flag in both the `run` script & `build` script inside your package.json. This will tell Storybook to serve from that folder when you start up.
+- **Step 2**  
+  Go to your `.storybook/main.js` file, and add a `staticDirs` key, which accepts an array of strings. Each string is a `path` to a public folder you want to serve.
+  ```js title=".storybook/main.js"
+  export default {
+    framework: '@storybook/your-framework',
+    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    staticDirs: ['../public'], // 👈 Configures the static asset folder in Storybook
+  };
+  ```
+  Another approach is one that allows for renaming of the output folder:
+  ````js title=".storybook/main.js"
+  export default {
+    framework: '@storybook/your-framework',
+    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    staticDirs: [{ from: '../my-custom-assets/images', to: '/assets' }],
+  };```
+  ````
 
 We recommend serving assets/resources from the `public` folder inside .`.storybook`, and not from external resources, to ensure that assets are always available to your stories.
 
-:::tip
-The `paths` are not the same!!! Each script needs a different path!
+:::warning
+
+## Deprecated
+
+There **_is_** another approach to serving static files but it is deprecated, and that is by using **_storybook's CLI_** with the flag of `--static-dir` or `-s`. What we did above was serving static files via the **_configuration file_** (`.storybook/main.js`) which replaced the serving of static files using **_storybook's CLI_**. Avoid using it! Also, the `path` you need to mention for the dev script and the path you need to mention for the build script are **_NOT_** the same!!! Each script requires a different path.
 
 ```json title="package.json"
 {
   "scripts": {
-    "storybook": "storybook dev -p 6006 -s public",
-    "build-storybook": "storybook build -s .storybook/public"
+    "storybook": "storybook dev -p 6006 -s public", // <--- don't use this approach
+    "build-storybook": "storybook build -s .storybook/public" // <--- don't use this approach
   }
 }
 ```
