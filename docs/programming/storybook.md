@@ -122,7 +122,7 @@ export const decorators = [
 ];
 ```
 
-## 2 The \*.stories.jsx Files
+## 2. The \*.stories.jsx Files
 
 Storybook scans your project and looks for files which end with: `.stories.js`, `.stories.jsx`, `.stories.ts`, `.stories.tsx`.  
 Notice how it has `stories` in it's path, in _plural_, to note that each file representing a component can export multiple stories. A \*.stories.js file defines all the stories for a component. Each story has a corresponding sidebar item in the Storybook app. When you click on a story, it renders in the Canvas an isolated preview iframe.
@@ -150,7 +150,7 @@ export default {
 Starting with Storybook version 7.0, story titles are analyzed statically as part of the build process. The **default** export must contain a _title_ property that can be read statically or a component property from which an automatic title can be computed. Using the id property to customize your story URL must also be statically readable.
 :::
 
-## 4 Layout Centered
+## 4. Layout Centered
 
 Another nice-to-have key inside meta is the `parameters.layout`, which tells Storybook where to render the component on the screen. By default, it renders it on the top-left, but it would be nice to have it centered, right?
 To do so, simply add:
@@ -266,7 +266,7 @@ export const Primary = {
 This could be useful in multiple cases.  
 For example, in a case where you need the parent to have `dir="rtl"`.
 
-### 5.6 Hide an arg's controller
+### 5.6. Hide an arg's controller
 
 If you wish to hide a certain arg, or I should say a controller for an arg, there's a very easy way to do so. Let's say you have a Component with a prop named `testId`, and you decided you don't need a controller for it.  
 You have two options as to how you can hide a prop's controller.
@@ -510,12 +510,28 @@ export default {
     propName1: {
       control: {
         type: 'color',
-        presetColors: ['red', 'green'],
+        presetColors: ['red', 'green', 'blue'],
       },
     },
   },
 };
 ```
+
+**Specify initial preset color swatches**
+
+For color controls, you can specify an array of presetColors, either on the control in argTypes, or as a parameter under the controls namespace:
+
+```js
+export default {
+  parameters: {
+    controls: {
+      presetColors: [{ color: '#ff4785', title: 'Coral' }, 'rgba(0, 159, 183, 1)', '#fe4a49'],
+    },
+  },
+};
+```
+
+Color presets can be defined as an object with color and title or a simple CSS color string. These will then be available as swatches in the color picker. When you hover over the color swatch, you'll be able to see its title. It will default to the nearest CSS color name if none is specified.
 
 - Control Type 10: `date`
 
