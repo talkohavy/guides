@@ -938,3 +938,116 @@ export const FilledForm = {
 ```
 
 Without the help of the play function and the @storybook/addon-interactions, you had to write your own stories and manually interact with the component to test out each use case scenario possible.
+
+---
+
+add background options to storybook
+
+```js
+import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import '../styles/tailwind.css';
+// import 'tailwindcss/tailwind.css'; <--- an index.css file from tailwind inside node-modules, which only contains the 3 lines.
+
+export const decorators = [
+  // Applies only if tailwind's darkMode config is set to 'class':
+  // withThemeByClassName({
+  //   themes: { light: 'light', dark: 'dark' },
+  //   defaultTheme: 'light',
+  //   parentSelector: 'body',
+  // }),
+  // Applies only if tailwind's darkMode config is set to ['class', '[data-theme="dark"]']:
+  withThemeByDataAttribute({
+    themes: { light: 'light', dark: 'dark' },
+    defaultTheme: 'light',
+    attributeName: 'data-theme',
+  }),
+];
+
+/** @type { import('@storybook/react').Preview } */
+const preview = {
+  parameters: {
+    backgrounds: {
+      default: 'Twitter',
+      values: [
+        { name: 'Twitter', value: '#00aced' },
+        { name: 'Facebook', value: '#3b5998' },
+        { name: 'White', value: '#fff' },
+        { name: 'Black', value: '#000' },
+      ],
+    },
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i, // <--- if a react prop name contains these, the selected controller would be a color-picker.
+        date: /Date$/i, // <--- if a react prop name contains this, the selected controller would be a date-picker.
+      },
+    },
+    docs: {
+      // `toc` Accepts `true` or an object. Generates a table-of-content on the side of the Docs page of each component. Defaults to false.
+      toc: {
+        disable: false,
+        title: 'Table of Contents', // <--- give it a title. Defaults to nothing being displayed.
+        headingSelector: 'h2, h3', // <--- Defines the list of headings to feature in the table of contents.
+        // ignoreSelector: 'h1', // <--- or '#primary',
+        // unsafeTocbotOptions: { orderedList: true },
+      },
+    },
+  },
+};
+
+export default preview;
+```
+
+You can also define backgrounds per-component or per-story basis through parameter inheritance. It's the same `parameters` key after all.
+
+If for some weird reason you want to disable a background on a specific story, you can do it like so:
+
+```js
+import { Button } from './Button';
+
+export const Large = { parameters: { backgrounds: { disable: true } } };
+
+export default { component: Button };
+```
+
+---
+
+You also have control over the grid coming from the grid addon.  
+The default values of the grid are:
+
+```js
+import '../styles/tailwind.css';
+
+/** @type { import('@storybook/react').Preview } */
+const preview = {
+  parameters: {
+    backgrounds: {
+      grid: {
+        cellSize: 20,
+        opacity: 0.5,
+        cellAmount: 5,
+        offsetX: 16, // Default is 0 if story has 'fullscreen' layout, 16 if layout is 'padded'
+        offsetY: 16, // Default is 0 if story has 'fullscreen' layout, 16 if layout is 'padded'
+      },
+    },
+  },
+};
+
+export default preview;
+```
+
+If for some weird reason you want to disable the grid for a specific Story you can do so like this:
+
+```js
+import { Button } from './Button';
+
+export const Large = {
+  parameters: {
+    backgrounds: {
+      grid: { disable: true },
+    },
+  },
+};
+
+export default { component: Button };
+```
