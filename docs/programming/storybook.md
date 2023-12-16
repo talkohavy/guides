@@ -567,7 +567,61 @@ export default {
 };
 ```
 
-## 6 Public - Static Serve
+### 5.8. Conditional controls
+
+In some cases, it's useful to be able to conditionally exclude a control based on the value of another control. Controls supports basic versions of these use cases with the if, which can take a simple query object to determine whether to include the control.
+
+Consider a collection of "advanced" settings that are only visible when the user toggles an "advanced" toggle.
+
+```js
+import { Button } from './Button';
+
+export default {
+  component: Button,
+  argTypes: {
+    label: { control: 'text' }, // Always shows the control
+    advanced: { control: 'boolean' },
+    // Only enabled if advanced is true
+    margin: { control: 'number', if: { arg: 'advanced' } },
+    padding: { control: 'number', if: { arg: 'advanced' } },
+    cornerRadius: { control: 'number', if: { arg: 'advanced' } },
+  },
+};
+```
+
+Or consider a constraint where if the user sets one control value, it doesn't make sense for the user to be able to set another value.
+
+```js
+import { Button } from './Button';
+
+export default {
+  component: Button,
+  argTypes: {
+    // Button can be passed a label or an image, not both
+    label: {
+      control: 'text',
+      if: { arg: 'image', truthy: false },
+    },
+    image: {
+      control: { type: 'select', options: ['foo.jpg', 'bar.jpg'] },
+      if: { arg: 'label', truthy: false },
+    },
+  },
+};
+```
+
+It may also contain at most one of the following operators:
+
+| Operator | Type    | Meaning                                              |
+| -------- | ------- | ---------------------------------------------------- |
+| truthy   | boolean | Is the target value truthy?                          |
+| exists   | boolean | Is the target value defined?                         |
+| eq       | any     | Is the target value equal to the provided value?     |
+| neq      | any     | Is the target value NOT equal to the provided value? |
+
+If no operator is provided, that is equivalent to `{ truthy: true }`.
+
+## 6. Public - Static Serve
 
 You may find yourself in need for fetching resources from a public static folder. Storybook allows you to link to static files in your project or stories.
 
