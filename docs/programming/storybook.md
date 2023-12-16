@@ -266,7 +266,41 @@ export const Primary = {
 This could be useful in multiple cases.  
 For example, in a case where you need the parent to have `dir="rtl"`.
 
-### 5.6 Storybook Controls
+### 5.6 Hide an arg's controller
+
+If you wish to hide a certain arg, or I should say a controller for an arg, there's a very easy way to do so. Let's say you have a Component with a prop named `testId`, and you decided you don't need a controller for it.  
+You have two options as to how you can hide a prop's controller.
+
+- 1. The direct way: using `meta.argTypes.propName1.table.disable`
+
+The direct way is using the `meta.argTypes.propName1.table.disable` key and provide a boolean false to hide it from view.
+
+```js
+// <typeof Button>
+/** @type {import('@storybook/react').Meta} */
+export default {
+  title: 'Example/Button',
+  component: Button,
+  argTypes: { testId: { table: { disable: true } } },
+};
+```
+
+- 2. The indirect way: using `meta.parameters.controls.exclude`
+
+The indirect way is using the `meta.parameters.controls.exclude` key and provide a regex that catches the arg by its name, to hide it from view.
+
+```js
+/** @type {import('@storybook/react').Meta} */
+export default {
+  title: 'Example/Button',
+  component: Button,
+  parameters: {
+    controls: { exclude: /testId/g },
+  },
+};
+```
+
+### 5.7 Storybook Controls
 
 #### - Introduction
 
@@ -764,43 +798,6 @@ export default {
     ),
   ],
 }
-```
-
----
-
-Hide an arg
-
-Let's say you have a Component with a prop on which you don't want a controller for. I.e. testId.
-
-You have two options on how to hide a controller for a certain prop/arg.
-
-- 1. The direct way: using `meta.argTypes.propName1.table.disable`
-
-The direct way is using the `meta.argTypes.propName1.table.disable` key and provide a boolean false to hide it from view.
-
-```js
-// <typeof Button>
-/** @type {import('@storybook/react').Meta} */
-export default {
-  title: 'Example/Button',
-  component: Button,
-  argTypes: { testId: { table: { disable: true } } },
-};
-```
-
-- 2. The indirect way: using `meta.parameters.controls.exclude`
-
-The indirect way is using the `meta.parameters.controls.exclude` key and provide a regex that catches the arg by its name, to hide it from view.
-
-```js
-/** @type {import('@storybook/react').Meta} */
-export default {
-  title: 'Example/Button',
-  component: Button,
-  parameters: {
-    controls: { exclude: /testId/g },
-  },
-};
 ```
 
 ---
