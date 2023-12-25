@@ -4,15 +4,19 @@
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.- Programming": {
-    "message": "- Programming",
+    "message": "- תיכנות",
+    "description": "The label for category - Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.job-interview": {
+    "message": "- תיכנות",
     "description": "The label for category - Programming in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.- Programming.link.generated-index.title": {
-    "message": "Programming Guides - overview",
+    "message": "מדריכים לתיכנות - סיכום",
     "description": "The generated-index page title for category - Programming in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.- Programming.link.generated-index.description": {
-    "message": "All the Programming Guides in one place!",
+    "message": "כל מדריכי התיכנות במקום אחד!",
     "description": "The generated-index page description for category - Programming in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.1. Software Concepts": {
@@ -20,11 +24,11 @@
     "description": "The label for category 1. Software Concepts in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.1. Software Concepts.link.generated-index.title": {
-    "message": "Software Concepts - overview",
+    "message": "עקרונות פיתוח תוכנה - סיגום",
     "description": "The generated-index page title for category 1. Software Concepts in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.1. Software Concepts.link.generated-index.description": {
-    "message": "All the important programming concepts you need to know.",
+    "message": "כל הקונספטים החשובים בתיכנות שאתה צריך לדעת",
     "description": "The generated-index page description for category 1. Software Concepts in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.- Photoshop": {
@@ -36,7 +40,7 @@
     "description": "The generated-index page title for category - Photoshop in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.- Photoshop.link.generated-index.description": {
-    "message": "Welcome to the Photoshop Guide",
+    "message": "ברוך הבא למדריך בפוטושופ",
     "description": "The generated-index page description for category - Photoshop in sidebar tutorialSidebar"
   }
 }
