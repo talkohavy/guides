@@ -23,6 +23,10 @@ const config = {
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'he'],
+    localeConfigs: {
+      en: { htmlLang: 'en-US' }, // <--- use en-US or en-GB
+      he: { direction: 'rtl' },
+    },
   },
 
   // ---------------------------------
