@@ -80,12 +80,12 @@ const config = {
           label: 'Guides',
         },
         { to: APP_URLS.blogs, label: 'Blogs', position: 'left' },
+        { type: 'localeDropdown', position: 'right' },
         {
           href: APP_URLS.gitRepositoryURL,
           position: 'right',
           className: 'header-github-link',
         },
-        { type: 'localeDropdown' },
       ],
     },
     colorMode: {
