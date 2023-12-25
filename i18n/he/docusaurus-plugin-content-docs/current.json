@@ -1,13 +1,9 @@
 {
   "version.label": {
-    "message": "Next",
+    "message": "הבא",
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.- Programming": {
-    "message": "- תיכנות",
-    "description": "The label for category - Programming in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.job-interview": {
     "message": "- תיכנות",
     "description": "The label for category - Programming in sidebar tutorialSidebar"
   },

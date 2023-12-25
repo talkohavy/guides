@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-sidebar_label: '- Job Interview'
+sidebar_label: '- ראיון עבודה'
 ---
 
 # מה להגיד בראיון עבודה טכני

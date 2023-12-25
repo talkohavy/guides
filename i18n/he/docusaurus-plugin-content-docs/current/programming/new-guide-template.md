@@ -1,5 +1,5 @@
 ---
-sidebar_label: '999. New guide template'
+sidebar_label: '999. תבנית למדריך חדש'
 sidebar_position: 999
 # sidebar_class_name: specialSidebarLI
 ---
