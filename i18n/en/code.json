@@ -4,7 +4,7 @@
     "description": "The homepage welcome message"
   },
   "pages.home.tagline": {
-    "message": "Docusaurus Tutorial - 5min"
+    "message": "Start learning"
   },
   "theme.ErrorPageContent.title": {
     "message": "This page crashed.",
