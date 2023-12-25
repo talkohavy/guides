@@ -153,8 +153,13 @@ const config = {
   onBrokenMarkdownLinks: 'throw', // <--- was `warn`. I changed to `throw`.
   trailingSlash: true, // <--- this config is under test! Now it's set to `true`, should examine a case of `false` as well.
 
+  // -------------------------
+  // Category 7: Static assets
+  // -------------------------
+  staticDirectories: ['static'], // <--- defaults to 'static'
+
   // --------------------------------
-  // Category 7: Custom Configuration
+  // Category 8: Custom Configuration
   // --------------------------------
   // customFields: {},
 };
