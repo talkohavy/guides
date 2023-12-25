@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "דף הבית",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "לוגו האתר",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Guides": {
+    "message": "מדריכים",
+    "description": "Navbar item with label Guides"
+  },
+  "item.label.Blogs": {
+    "message": "בלוגים",
+    "description": "Navbar item with label Blogs"
+  }
+}

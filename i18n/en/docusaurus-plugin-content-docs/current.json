@@ -1,0 +1,42 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.- Programming": {
+    "message": "- Programming",
+    "description": "The label for category - Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.- Programming.link.generated-index.title": {
+    "message": "Programming Guides - overview",
+    "description": "The generated-index page title for category - Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.- Programming.link.generated-index.description": {
+    "message": "All the Programming Guides in one place!",
+    "description": "The generated-index page description for category - Programming in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.1. Software Concepts": {
+    "message": "1. Software Concepts",
+    "description": "The label for category 1. Software Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.1. Software Concepts.link.generated-index.title": {
+    "message": "Software Concepts - overview",
+    "description": "The generated-index page title for category 1. Software Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.1. Software Concepts.link.generated-index.description": {
+    "message": "All the important programming concepts you need to know.",
+    "description": "The generated-index page description for category 1. Software Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.- Photoshop": {
+    "message": "- Photoshop",
+    "description": "The label for category - Photoshop in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.- Photoshop.link.generated-index.title": {
+    "message": "Photoshop Intro",
+    "description": "The generated-index page title for category - Photoshop in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.- Photoshop.link.generated-index.description": {
+    "message": "Welcome to the Photoshop Guide",
+    "description": "The generated-index page description for category - Photoshop in sidebar tutorialSidebar"
+  }
+}
