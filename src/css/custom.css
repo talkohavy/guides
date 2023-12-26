@@ -159,3 +159,13 @@ a {
 a:hover {
   color: #fe4343;
 }
+
+.myButton {
+  border: 1px solid rgb(144, 144, 144);
+  padding: 8px 16px;
+  box-shadow: 0 0px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.myButton:hover {
+  border-radius: 12px;
+}

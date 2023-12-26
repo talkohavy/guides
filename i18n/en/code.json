@@ -4,6 +4,9 @@
     "description": "The homepage welcome message"
   },
   "pages.home.tagline": {
+    "message": "Docusaurus Tutorials & Guides - 5min"
+  },
+  "pages.home.mainButton": {
     "message": "Start learning"
   },
   "theme.ErrorPageContent.title": {

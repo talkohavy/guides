@@ -4,7 +4,10 @@
     "description": "The homepage welcome message"
   },
   "pages.home.tagline": {
-    "message": "מעבר לרשימת המדריכים"
+    "message": "מאגר המדריכים של דוקוזאורוס - כי זמן שווה כסף"
+  },
+  "pages.home.mainButton": {
+    "message": "לחץ כאן להתחיל"
   },
   "theme.ErrorPageContent.title": {
     "message": "העמוד קרס.",

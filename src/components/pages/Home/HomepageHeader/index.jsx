@@ -22,10 +22,11 @@ export default function HomepageHeader() {
 
         <p className='hero__subtitle'>
           {translate({ id: 'pages.home.tagline', message: "All the tutorials you'll ever need as a developer" })}
+          &nbsp;⏱️
         </p>
         <div className={styles.buttons}>
-          <Link className='button button--secondary button--lg' to='/docs/programming'>
-            {translate({ id: 'pages.home.tagline', message: 'Docusaurus Tutorial - 5min' })}&nbsp;⏱️
+          <Link className='button button--secondary button--lg myButton' to='/docs/programming'>
+            {translate({ id: 'pages.home.mainButton', message: 'Docusaurus Tutorial - 5min' })}
           </Link>
         </div>
       </div>
