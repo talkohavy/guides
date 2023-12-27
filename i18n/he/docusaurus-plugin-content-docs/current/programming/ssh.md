@@ -9,11 +9,11 @@ sidebar_position: 4
 
 The basic idea of how it works is such a clever, and dare I say cool, idea.
 
-### What we want to achieve
+### - What we want to achieve
 
 You have a `secret key`. You use that to `encode` some information, which converts it from a readable form to an un-readable form, effectively garbage, which looks like random noise. You then transfer that garbage to somebody else, and they are then able to `decrypt` it and get the message out. And anyone who's listening on your communication is unable to find out anything about the information that you are communicating.
 
-### Solution 1: Symmetric System (BAD)
+### - Solution 1: Symmetric System (BAD)
 
 The simplest way of thinking about it is to say, well there's a `message`, like _"hello"_, which I want to `encrypt`, and so I do some process on it, using a `secret key`, which then converts the `message` into nonsense (i.e. _xyz123_), and then you send it to the other person, and they `decrypt` it, with a process which is kind of the same but in reverse, using... the same `secret key`, and then I get _"hello"_ back on the other end.  
 And that's nice and simple, and it works.  
@@ -26,7 +26,7 @@ So the problem becomes, how do I send this `secret key` to you, without just sen
 In order for us to share the key safely we need a secure encrypted connection, but we can't establish a secure encrypted connection without key!  
 There's a way of solving this problem, which is with **Asymmetric Encryption**.
 
-### Solution 2: Asymmetric System (Good !)
+### - Solution 2: Asymmetric System (Good !)
 
 What you do is you generate 2 keys. key*A & key_B.
 And basically? It's the same as before. You got your `message` that says *"Hello"\_, you encrypt it with key_A, get garbage, send the garbage over to the other person, and then the other person uses key_B to decrypt it, and get out the `message`.  
@@ -51,7 +51,7 @@ That's a great secure system, in which we didn't have to meet up in a park in sh
 
 ## 2. What is SSH?
 
-### About SSH
+### - About SSH
 
 SSH, also known as `Secure Shell` or `Secure Socket Shell`, is a network protocol that gives users, particularly system administrators, a secure way to access a computer over an unsecured network.
 
@@ -61,7 +61,7 @@ In addition to providing strong encryption, SSH is widely used by network admini
 
 SSH refers both to the cryptographic network protocol and to the suite of utilities that implement that protocol. SSH uses the client-server model. An SSH server, by default, listens on the standard Transmission Control Protocol (TCP) port 22.
 
-### How does SSH work?
+### - How does SSH work?
 
 The most basic use of SSH is to connect to a remote host for a terminal session. The form of that command is the following:
 
@@ -86,11 +86,11 @@ Answering yes to the prompt will cause the session to continue, and the host key
 SSH supports several public key algorithms for authentication keys. You need to choose an algorithm for how to generate your key, which would in turn affect its and security level.  
 There are 4 available algorithms which you could choose to make that key.
 
-### option 1: rsa
+### - option 1: rsa
 
 An old algorithm based on the difficulty of factoring large numbers. A key size of at least 2048 bits is recommended for RSA; 4096 bits is better. RSA is getting old and significant advances are being made in factoring. Choosing a different algorithm may be advisable. It is quite possible the RSA algorithm will become practically breakable in the foreseeable future. All SSH clients support this algorithm.
 
-### option 2: dsa
+### - option 2: dsa
 
 An old US government Digital Signature Algorithm. It is based on the difficulty of computing discrete logarithms. A key size of 1024 would normally be used with it.
 
@@ -98,11 +98,11 @@ An old US government Digital Signature Algorithm. It is based on the difficulty 
 DSA in its original form is no longer recommended.
 :::
 
-### option 3: ecdsa
+### - option 3: ecdsa
 
 A new Digital Signature Algorithm standardized by the US government, using elliptic curves. This is probably a good algorithm for current applications. Only three key sizes are supported: 256, 384, and 521 (sick!) bits. We would recommend always using it with 521 bits, since the keys are still small and probably more secure than the smaller keys (even though they should be safe as well). Most SSH clients now support this algorithm.
 
-### option 4: ed25519
+### - option 4: ed25519
 
 This is a new algorithm added in OpenSSH. Support for it in clients is not yet universal. Thus, its use in general purpose applications may not yet be advisable.
 
@@ -150,7 +150,7 @@ cat ~/.ssh/id_rsa.pub
 
 ---
 
-## 5. Create A Second key-pair of public/private keys
+## 5. Create a second key-pair of public/private keys
 
 **<font size="6">TLDR;</font>**  
 **Two different `accounts`, on the same git provider, CANNOT share the same `public key`!!!**
