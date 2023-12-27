@@ -105,7 +105,7 @@ docker container rm ${CONTAINER_ID}
 ### • E: Run an image/container locally
 
 ```bash
-docker run -it --rm node bash
+docker run -it --rm node sh
 ```
 
 ### • F: How do I debug a running container?
