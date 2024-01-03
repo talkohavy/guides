@@ -112,20 +112,33 @@ This is a new algorithm added in OpenSSH. Support for it in clients is not yet u
 
 Run either one of these commands:
 
+- option 1: rsa
+
 ```bash
-# - option 1: rsa
 ssh-keygen -t rsa -b 4096 -C talkohavy
+```
 
-# - option 2: dsa
+- option 2: dsa
+
+```bash
 ssh-keygen -t dsa
+```
 
-# - option 3: ecdsa ( recommended!!! )
-ssh-keygen -t ecdsa -b 521 -f $HOME\.ssh\talkohavy_ecdsa -C talkohavy_ecdsa
+- option 3: ecdsa ( **recommended!!!** )
 
-# - option 4: ed25519
+```bash
+ssh-keygen -t ecdsa -b 521 -f ${HOME}/.ssh/id_ecdsa -C my-main-key
+```
+
+- option 4: ed25519
+
+```bash
 ssh-keygen -t ed25519
+```
 
-# - option 5: the default one (find out what this means!!!)
+- option 5: the default one (find out what this means!!!)
+
+```bash
 ssh-keygen
 ```
 
