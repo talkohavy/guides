@@ -689,7 +689,7 @@ ARG user1
 ARG buildNumber
 ```
 
-You can a _default value_ to and ARG, in case an outside value wasn't provided:
+You can set a _default value_ to and **ARG**, in case an outside value wasn't provided:
 
 ```dockerfile
 FROM busybox
