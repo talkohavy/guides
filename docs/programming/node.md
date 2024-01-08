@@ -725,7 +725,7 @@ Looking back at our diagram, any time you call process.nextTick() in a given pha
 
 ---
 
-## 14. List Of All Auto Emitted Events
+## 16. List Of All Auto Emitted Events
 
 All objects that emit events are instances of the EventEmitter class.
 
@@ -739,7 +739,7 @@ If someone is doing an HTTP upload the request object would emit a "body" event,
 
 ---
 
-## 15. Node V.s. Deno
+## 17. Node V.s. Deno
 
 Ryan Dahl about Node:
 
@@ -796,7 +796,7 @@ Uses message passing channels for invoking privileged system APIs and using bind
 
 ---
 
-## 17. Spawn Child Process
+## 18. Spawn Child Process
 
 If you want to harness the full power of your processor, you have what's known in node as "child processes".
 
