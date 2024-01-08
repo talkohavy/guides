@@ -76,7 +76,7 @@ docker run ...
 
 ## 2. Daily Use Workflow Process
 
-### • A: List all docker images on your machine
+### • A: List docker images
 
 ```bash
 docker images
@@ -86,10 +86,13 @@ docker images
 
 ```bash
 IMAGE_ID=
+```
+
+```bash
 docker image rm ${IMAGE_ID} -f
 ```
 
-### • C: List all containers
+### • C: List docker containers
 
 ```bash
 docker ps -a
@@ -102,30 +105,44 @@ CONTAINER_ID=
 docker container rm ${CONTAINER_ID}
 ```
 
-### • E: Run an image/container locally
+### • E: Build an image
 
 ```bash
-docker run -it --rm node sh
+docker build . -t <name>
 ```
 
-### • F: How do I debug a running container?
+### • E: Run an image locally
 
-Watching a running container's log just might be enough:
+To run an image and print all stdout in your terminal:
+
+```bash
+docker run -t --rm imageName
+```
+
+To run an image and also go inside the container to its terminal:
+
+```bash
+docker run -it --rm imageName sh
+```
+
+To run an image and expose its port to the host:
+
+```bash
+docker run -t --rm -p 8888:8888 imageName
+```
+
+### • F: How to debug a running container?
+
+To print out a container's logs:
 
 ```bash
 docker logs <name-or-image-id>
 ```
 
-But if it's not, and you need to tap into an already running container, docker allows you access in a manner similar to SSH, using `docker exec` command which was made for this purpose exactly.
+To ssh into a running container:
 
 ```bash
 docker exec -it <container_name_or_id> bash
-```
-
-### • G: How do I expose a container to my localhost? (Port mapping)
-
-```bash
-docker run redis -p 5678:5678
 ```
 
 ---
