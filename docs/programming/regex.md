@@ -17,7 +17,7 @@ When wanting to extract B, which comes after A, without also extracting A, `look
 General form:
 
 ```bash
-/(?=AAA)/
+/.+(?=AAA)/
 ```
 
 **Description**
@@ -32,7 +32,7 @@ _Example 1:_ grab just the name of a file ending with .d.ts extension
 
 ```javascript
 const exampleString = 'config.d.ts';
-const positiveLookaheadRegex = /(?=\.d\.ts)/g;
+const positiveLookaheadRegex = /.+(?=\.d\.ts)/g;
 
 positiveLookaheadRegex.test(exampleString); // returns true
 exampleString.match(positiveLookaheadRegex); // returns 'config' (without '.d.ts' !!!)
