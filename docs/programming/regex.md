@@ -132,14 +132,14 @@ You can already imagine.
 
 ### - Combining Lookahead with Lookbehind
 
-_Example:_
+_Example 1: return only the filename_
 
 ```javascript
-regex = /(?<=1)ca.(?=2)/g
-exampleString = '1cat2-and then-1car2';
+const exampleString = 'dist/config.d.ts';
+const regex = /(?<=\/).+(?=\.d\.ts)/g
 
 regex.test(exampleString);
-exampleString.match(regex); // returns ['cat', 'car']
+exampleString.match(regex); // returns 'config'
 ```
 
 ---
