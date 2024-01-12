@@ -1,6 +1,6 @@
 ---
-sidebar_label: '12. What is Long-Polling'
-sidebar_position: 10
+sidebar_label: '13. What is Long-Polling'
+sidebar_position: 11
 ---
 
 # What is Long Polling?
