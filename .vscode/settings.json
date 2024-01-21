@@ -51,7 +51,8 @@
   "[markdown]": {
     "editor.wordWrap": "on",
     "editor.renderWhitespace": "all",
-    "editor.acceptSuggestionOnEnter": "off"
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
   // ------------------------------------
@@ -62,6 +63,9 @@
     "source.fixAll.eslint": "explicit",
     "source.addMissingImports": "never"
   },
+  // ["markdown"]:{
+  //   "editor.defaultFormatter": "prettier",
+  // },
   // "prettier.configPath": ".prettierrc.js",
   // Enable eslint for all supported languages
   "eslint.validate": [
