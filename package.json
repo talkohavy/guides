@@ -3,11 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "docusaurus": "docusaurus",
-    "start": "docusaurus start",
+    "clean": "rm -rf node_modules",
+    "lint": "eslint -c ./.eslintrc.json '**/*/*.{js,jsx,tsx,ts,d.ts,cjs,mjs}' --report-unused-disable-directives --max-warnings 0",
+    "lint-biome": "biome lint ./src",
+    "lint-fix": "eslint --fix -c .eslintrc.cjs '**/*/*.{js,jsx,tsx,ts,d.ts,cjs,mjs}'",
+    "format": "biome format --verbose ./src",
+    "format-prettier": "prettier . --check --config .prettierrc.mjs",
+    "format-fix-prettier": "prettier . --write --config .prettierrc.mjs",
+    "test": "node --test",
+    "build": "docusaurus build",
     "dev": "docusaurus start",
     "dev-heb": "docusaurus start --locale he",
-    "build": "docusaurus build",
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
@@ -16,9 +24,6 @@
     "write-translations-heb": "docusaurus write-translations --locale he",
     "translate-docs": "./toolbox/translateDocs.sh",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "lint": "eslint -c ./.eslintrc.json '**/*/*.{js,jsx,tsx,ts,d.ts,cjs,mjs}' --report-unused-disable-directives --max-warnings 0",
-    "check-format": "prettier . --check --config .prettierrc.mjs",
-    "format": "prettier . --write --config .prettierrc.mjs",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -32,6 +37,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.3",
     "@docusaurus/module-type-aliases": "3.1.0",
     "@docusaurus/types": "3.1.0",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
@@ -51,8 +57,16 @@
     "typescript": "^5.3.3"
   },
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
-    "development": ["last 3 chrome version", "last 3 firefox version", "last 5 safari version"]
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
   },
   "engines": {
     "node": ">=18.0"
