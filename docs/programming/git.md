@@ -1,5 +1,5 @@
 ---
-sidebar_label: '5. Git'
+sidebar_label: '6. Git'
 sidebar_position: 3
 ---
 

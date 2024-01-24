@@ -1,5 +1,5 @@
 ---
-sidebar_label: '4. Design Patterns'
+sidebar_label: '5. Design Patterns'
 sidebar_position: 2
 # sidebar_class_name: specialSidebarLI
 ---

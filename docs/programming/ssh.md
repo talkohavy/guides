@@ -1,5 +1,5 @@
 ---
-sidebar_label: '6. SSH'
+sidebar_label: '7. SSH'
 sidebar_position: 4
 ---
 

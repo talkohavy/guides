@@ -1,5 +1,5 @@
 ---
-sidebar_label: '11. Configuration Server'
+sidebar_label: '12. Configuration Server'
 sidebar_position: 9
 ---
 

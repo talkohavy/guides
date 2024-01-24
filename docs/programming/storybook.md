@@ -1,5 +1,5 @@
 ---
-sidebar_label: '8. Storybook'
+sidebar_label: '9. Storybook'
 sidebar_position: 6
 ---
 

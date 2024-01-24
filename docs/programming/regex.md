@@ -1,5 +1,5 @@
 ---
-sidebar_label: '12. Regex'
+sidebar_label: '13. Regex'
 sidebar_position: 10
 ---
 
