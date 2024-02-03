@@ -38,6 +38,7 @@ As of today, here's how my .gitconfig looks:
 	unstage = restore --staged .
 	s = status
 	comit = commit
+	amend = commit --amend --no-edit
 [user]
 	name = Tal Kohavy
 	email = talkohavy@gmail.com
