@@ -821,7 +821,9 @@ In a case of a NodePort type of service, this is a way to open up a service in y
 
 ## **5. Kubectl Commands**
 
-### - Command 999: kubectl config get-contexts
+### - Command 1: get contexts list
+
+**The command:**
 
 ```bash
 kubectl config get-contexts
@@ -833,7 +835,23 @@ Display one or many contexts from the kubeconfig file.
 
 <br/>
 
-### - Command 1: kubectl config view
+### - Command 2: switch to context
+
+**The command:**
+
+```bash
+kubectl config use-context context-name
+```
+
+**Description:**
+
+Display one or many contexts from the kubeconfig file.
+
+<br/>
+
+### - Command 3: view config settings
+
+**The command:**
 
 ```bash
 kubectl config view
@@ -845,7 +863,9 @@ Displays a merged kubeconfig settings or a specified kubeconfig file.
 
 <br/>
 
-### - Command 2: kubectl cluster-info
+### - Command 4: show cluster-info
+
+**The command:**
 
 ```bash
 kubectl cluster-info
@@ -865,7 +885,9 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 <br/>
 
-### - Command 3: kubectl get namespaces
+### - Command 5: show all namespaces
+
+**The command:**
 
 ```bash
 kubectl get namespaces
@@ -889,7 +911,9 @@ kube-system Active 29m
 
 <br/>
 
-### - Command 4: kubectl get nodes
+### - Command 6: get nodes
+
+**The command:**
 
 ```bash
 kubectl get nodes <flags>
@@ -923,7 +947,9 @@ storage-provisioner 1/1 Running 1 (54m ago) 54m
 
 <br/>
 
-### - Command 5: kubectl run
+### - Command 7: manually create pod
+
+**The command:**
 
 ```bash
 kubectl run <name> --image=<image-name>
@@ -941,7 +967,9 @@ We usually don't use this command to create new pods. We would use `create deplo
 
 <br/>
 
-### - Command 6: kubectl get deployments
+### - Command 8: get deployments
+
+**The command:**
 
 ```bash
 kubectl get deployments {flags}
@@ -968,7 +996,9 @@ Get deployments.
 
 <br/>
 
-### - Command 7: kubectl create deployment
+### - Command 9: manually create deployment
+
+**The command:**
 
 ```bash
 kubectl create deployment <deployment-name> --image=<image-name>
@@ -1007,7 +1037,9 @@ Google's Documentation: Deployments represent a set of multiple identical Pods w
 
 <br/>
 
-### - Command 8: kubectl describe deployment
+### - Command 10: show description of deployment
+
+**The command:**
 
 ```bash
 kubectl describe deployment <deployment-name>
@@ -1081,7 +1113,9 @@ Normal ScalingReplicaSet 11m deployment-controller Scaled up replica set nginx-d
 
 <br/>
 
-### - Command 9: kubectl scale deployment
+### - Command 11: manually scale a deployment
+
+**The command:**
 
 ```bash
 kubectl scale deployment <deployment-name> --replicas=#number
@@ -1099,7 +1133,9 @@ deployment.apps/nginx-deployment scaled
 
 <br/>
 
-### - Command 10: kubectl get rs
+### - Command 12: get list of all replica sets
+
+**The command:**
 
 ```bash
 kubectl get rs
@@ -1117,7 +1153,9 @@ Basically `kubectl get deployments` & `kubectl get rs` are both doing the same t
 
 <br/>
 
-### - Command 11: kubectl get pods
+### - Command 13: get pods
+
+**The command:**
 
 ```bash
 kubectl get pods <flags>
@@ -1153,7 +1191,9 @@ Also, notice how to pods' IPs are internal IPs. Meaning, they cannot be accessed
 
 <br/>
 
-### - Command 12: kubectl describe pod
+### - Command 14: show description of a pod
+
+**The command:**
 
 ```bash
 kubectl describe pod <pod-name>
@@ -1181,7 +1221,9 @@ Some really useful information coming from the response is:
 
 <br/>
 
-### - Command 13: kubectl delete pod
+### - Command 15: manually delete a pod
+
+**The command:**
 
 ```bash
 kubectl delete pod <pod-name>
@@ -1196,7 +1238,9 @@ A pod that's deleted, which was created by a deployment, would also be deleted f
 
 <br/>
 
-### - Command 14: kubectl expose deployment
+### - Command 16: manually expose a deployment
+
+**The command:**
 
 ```bash
 kubectl expose deployment <deploy-name> --type=LoadBalancer --name=<my-service> --port=<port> --target-port=<tar-port>
@@ -1230,7 +1274,9 @@ service/my-service exposed
 
 <br/>
 
-### - Command 15: kubectl get services / a specific service
+### - Command 17: get services / a specific service
+
+**The command:**
 
 The plural form gets you many:
 
@@ -1263,7 +1309,7 @@ my-service LoadBalancer 10.109.250.82 <pending> 8080:30000/TCP 64s
 
 <br/>
 
-### - Command 16: kubectl describe services
+### - Command 18: show description of service
 
 ```bash
 kubectl describe service <my-service>
@@ -1309,7 +1355,9 @@ Events: <none>
 
 <br/>
 
-### - Command 17: kubectl delete all
+### - Command 19: manually delete all resources
+
+**The command:**
 
 ```bash
 kubectl delete all --all
@@ -1330,7 +1378,9 @@ immediately after the `delete all` command, you'll see some pods are still alive
 
 <br/>
 
-### - Command 18: kubectl exec
+### - Command 20: kubectl exec
+
+**The command:**
 
 ```bash
 kubectl exec <pod-name> [-c CONTAINER] [flags] -- COMMAND [args...]
