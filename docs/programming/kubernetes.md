@@ -821,6 +821,18 @@ In a case of a NodePort type of service, this is a way to open up a service in y
 
 ## **5. Kubectl Commands**
 
+### - Command 999: kubectl config get-contexts
+
+```bash
+kubectl config get-contexts
+```
+
+**Description:**
+
+Display one or many contexts from the kubeconfig file.
+
+<br/>
+
 ### - Command 1: kubectl config view
 
 ```bash
