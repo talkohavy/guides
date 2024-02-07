@@ -288,12 +288,17 @@ Show logs inside a pod.
 **The command:**
 
 ```bash
-kubectl exec <pod-name> [-c CONTAINER] [flags] -- COMMAND [args...]
+kubectl exec -it -n <namespace-name> <pod-name> -c <container-name> -- sh
 ```
 
 **Description:**
 
-Execute a command in a container.
+Using this command you can:
+
+1. Execute a command inside a **running** pod.
+2. Execute a command inside a **running** container inside of a **running** pod.
+
+If the `-n` flag is omitted, the command searches for the pod name inside the `default` namespace. If the `-c` flag is omitted, you are ssh'ing to the pod, and if you _are_ adding the `-c` flag, you are ssh'ing into the container inside the running pod.
 
 This command is very similar to the `docker exec` command. It allows us to take any of the pods inside our cluster, and execute any command we want inside of the running `container` inside of the `pod`.
 
@@ -302,7 +307,7 @@ This command is very similar to the `docker exec` command. It allows us to take 
 By running the following command:
 
 ```bash
-kubectl exec <pod-name> -- nslookup nginx
+kubectl exec -it -n solve-dev solvebe-admin-server-3d45e6 -c solve-admin-server -- sh
 ```
 
 we try to resolve the "nginx" name from inside of the container which belongs to "pod-name". The response should look like:
