@@ -7,7 +7,7 @@ sidebar_position: 8
 
 ## **1. Kubectl Commands**
 
-### - Command 1: show list of all contexts
+### - Command 1: show all contexts list
 
 **The command:**
 
@@ -85,7 +85,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 <br/>
 
-### - Command 6: show all namespaces
+### - Command 6: get namespaces
 
 **The command:**
 
@@ -111,7 +111,109 @@ kube-system Active 29m
 
 <br/>
 
-### - Command 7: get nodes
+### - Command 7: get deployments
+
+**The command:**
+
+```bash
+kubectl get deployments {flags}
+```
+
+or in the singular form...
+
+```bash
+kubectl get deployment {flags}
+```
+
+**Description:**
+
+Get deployments.
+
+**Commonly used options:**
+
+- **Flag 1: -n | --namespace**  
+  By default, `kubectl get deployments` returns a list of all the deployments within the `default` namespace. To get deployments from another namespace, use the `--namespace` flag, followed by the namespace's name.
+
+  ```bash
+  kubectl get deployments --namespace=kube-system
+  ```
+
+<br/>
+
+### - Command 8: get pods
+
+**The command:**
+
+```bash
+kubectl get pods <flags>
+```
+
+**Description:**
+
+Get pods.
+
+In the response of the `kubectl get pods` command, under the pods' names, you'll notice 3 things:
+
+- The deployment's name
+- The replicaSet's hash
+- The pod's unique hash
+
+Also, notice how to pods' IPs are internal IPs. Meaning, they cannot be accessed from the outside world (which is a good thing!).
+
+**Commonly used options:**
+
+- **Flag 1: -n | --namespace**  
+  By default, `kubectl get pods` returns a list of all pod within the `default` namespace. To get pod living on another namespace, use the `--namespace` flag, followed by the namespace's name.
+
+  ```bash
+  kubectl get pod --namespace=luckylove
+  ```
+
+- **Flag 2: -o**  
+  To view a little more information, like the ip address for example, add the `-o wide` option:
+
+  ```bash
+  kubectl get pods -o wide
+  ```
+
+<br/>
+
+### - Command 9: get services
+
+**The command:**
+
+The plural form gets you many:
+
+```bash
+kubectl get services
+# or...
+kubectl get svc
+```
+
+The singular form gets a specific service: (by name)
+
+```bash
+kubectl get service <service-name>
+```
+
+**Description:**
+
+Feels like this is an unnecessary command!
+
+It doesn't give you more information than what `kubectl get services` gives back! It is more of a regex filterer to the `kubectl get services` command.  
+Displays information about Services / a specific Service.
+
+**A response example would look like:**
+
+```bash
+NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
+kubernetes ClusterIP 10.96.0.1 <none> 443/TCP 10h
+my-service LoadBalancer 10.109.250.82 <pending> 8080:30000/TCP 64s
+```
+
+<br/>
+
+### - Command 10: get nodes
 
 **The command:**
 
@@ -147,97 +249,118 @@ storage-provisioner 1/1 Running 1 (54m ago) 54m
 
 <br/>
 
-### - Command 8: manually create pod
+### - Command 11: get replica sets
 
 **The command:**
 
 ```bash
-kubectl run <name> --image=<image-name>
+kubectl get rs
 ```
 
 **Description:**
 
-A way to manually create a pod.
+Get replica sets.
 
-`kubectl run` command is very similar to the `docker run` command. Just as `docker run` creates one docker container, `kubectl run` creates one single pod. `kubectl run` creates a new pod, and inside it, pulls the image you specified, and runs a new container based on that.
+Basically, when you create a `deployment`, it also creates a ReplicaSet under the hood. With `kubectl get rs` you can see all the replica sets which were created. Although you can create ReplicaSets directly, it is not recommended, and you should always be using deployments to do it for you.
 
 :::info
-We usually don't use this command to create new pods. We would use `create deployment` for that purpose instead.
+Basically `kubectl get deployments` & `kubectl get rs` are both doing the same thing, only in the latter you could also see the replicaSet's hash, where in the former it is hidden from you, and you can only see the deployment's name.
 :::
 
 <br/>
 
-### - Command 9: get deployments
+### - Command 12: show logs from a pod
 
 **The command:**
 
 ```bash
-kubectl get deployments {flags}
-```
-
-or in the singular form...
-
-```bash
-kubectl get deployment {flags}
+kubectl logs <pod-name> -n <namespace-name> -f
 ```
 
 **Description:**
 
-Get deployments.
-
-**Commonly used options:**
-
-- **Flag 1: -n | --namespace**  
-  By default, `kubectl get deployments` returns a list of all the deployments within the `default` namespace. To get deployments from another namespace, use the `--namespace` flag, followed by the namespace's name.
-
-  ```bash
-  kubectl get deployments --namespace=kube-system
-  ```
+Show logs inside a pod.
 
 <br/>
 
-### - Command 10: manually create deployment
+### - Command 13: kubectl exec
 
 **The command:**
 
 ```bash
-kubectl create deployment <deployment-name> --image=<image-name>
+kubectl exec <pod-name> [-c CONTAINER] [flags] -- COMMAND [args...]
 ```
 
 **Description:**
 
-Creates a new `deployment` with exactly 1 new `pod`.
+Execute a command in a container.
 
-The `deployment` is given the name you specified. `deployment-name` is a **required** field. `image-name` is a **required** field.  
-Inside the newly created `pod`, an image is pulled, built, and a `container` starts to run. This is according to the image you provided. A `deployment` can later be scaled up, or down as you like, to include more pods.
+This command is very similar to the `docker exec` command. It allows us to take any of the pods inside our cluster, and execute any command we want inside of the running `container` inside of the `pod`.
 
-Even if you want a deployment to have just 1 pod, it is still more reasonable to create a deployment with 1 pod, instead of creating 1 pod outside of a deployment using the `kubectl run` command (A command which creates a pod). There are 3 reasons for that:
+**Common Use-Case:**
 
-1. **Scale**: Creating a pod with `kubectl run` doesn't let you scale. You wouldn't be able to increase the quantity of the pods if you needed to.
-2. **Failure**: If the pod created outside a deployment dies for some reason, it won't restart itself.
-3. **Load Balancing**: In a case of 2+ pods, even if you've found a way to get around the 2 points above, and create an army of pods, you'd still need to create your own mechanism for load balancing. A deployment basically acts as a load balancer out of the box automatically for you.
-
-For those reasons mentioned above, the most common way to create `pods` (whether it's 1 or 2+ identical ones) is by wrapping them in a `deployment`. With a `deployment`, you're able to increase or decrease the quantity of the pods, modify configuration, and so much more. It would even distribute the load (load-balancing) automatically for you! That's the whole purpose of the deployment. A minimal downside to this is that you won't be able to know which pod exactly gave you back the response, but is it really a downside though? I mean, they're 100% identical.
-
-**Commonly used options:**
-
-- **Flag 1: -n | --namespace**  
-  By default, `kubectl create deployment` creates a deployment in the `default` namespace. To create a deployment in another namespace, use the `--namespace` flag, followed by the namespace's name.
-
-  ```bash
-  kubectl create deployment <deployment-name> --image <image-name> --namespace=frontend
-  ```
-
-**A response example would look like:**
+By running the following command:
 
 ```bash
-deployment.apps/nginx-deployment created
-Google's Documentation: Deployments represent a set of multiple identical Pods with no unique identities. A Deployment runs multiple replicas of your application and automatically replaces any instances that fail or become unresponsive. In this way, Deployments help ensure that one or more instances of your application are available to serve user requests. Deployments are managed by the Kubernetes Deployment controller.
+kubectl exec <pod-name> -- nslookup nginx
 ```
+
+we try to resolve the "nginx" name from inside of the container which belongs to "pod-name". The response should look like:
+
+```bash
+Name: nginx.default.svc.cluster.local
+Address: 10.106.227.35
+```
+
+The value "10.106.227.35" under IP address is what we got back from the DNS server when we made the request `nslookup nginx`. But where does this IP come from? If you type in the command:
+
+```bash
+k get svc
+```
+
+You should see:
+
+```bash
+NAME    CLUSTER-IP
+nginx   10.106.227.35
+```
+
+And notice that the 2 IPs match! They're identical.  
+Now kubernetes is able to resolve the name of the service, to the corresponding ClusterIP.
 
 <br/>
 
-### - Command 11: show description of deployment
+### - Command 14: describe pod
+
+**The command:**
+
+```bash
+kubectl describe pod <pod-name>
+```
+
+**Description:**
+
+Get a full description about a specific pod (identify by name).
+
+Some really useful information coming from the response is:
+
+- **name**: name of the pod
+- **namespace**: the namespace it belongs to (automatically assigned to default).
+- **Start time**: the start time of the pod.
+- **Status**: the status of the pod (running, stopped, etc.)
+- **IP**: the IP address which was assigned to this specific pod. Note that this is an internal IP address! You will not be able to connect to it from outside. In order to be able to connect to pods, you have to create services in kubernetes.
+
+- **Containers & Container ID**: Containers hold a list of all docker containers which are running inside of our pod. An item on that list would have a container ID, which is the container ID that was generated/given to it.
+
+- **Controlled By**: this field is related to a subject called deployment - where many identical pods are considered as one collection, and so with this field we could see who controls all those identical pods. This fields basically says: "I belong to this deployment". The value here looks something like: `ReplicaSet/<deployment-name>-<replicaSet-hash>`
+
+- **Image**: which image was utilized for this particular container. That's the image which was specified using the --image flag upon creation of the pod.
+
+- **Events**: in the events section you can see a message saying the pod was successfully assigned to minikube node, a message about the image which was pulled, creation of the container, and starting of tat container.
+
+<br/>
+
+### - Command 15: describe deployment
 
 **The command:**
 
@@ -313,203 +436,7 @@ Normal ScalingReplicaSet 11m deployment-controller Scaled up replica set nginx-d
 
 <br/>
 
-### - Command 12: manually scale a deployment
-
-**The command:**
-
-```bash
-kubectl scale deployment <deployment-name> --replicas=#number
-```
-
-**Description:**
-
-Scales a `deployment` by its name, and increases/decreases the number of `pods` living inside it according to the number of replicas provided, and based on the number of replicas currently living in the deployment.
-
-**A response example would look like:**
-
-```bash
-deployment.apps/nginx-deployment scaled
-```
-
-<br/>
-
-### - Command 13: get list of all replica sets
-
-**The command:**
-
-```bash
-kubectl get rs
-```
-
-**Description:**
-
-Get replica sets.
-
-Basically, when you create a `deployment`, it also creates a ReplicaSet under the hood. With `kubectl get rs` you can see all the replica sets which were created. Although you can create ReplicaSets directly, it is not recommended, and you should always be using deployments to do it for you.
-
-:::info
-Basically `kubectl get deployments` & `kubectl get rs` are both doing the same thing, only in the latter you could also see the replicaSet's hash, where in the former it is hidden from you, and you can only see the deployment's name.
-:::
-
-<br/>
-
-### - Command 14: get pods
-
-**The command:**
-
-```bash
-kubectl get pods <flags>
-```
-
-**Description:**
-
-Get pods.
-
-In the response of the `kubectl get pods` command, under the pods' names, you'll notice 3 things:
-
-- The deployment's name
-- The replicaSet's hash
-- The pod's unique hash
-
-Also, notice how to pods' IPs are internal IPs. Meaning, they cannot be accessed from the outside world (which is a good thing!).
-
-**Commonly used options:**
-
-- **Flag 1: -n | --namespace**  
-  By default, `kubectl get pods` returns a list of all pod within the `default` namespace. To get pod living on another namespace, use the `--namespace` flag, followed by the namespace's name.
-
-  ```bash
-  kubectl get pod --namespace=luckylove
-  ```
-
-- **Flag 2: -o**  
-  To view a little more information, like the ip address for example, add the `-o wide` option:
-
-  ```bash
-  kubectl get pods -o wide
-  ```
-
-<br/>
-
-### - Command 15: show description of a pod
-
-**The command:**
-
-```bash
-kubectl describe pod <pod-name>
-```
-
-**Description:**
-
-Get a full description about a specific pod (identify by name).
-
-Some really useful information coming from the response is:
-
-- **name**: name of the pod
-- **namespace**: the namespace it belongs to (automatically assigned to default).
-- **Start time**: the start time of the pod.
-- **Status**: the status of the pod (running, stopped, etc.)
-- **IP**: the IP address which was assigned to this specific pod. Note that this is an internal IP address! You will not be able to connect to it from outside. In order to be able to connect to pods, you have to create services in kubernetes.
-
-- **Containers & Container ID**: Containers hold a list of all docker containers which are running inside of our pod. An item on that list would have a container ID, which is the container ID that was generated/given to it.
-
-- **Controlled By**: this field is related to a subject called deployment - where many identical pods are considered as one collection, and so with this field we could see who controls all those identical pods. This fields basically says: "I belong to this deployment". The value here looks something like: `ReplicaSet/<deployment-name>-<replicaSet-hash>`
-
-- **Image**: which image was utilized for this particular container. That's the image which was specified using the --image flag upon creation of the pod.
-
-- **Events**: in the events section you can see a message saying the pod was successfully assigned to minikube node, a message about the image which was pulled, creation of the container, and starting of tat container.
-
-<br/>
-
-### - Command 16: manually delete a pod
-
-**The command:**
-
-```bash
-kubectl delete pod <pod-name>
-```
-
-**Description:**
-
-Deletes a pod by name.
-
-A pod that's deleted, which was manually created, would be deleted forever.  
-A pod that's deleted, which was created by a deployment, would also be deleted forever, but a few seconds later, the deployment would take care of creating a new pod to take its place, and that pod would have a different hash and a different IP address.
-
-<br/>
-
-### - Command 17: manually expose a deployment
-
-**The command:**
-
-```bash
-kubectl expose deployment <deploy-name> --type=LoadBalancer --name=<my-service> --port=<port> --target-port=<tar-port>
-```
-
-**Description:**
-
-Create a `service` object that exposes the deployment.
-
-**Commonly used options:**
-
-- **Flag 1: --target-port**  
-   The _port number on the container_ that the service should direct traffic to.
-
-  ```bash
-  kubectl expose deployment nginx-deployment --type=LoadBalancer --name=my-service --port=8000 --target-port=80
-  ```
-
-- **Flag 2: --port**  
-   The port number on the `service` to which external resources should tap into.
-
-  ```bash
-  kubectl expose deployment nginx-deployment --type=LoadBalancer --name=my-service --port=5000 --target-port=80
-  ```
-
-**A response example would look like:**
-
-```bash
-service/my-service exposed
-```
-
-<br/>
-
-### - Command 18: get services / a specific service
-
-**The command:**
-
-The plural form gets you many:
-
-```bash
-kubectl get services
-# or...
-kubectl get svc
-```
-
-The singular form gets a specific service: (by name)
-
-```bash
-kubectl get service <service-name>
-```
-
-**Description:**
-
-Feels like this is an unnecessary command!
-
-It doesn't give you more information than what `kubectl get services` gives back! It is more of a regex filterer to the `kubectl get services` command.  
-Displays information about Services / a specific Service.
-
-**A response example would look like:**
-
-```bash
-NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
-kubernetes ClusterIP 10.96.0.1 <none> 443/TCP 10h
-my-service LoadBalancer 10.109.250.82 <pending> 8080:30000/TCP 64s
-```
-
-<br/>
-
-### - Command 19: show description of service
+### - Command 16: describe service
 
 ```bash
 kubectl describe service <my-service>
@@ -555,7 +482,141 @@ Events: <none>
 
 <br/>
 
-### - Command 20: manually delete all resources
+### - Command 17: manually delete a pod
+
+**The command:**
+
+```bash
+kubectl delete pod <pod-name>
+```
+
+**Description:**
+
+Deletes a pod by name.
+
+A pod that's deleted, which was manually created, would be deleted forever.  
+A pod that's deleted, which was created by a deployment, would also be deleted forever, but a few seconds later, the deployment would take care of creating a new pod to take its place, and that pod would have a different hash and a different IP address.
+
+<br/>
+
+### - Command 18: manually create pod
+
+**The command:**
+
+```bash
+kubectl run <name> --image=<image-name>
+```
+
+**Description:**
+
+A way to manually create a pod.
+
+`kubectl run` command is very similar to the `docker run` command. Just as `docker run` creates one docker container, `kubectl run` creates one single pod. `kubectl run` creates a new pod, and inside it, pulls the image you specified, and runs a new container based on that.
+
+:::info
+We usually don't use this command to create new pods. We would use `create deployment` for that purpose instead.
+:::
+
+<br/>
+
+### - Command 19: manually create deployment
+
+**The command:**
+
+```bash
+kubectl create deployment <deployment-name> --image=<image-name>
+```
+
+**Description:**
+
+Creates a new `deployment` with exactly 1 new `pod`.
+
+The `deployment` is given the name you specified. `deployment-name` is a **required** field. `image-name` is a **required** field.  
+Inside the newly created `pod`, an image is pulled, built, and a `container` starts to run. This is according to the image you provided. A `deployment` can later be scaled up, or down as you like, to include more pods.
+
+Even if you want a deployment to have just 1 pod, it is still more reasonable to create a deployment with 1 pod, instead of creating 1 pod outside of a deployment using the `kubectl run` command (A command which creates a pod). There are 3 reasons for that:
+
+1. **Scale**: Creating a pod with `kubectl run` doesn't let you scale. You wouldn't be able to increase the quantity of the pods if you needed to.
+2. **Failure**: If the pod created outside a deployment dies for some reason, it won't restart itself.
+3. **Load Balancing**: In a case of 2+ pods, even if you've found a way to get around the 2 points above, and create an army of pods, you'd still need to create your own mechanism for load balancing. A deployment basically acts as a load balancer out of the box automatically for you.
+
+For those reasons mentioned above, the most common way to create `pods` (whether it's 1 or 2+ identical ones) is by wrapping them in a `deployment`. With a `deployment`, you're able to increase or decrease the quantity of the pods, modify configuration, and so much more. It would even distribute the load (load-balancing) automatically for you! That's the whole purpose of the deployment. A minimal downside to this is that you won't be able to know which pod exactly gave you back the response, but is it really a downside though? I mean, they're 100% identical.
+
+**Commonly used options:**
+
+- **Flag 1: -n | --namespace**  
+  By default, `kubectl create deployment` creates a deployment in the `default` namespace. To create a deployment in another namespace, use the `--namespace` flag, followed by the namespace's name.
+
+  ```bash
+  kubectl create deployment <deployment-name> --image <image-name> --namespace=frontend
+  ```
+
+**A response example would look like:**
+
+```bash
+deployment.apps/nginx-deployment created
+Google's Documentation: Deployments represent a set of multiple identical Pods with no unique identities. A Deployment runs multiple replicas of your application and automatically replaces any instances that fail or become unresponsive. In this way, Deployments help ensure that one or more instances of your application are available to serve user requests. Deployments are managed by the Kubernetes Deployment controller.
+```
+
+<br/>
+
+### - Command 20: manually expose a deployment
+
+**The command:**
+
+```bash
+kubectl expose deployment <deploy-name> --type=LoadBalancer --name=<my-service> --port=<port> --target-port=<tar-port>
+```
+
+**Description:**
+
+Create a `service` object that exposes the deployment.
+
+**Commonly used options:**
+
+- **Flag 1: --target-port**  
+   The _port number on the container_ that the service should direct traffic to.
+
+  ```bash
+  kubectl expose deployment nginx-deployment --type=LoadBalancer --name=my-service --port=8000 --target-port=80
+  ```
+
+- **Flag 2: --port**  
+   The port number on the `service` to which external resources should tap into.
+
+  ```bash
+  kubectl expose deployment nginx-deployment --type=LoadBalancer --name=my-service --port=5000 --target-port=80
+  ```
+
+**A response example would look like:**
+
+```bash
+service/my-service exposed
+```
+
+<br/>
+
+### - Command 21: manually scale a deployment
+
+**The command:**
+
+```bash
+kubectl scale deployment <deployment-name> --replicas=#number
+```
+
+**Description:**
+
+Scales a `deployment` by its name, and increases/decreases the number of `pods` living inside it according to the number of replicas provided, and based on the number of replicas currently living in the deployment.
+
+**A response example would look like:**
+
+```bash
+deployment.apps/nginx-deployment scaled
+```
+
+<br/>
+
+### - Command 22: manually delete all resources
 
 **The command:**
 
@@ -577,51 +638,6 @@ kubectl get pods
 immediately after the `delete all` command, you'll see some pods are still alive! However notice their status, it's marked as `Terminating`. Also, note that this command also deleted the default `service` created by Kubernetes, which is also called Kubernetes, but this `service` got re-created again. Check its **AGE** and you'll see that it's only alive for a few seconds.
 
 <br/>
-
-### - Command 21: kubectl exec
-
-**The command:**
-
-```bash
-kubectl exec <pod-name> [-c CONTAINER] [flags] -- COMMAND [args...]
-```
-
-**Description:**
-
-Execute a command in a container.
-
-This command is very similar to the `docker exec` command. It allows us to take any of the pods inside our cluster, and execute any command we want inside of the running `container` inside of the `pod`.
-
-**Common Use-Case:**
-
-By running the following command:
-
-```bash
-kubectl exec <pod-name> -- nslookup nginx
-```
-
-we try to resolve the "nginx" name from inside of the container which belongs to "pod-name". The response should look like:
-
-```bash
-Name: nginx.default.svc.cluster.local
-Address: 10.106.227.35
-```
-
-The value "10.106.227.35" under IP address is what we got back from the DNS server when we made the request `nslookup nginx`. But where does this IP come from? If you type in the command:
-
-```bash
-k get svc
-```
-
-You should see:
-
-```bash
-NAME    CLUSTER-IP
-nginx   10.106.227.35
-```
-
-And notice that the 2 IPs match! They're identical.  
-Now kubernetes is able to resolve the name of the service, to the corresponding ClusterIP.
 
 ---
 
