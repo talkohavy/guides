@@ -7,7 +7,7 @@ sidebar_position: 8
 
 ## **1. Kubectl Commands**
 
-### - Command 1: get contexts list
+### - Command 1: show list of all contexts
 
 **The command:**
 
@@ -21,7 +21,21 @@ Display one or many contexts from the kubeconfig file.
 
 <br/>
 
-### - Command 2: switch to context
+### - Command 2: get current context
+
+**The command:**
+
+```bash
+kubectl config current-context
+```
+
+**Description:**
+
+Displays the current-context
+
+<br/>
+
+### - Command 3: switch to a context
 
 **The command:**
 
@@ -35,7 +49,7 @@ Display one or many contexts from the kubeconfig file.
 
 <br/>
 
-### - Command 3: view config settings
+### - Command 4: view config settings
 
 **The command:**
 
@@ -49,7 +63,7 @@ Displays a merged kubeconfig settings or a specified kubeconfig file.
 
 <br/>
 
-### - Command 4: show cluster-info
+### - Command 5: show cluster-info
 
 **The command:**
 
@@ -71,7 +85,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 <br/>
 
-### - Command 5: show all namespaces
+### - Command 6: show all namespaces
 
 **The command:**
 
@@ -97,7 +111,7 @@ kube-system Active 29m
 
 <br/>
 
-### - Command 6: get nodes
+### - Command 7: get nodes
 
 **The command:**
 
@@ -133,7 +147,7 @@ storage-provisioner 1/1 Running 1 (54m ago) 54m
 
 <br/>
 
-### - Command 7: manually create pod
+### - Command 8: manually create pod
 
 **The command:**
 
@@ -153,7 +167,7 @@ We usually don't use this command to create new pods. We would use `create deplo
 
 <br/>
 
-### - Command 8: get deployments
+### - Command 9: get deployments
 
 **The command:**
 
@@ -182,7 +196,7 @@ Get deployments.
 
 <br/>
 
-### - Command 9: manually create deployment
+### - Command 10: manually create deployment
 
 **The command:**
 
@@ -223,7 +237,7 @@ Google's Documentation: Deployments represent a set of multiple identical Pods w
 
 <br/>
 
-### - Command 10: show description of deployment
+### - Command 11: show description of deployment
 
 **The command:**
 
@@ -299,7 +313,7 @@ Normal ScalingReplicaSet 11m deployment-controller Scaled up replica set nginx-d
 
 <br/>
 
-### - Command 11: manually scale a deployment
+### - Command 12: manually scale a deployment
 
 **The command:**
 
@@ -319,7 +333,7 @@ deployment.apps/nginx-deployment scaled
 
 <br/>
 
-### - Command 12: get list of all replica sets
+### - Command 13: get list of all replica sets
 
 **The command:**
 
@@ -339,7 +353,7 @@ Basically `kubectl get deployments` & `kubectl get rs` are both doing the same t
 
 <br/>
 
-### - Command 13: get pods
+### - Command 14: get pods
 
 **The command:**
 
@@ -377,7 +391,7 @@ Also, notice how to pods' IPs are internal IPs. Meaning, they cannot be accessed
 
 <br/>
 
-### - Command 14: show description of a pod
+### - Command 15: show description of a pod
 
 **The command:**
 
@@ -407,7 +421,7 @@ Some really useful information coming from the response is:
 
 <br/>
 
-### - Command 15: manually delete a pod
+### - Command 16: manually delete a pod
 
 **The command:**
 
@@ -424,7 +438,7 @@ A pod that's deleted, which was created by a deployment, would also be deleted f
 
 <br/>
 
-### - Command 16: manually expose a deployment
+### - Command 17: manually expose a deployment
 
 **The command:**
 
@@ -460,7 +474,7 @@ service/my-service exposed
 
 <br/>
 
-### - Command 17: get services / a specific service
+### - Command 18: get services / a specific service
 
 **The command:**
 
@@ -495,7 +509,7 @@ my-service LoadBalancer 10.109.250.82 <pending> 8080:30000/TCP 64s
 
 <br/>
 
-### - Command 18: show description of service
+### - Command 19: show description of service
 
 ```bash
 kubectl describe service <my-service>
@@ -541,7 +555,7 @@ Events: <none>
 
 <br/>
 
-### - Command 19: manually delete all resources
+### - Command 20: manually delete all resources
 
 **The command:**
 
@@ -564,7 +578,7 @@ immediately after the `delete all` command, you'll see some pods are still alive
 
 <br/>
 
-### - Command 20: kubectl exec
+### - Command 21: kubectl exec
 
 **The command:**
 
