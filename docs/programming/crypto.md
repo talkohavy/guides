@@ -1,6 +1,6 @@
 ---
 sidebar_label: '3. Crypto'
-sidebar_position: 0.5
+sidebar_position: 2
 ---
 
 # Crypto

@@ -1,6 +1,6 @@
 ---
 sidebar_label: '4. Software Architecture'
-sidebar_position: 1
+sidebar_position: 3
 ---
 
 # Software Architecture

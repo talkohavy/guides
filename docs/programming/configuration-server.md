@@ -1,6 +1,6 @@
 ---
-sidebar_label: '12. Configuration Server'
-sidebar_position: 9
+sidebar_label: '13. Configuration Server'
+sidebar_position: 12
 ---
 
 # Guide For Spring Boot Configuration Server

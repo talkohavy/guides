@@ -1,6 +1,6 @@
 ---
 sidebar_label: '2. Node'
-sidebar_position: 0
+sidebar_position: 1
 ---
 
 # Guide For NodeJS - the Hard Parts

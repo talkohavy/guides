@@ -1,6 +1,6 @@
 ---
-sidebar_label: '888. Micro-Frontends'
-sidebar_position: 8.5
+sidebar_label: '16. Micro-Frontends'
+sidebar_position: 15
 ---
 
 # Guide For Micro-Frontends

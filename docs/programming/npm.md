@@ -1,6 +1,6 @@
 ---
 sidebar_label: '8. npm publish a package'
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 # How to publish your NPM Package

@@ -1,6 +1,6 @@
 ---
 sidebar_label: '11. Kubernetes'
-sidebar_position: 8
+sidebar_position: 10
 ---
 
 # Guide For Kubernetes

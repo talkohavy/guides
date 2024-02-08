@@ -1,6 +1,6 @@
 ---
 sidebar_label: '6. Git'
-sidebar_position: 3
+sidebar_position: 5
 ---
 
 # Guide for Git
