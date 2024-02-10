@@ -7,6 +7,20 @@ sidebar_position: 10
 
 ## **1. Kubectl Commands**
 
+### - Command 0: Check/Upgrade Kubernetes version
+
+**The command:**
+
+```bash
+kubectl version --client
+```
+
+**Description:**
+
+Kubectl is a command line tool that you use to communicate with the Kubernetes API server. This above command determines whether you already have kubectl installed on your device.
+
+<br/>
+
 ### - Command 1: show all contexts list
 
 **The command:**
