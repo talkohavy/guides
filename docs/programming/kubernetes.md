@@ -61,6 +61,20 @@ kubectl config view
 
 Displays a merged kubeconfig settings or a specified kubeconfig file.
 
+**A response example would look like:**
+
+When you haven't set any clusters yet:
+
+```bash
+apiVersion: v1
+clusters: null
+contexts: null
+current-context: ""
+kind: Config
+preferences: {}
+users: null
+```
+
 <br/>
 
 ### - Command 5: show cluster-info
