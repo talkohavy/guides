@@ -1,6 +1,6 @@
 ---
-sidebar_label: '14. Regex'
-sidebar_position: 13
+sidebar_label: '15. Regex'
+sidebar_position: 14
 ---
 
 # Guide for Regex
