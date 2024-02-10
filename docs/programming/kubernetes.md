@@ -153,6 +153,10 @@ or in the singular form...
 kubectl get deployment {flags}
 ```
 
+or in the short form...
+
+kubectl get deploy
+
 **Description:**
 
 Get deployments.
@@ -672,6 +676,38 @@ immediately after the `delete all` command, you'll see some pods are still alive
 
 <br/>
 
+### - Command 23: set image
+
+**The command:**
+
+```bash
+kubectl set image <deployment-name>=talkohavy/img-name:2.0.0
+```
+
+**Description:**
+
+...
+
+<br/>
+
+### - Command 24: rollout status deploy
+
+**The command:**
+
+```bash
+kubectl rollout status deploy <deployment-name>
+```
+
+**Description:**
+
+...
+
+<br/>
+
+```bash
+kubectl rollout status deploy <deployment-name>
+```
+
 ---
 
 ## **2. Minikube Commands**
@@ -895,14 +931,12 @@ In a case of a NodePort type of service, this is a way to open up a service in y
 
 ### - Introduction
 
-Kubernetes is de-facto the standard for deploying containerized applications into production. Kubernetes is open-source, which means it's free for use.
+Kubernetes is a **CONTAINER ORCHESTRATION** system. It is an open-source tool which specializes in deploying containerized applications to production.
 
-Kubernetes definition: _"Kubernetes is a container orchestration system"._
+Using docker, you can create as many containers as you want. However, what if you need to create a network of multiple containers running on different computers/servers, and have them talk with each other? Using docker alone, creating this network would prove to be a hard task. Kubernetes rose to the challenge, and it helps you do just that - create containers on different servers (either physical or virtual) and **create this network to allow them to communicate with each other**. This network creation is being done automatically, without the user's intervention.  
+The user's only job is to tell kubernetes how many containers you wanna create, based on a specific image you name.
 
-Using docker, you can create as many containers as you want. However, what if you wanted to create a network of multiple containers on different computers/servers, and have them talk with each other? Using docker alone, creating this network would prove to be a hard task. Kubernetes rose to the challenge, and it helps you do just that - create containers on different servers (either physical or virtual) and create this sort of network to allow them to communicate with each other. This network creation is being done automatically, without the user's intervention.
-The user's only job is to tell kubernetes how many containers you want to create, based on specific image.
-
-### - What does k8s takes care of?
+### - Kubernetes Responsibilities
 
 K8s takes care of:
 
@@ -921,358 +955,137 @@ Nowadays, Kubernetes supports these types of container runtimes:
 
 ---
 
-## 4. **Deep Dive - Kubernetes Architecture & Terminology**
+## **4. Kubernetes Architecture & Concepts**
 
 Let's start with some terminology and talk about the architecture of kubernetes:
 
-### Random info
+### - Concept 1: A Pod
 
-- **Selectors**: Selectors are used in order to connect pods to a deployment. In kubernetes, pods & deployments are actually separate objects, so we need some system to know how to assign a pod to a deployment. After creating a new deployment, which creates both a deployment, and a new pod, we would see the same selector on the pod, as well as on the deployment.
+A **Pod** is the smallest unit that exists within the _kubernetes_ world.  
+Note that **container** is the smallest unit that exists within the _docker_ world. In kubernetes however, it is the **pod**.  
+Containers are created INSIDE a pod!  
+Inside the pod, there could be one or more containers, although the most common scenario is to have **a single container running inside a pod**. One pod, one container.
 
-- **Replicas**: here we see 5 groups: `desired`, `updated`, `total`, `available`, `unavailable`. Desired is the easiest one to explain. It's the number of pods you wanted in the first place. In the best scenario possible, this number would match the number of available pods. But things can go bad, and a pod can go down, so that's the `unavailable` group.
+### - Concept 2: A Kubernetes Cluster & node
 
-- **StrategyType**: Here we see the value **RollingUpdate**. This field tells how to perform updated of deployments. We will get back to it a bit later in this course.
+A kubernetes **cluster** consists of **nodes**.  
+A **node** is actually a server.
 
-- **Pod Template**: notice the corresponding label here, which is "app=nginx-deployment", the same label that is mentioned in the label field. As I've mentioned, that's how the deployment is connected to its pods.
+You can include multiple **nodes** (servers) inside a kubernetes **cluster**, and they could be located in different data-centers in different parts of the world. But usually, nodes which belong to the same kubernetes cluster are located close to each other. This is in order to perform tasks more efficiently.
 
-- **NewReplicaSet**: a replica set manages all pods related to a deployment, and a replica set is a set of replicas of your application, those are different pods in the same deployment, which all of them are included in the replica set. In our case we see `nginx-deployment-<some-id>`. And that why we see here under events, such replica with a message saying "scaled up to 1", meaning 1 pod. One pod was created in this replica set.
+Inside each **node**, there are **pods**, and inside of each **pod** there are **containers** (usually just 1). Each **pod** can have a _pod sibling_, meaning that they're both living under the same **deployment**, or a _pod cousin_, meaning that they're both living under different **deployments**.
 
-- **ReplicaSet**: In Kubernetes, a ReplicaSet is a controller that ensures a specified number of replica Pods are running at all times. It is part of the broader concept of controllers in Kubernetes, which are responsible for managing and maintaining a desired state of the cluster.
+Nodes will not automatically form a cluster without your intervention! But after such initial configuration, everything will be automated. And kubernetes will automatically deploy pods on different nodes.
 
-Here are the key components and concepts associated with a ReplicaSet:
+### - Concept 3: Deployment
 
-1. **Desired State**: A ReplicaSet specifies the desired number of replicas (identical copies) of a Pod that should be running. This is defined using the replicas field in the ReplicaSet configuration.
+#### -- A. Core Concept
 
-2. **Pod Template**: The ReplicaSet uses a template to create new Pods. The template specifies the characteristics of the Pod, such as the container image, volumes, and other settings. When the ReplicaSet creates new Pods, it uses this template.
+1. **Purpose**: A Deployment is a higher-level abstraction that builds on top of _ReplicaSets_. It adds declarative updates to applications, allowing you to describe the desired state for your application and automatically handles the deployment process.
 
-3. **Selector**: The ReplicaSet uses a label selector to identify the Pods it is managing. The selector is defined in the ReplicaSet configuration and matches the labels assigned to the Pods.
+2. **Rolling Updates and Rollbacks**: Deployments support _rolling updates_, allowing you to update your application with minimal downtime by gradually replacing old Pods with new ones. If something goes wrong, Deployments support easy _rollbacks_ to a previous version.
 
-4. **Scaling**: The primary purpose of a ReplicaSet is to maintain the desired number of replicas. If the actual number of Pods deviates from the desired state (either too many or too few), the ReplicaSet controller takes corrective actions to scale the number of Pods up or down.
+3. **Declarative Configuration**: Deployments use a declarative configuration to define the desired state of the application, making it easier to manage and update. You define the desired state, and the Deployment controller takes care of making it happen.
 
-**ReplicaSet V.S. Deployment**
+#### -- B. Selectors
 
-A ReplicaSet and a Deployment are both abstractions in Kubernetes that facilitate the management of multiple replica Pods, ensuring high availability and reliability. While they serve similar purposes, there are some key differences between them.
+**Selectors** are used in order to connect **pods** to a **deployment**. In kubernetes, pods & deployments are actually separate objects, so we need some kind of system to know how to **assign a pod to a deployment**. If you were to use the manual way to create a new deployment (which creates both a deployment and a new pod), you should see the same selector on the pod, as well as on the deployment.
 
-**ReplicaSet:**
+#### -- C. ReplicaSet
+
+_**Deployments use ReplicaSets under the hood!!!**_
+
+Behind the scenes, a **deployment** manages a **ReplicaSet**. When you create a Deployment, it creates and manages the associated ReplicaSets to ensure the desired number of replicas are running. A **ReplicaSet**'s purpose is to maintain a stable set of replica Pods running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
+
+Here are the key components and concepts associated with a **ReplicaSet**:
 
 1. **Purpose**: The primary purpose of a ReplicaSet is to maintain a specified number of replica Pods running at all times. It doesn't provide higher-level deployment features such as rolling updates or rollbacks.
 
 2. **Updates**: If you need to update the application running in your Pods (e.g., updating the container image), you typically need to manually delete the existing ReplicaSet and create a new one with the updated configuration. This approach can result in downtime during the transition.
 
-**Deployment:**
+3. **Desired State**: A ReplicaSet specifies the desired number of replicas (identical copies) of a Pod that should be running. This is defined using the **replicas** field in the ReplicaSet configuration.
 
-1. **Purpose**: A Deployment is a higher-level abstraction that builds on top of ReplicaSets. It adds declarative updates to applications, allowing you to describe the desired state for your application and automatically handling the deployment process.
+4. **Pod Template**: The ReplicaSet uses a template to create new Pods. The template specifies the characteristics of the Pod, such as the container image, volumes, and other settings. When the ReplicaSet creates new Pods, it uses this template.
 
-2. **Rolling Updates and Rollbacks**: Deployments support rolling updates, allowing you to update your application with minimal downtime by gradually replacing old Pods with new ones. If something goes wrong, Deployments support easy rollbacks to a previous version.
+5. **Selector**: The ReplicaSet uses a label selector to identify the Pods it is managing. The selector is defined in the ReplicaSet configuration and matches the labels assigned to the Pods.
 
-3. **Declarative Configuration**: Deployments use a declarative configuration to define the desired state of the application, making it easier to manage and update. You define the desired state, and the Deployment controller takes care of making it happen.
+6. **Scaling**: The primary purpose of a ReplicaSet is to maintain the desired number of replicas. If the actual number of Pods deviates from the desired state (either too many or too few), the ReplicaSet controller takes corrective actions to scale the number of Pods up or down.
 
-**Connection and Recommendations:**
+**Use Cases**:
 
-1. **Deployment Uses ReplicaSets**: Behind the scenes, a Deployment manages a ReplicaSet. When you create a Deployment, it creates and manages the associated ReplicaSets to ensure the desired number of replicas are running.
+- **ReplicaSet**: Use a ReplicaSet when you need a basic way to ensure a certain number of identical Pods are always running. If you don't need advanced deployment features like rolling updates and rollbacks, a ReplicaSet may be sufficient.
 
-2. **Use Cases**:
+- **Deployment**: Use a Deployment when you want to manage the deployment and scaling of applications more declaratively. Deployments are particularly useful when you need to update your application without downtime, handle rollbacks, or manage multiple environments (e.g., development, staging, production) with different configurations.
 
-   - **ReplicaSet**: Use a ReplicaSet when you need a basic way to ensure a certain number of identical Pods are always running. If you don't need advanced deployment features like rolling updates and rollbacks, a ReplicaSet may be sufficient.
+**Recommendations**:
 
-   - **Deployment**: Use a Deployment when you want to manage the deployment and scaling of applications more declaratively. Deployments are particularly useful when you need to update your application without downtime, handle rollbacks, or manage multiple environments (e.g., development, staging, production) with different configurations.
-
-3. **Recommendation**:
-
-   - For most use cases, it is recommended to use Deployments over ReplicaSets. Deployments provide more features, including rolling updates and rollbacks, making application updates smoother and less error-prone.
-
-   - Deployments are considered a higher-level abstraction that abstracts away some of the complexities associated with managing replica sets directly.
-
+For most use cases, it is recommended to use Deployments over ReplicaSets. Deployments provide more features, including rolling updates and rollbacks, making application updates smoother and less error-prone. Deployments are considered a higher-level abstraction that abstracts away some of the complexities associated with managing replica sets directly.  
 In summary, while ReplicaSets are a fundamental building block for managing replicated Pods, Deployments offer a higher-level abstraction with additional features that simplify the management of application updates and scaling. Deployments are generally preferred for managing applications in a production environment.
 
-**A deep dive into what is a ReplicaSet**
+**• How does a ReplicaSet work**
 
-A ReplicaSet's purpose is to maintain a stable set of replica Pods running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
-
-• How a ReplicaSet works
-A ReplicaSet is defined with fields, including a selector that specifies how to identify Pods it can acquire, a number of replicas indicating how many Pods it should be maintaining, and a pod template specifying the data of new Pods it should create to meet the number of replicas criteria. A ReplicaSet then fulfills its purpose by creating and deleting Pods as needed to reach the desired number. When a ReplicaSet needs to create new Pods, it uses its Pod template.
+A **ReplicaSet** is defined with fields, including a _selector_ that specifies how to identify Pods it can acquire, a number of replicas indicating how many Pods it should be maintaining, and a pod template specifying the data of new Pods it should create to meet the number of replicas criteria. A ReplicaSet then fulfills its purpose by creating and deleting Pods as needed to reach the desired number. When a ReplicaSet needs to create new Pods, it uses its Pod template.
 A ReplicaSet is linked to its Pods via the Pods' metadata.ownerReferences field, which specifies what resource the current object is owned by. All Pods acquired by a ReplicaSet have their owning ReplicaSet's identifying information within their ownerReferences field. It's through this link that the ReplicaSet knows of the state of the Pods it is maintaining and plans accordingly.
 A ReplicaSet identifies new Pods to acquire by using its selector. If there is a Pod that has no OwnerReference or the OwnerReference is not a Controller and it matches a ReplicaSet's selector, it will be immediately acquired by said ReplicaSet.
 
-• When to use a ReplicaSet?
-A ReplicaSet ensures that a specified number of pod replicas are running at any given time. However, a Deployment is a higher-level concept that manages ReplicaSets and provides declarative updates to Pods along with a lot of other useful features. Therefore, we recommend using Deployments instead of directly using ReplicaSets, unless you require custom update orchestration or don't require updates at all.
-This actually means that you may never need to manipulate ReplicaSet objects: use a Deployment instead, and define your application in the spec section.
+#### -- D. Deployment Replicas
 
-**Service**
+**Replicas** represents the state of a deployment.
 
-An abstract way for _exposing_ an application running on a set of Pods as a network service. With Kubernetes, you don't need to modify your application to use an unfamiliar service discovery mechanism. Kubernetes gives Pods their own IP addresses and a single DNS name for a set of Pods, and can load-balance across them.
-
-**• MOTIVATION**
-
-Kubernetes `pods` are created and destroyed to match the _desired state_ of your cluster. `pods` are nonpermanent resources. If you use a `deployment` to run your app, it can create and destroy `pods` dynamically. Each `pod` gets its own IP address, however in a `deployment`, the set of `pods` running in one moment in time could be different from the set of `pods` running in that `deployment` a moment later. This leads to a problem: if some set of `pods` (let's call them "backends" to better illustrate) provide functionality to another set of `pods` inside your cluster (let's call those "frontends"), how do the frontends set find out and keep track of which IP addresses to connect to, so that the frontend can use the backend part of the workload?
-
-Enter Services.
-
-**• Service Resources**
-
-In kubernetes, a `service` is an abstraction which defines a logical set of `pods` and a `policy` by which to access them (sometimes this pattern is called a micro-service). The set of `pods` targeted by a `service` is usually determined by a `selector`. To learn about other ways to define `service` endpoints, see _services without selectors_.
-
-For example, consider a stateless image-processing server which is running with 3 replicas. Those replicas are identical — The "frontend" pods do not care which image-processing server would reply/serve their request. While the actual "backend" `pods` may change, the "frontend" pods should not need to be aware of that, nor should they need to keep track of the actual set of the "backend" pods themselves.
-
-The Service abstraction enables this decoupling.
-
-**• Defining a Service**
-
-A `service` in kubernetes is a REST object, similar to a `pod`. Being a REST object means that one can be created, updated or deleted. It could also be read in the sense of getting information about it, about its current status, etc. To be more specific, a `service` being a REST object means that you can POST a `service` definition to the API server to create a new instance.
-
-For example, suppose you have a set of `pods` where each listens on TCP port 9376 and contains a label `app.kubernetes.io/name=MyApp`:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-name: my-service
-spec:
-selector:
-app.kubernetes.io/name: MyApp
-ports: - protocol: TCP
-port: 80
-targetPort: 9376
-```
-
-This specification creates a new `service` object named "my-service", which targets TCP port 9376 on any `pod` with the `app.kubernetes.io/name=MyApp` label.
-Kubernetes assigns this `service` an IP address (sometimes called the "cluster IP"), which is used by the `service` proxies (see _Virtual IPs_ and _service proxies_ below).  
-The controller for the Service selector continuously scans for `pods` that match its selector, and then POSTs any updates to an Endpoint object also named "my-service".  
-Port definitions in `pods` have names, and you can reference these names in the _targetPort_ attribute of a `service`. For example, we can bind the _targetPort_ of the `service` to the `pod` port in the following way:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-name: nginx
-labels:
-app.kubernetes.io/name: proxy
-spec:
-containers:
-
-- name: nginx
-  image: nginx:stable
-  ports:
-  - containerPort: 80
-    name: http-web-svc
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-name: nginx-service
-spec:
-selector:
-app.kubernetes.io/name: proxy
-ports:
-
-- name: name-of-service-port
-  protocol: TCP
-  port: 80
-  targetPort: http-web-svc
-```
-
-This works even if there is a mixture of `pods` in the `service` using a single configured name, with the same network protocol available via different port numbers. This offers a lot of flexibility for deploying and evolving your `services`. For example, you can change the port numbers that `pods` expose in the next version of your backend software, without breaking clients.  
-The default protocol for `services` is TCP; you can also use any other supported protocol.  
-As many `services` need to expose more than one port, Kubernetes supports multiple port definitions on a `service` object. Each port definition can have the same protocol, or a different one.
-
-**Expose a Deployment**
-
-**• Introduction**
-
-As we previously saw, pods are given internal IP addresses, which you _could_ access into manually by connecting to the kubernetes cluster, and from there navigate using the internal IP addresses of each pod.  
-Not very comfortable, right?  
-That's why in kubernetes we have `services`.  
-In kubernetes, you have to create `services` if you wish to get a response from one of the `pods` inside a `deployment`, not to mention utilize a load-balancing mechanism, which a `service` is doing automatically.
-
-**• Expose a Deployment Internally - ClusterIP**
-
-You could create a `service` with a type known as **_Cluster IP_**.
-When doing so, a new `service` would be created with a new virtual IP address assigned to it.  
-Upon creation you'd be asked to name a `deployment` to which this `service` would be linked to. kubernetes would then do all sorts of magic behind the scenes, which essentially gives this `service` a matching label as that of the `deployment`.  
-With the new virtual IP address, given to the new `service`, you'd be able to connect to that specific `deployment` and get responses from its `pods`. Also, with this `service`, kubernetes will distribute the load across the different `pods` related to that `deployment`.
-Let's now go ahead and create a `service` of type **_Cluster IP_** for our `deployment`.  
-For that, we need to create a specific `service`.  
-The only thing we need is a running `deployment`, and to know its name.  
-Run this next command to get the deployment's name:
+When you run the command:
 
 ```bash
-kubectl get deployments
+kubectl describe deployment
 ```
 
-Or in short:
+One of the fields shown on screen is **Replicas**.  
+The output of it would look something like:
 
 ```bash
-kubectl get deploy
+Replicas:       3 desired | 1 updated | 4 total | 3 available | 1 unavailable
 ```
 
-Copy the `deployment`'s name to which you want to add a `service` of type **_Cluster IP_** to.  
-In order to create this type of `service`, we use the command `expose deployment`:
+Here we see 5 groups: `desired`, `updated`, `total`, `available`, `unavailable`.  
+The combination of these groups define the current state of a deployment at a given time.
+
+- `desired`  
+  This one is the easiest one to explain. It's the number of pods you wanted the deployment to have in the first place. A deployment will aim to be in that number. Best case scenario, the number under `desired` would match the number under `available`.
+- `available`
+  The number of pods currently available to serve. Can be lower or higher than the number of desired pods.
+- `unavailable`
+  Things can go bad, and a pod can go down. That's the `unavailable` group.
+- `total`
+  ...
+- `updated`
+  ...
+
+#### -- E. Deployment's StrategyType
+
+When you run the command:
 
 ```bash
-kubectl expose deployment <deployment-name> --port=<port> --target-port=<tar-port>
+kubectl describe deployment
 ```
 
-Which is, in our case:
+One of the fields shown on screen is **StrategyType**.
 
-```bash
-kubectl expose deployment nginx-deployment --port=8080 --target-port=80
-```
+This field tells how to perform updated of deployments, basically for when you're updating an image's version. The default value is **RollingUpdate**.
 
-The response from that command should look like:
-
-```bash
-service/nginx-deployment exposed
-```
-
-**A few things to note:**
-
-- **Flag 1: --type**: we did not mention a `--type` flag, because by default, the type would be selected as **ClusterIP**. Possible options are: ClusterIP, NodePort.
-
-- **Flag 2: --port**: when only mentioning the `--port` flag, the `--target-port` options assumes the value set under `--port`! Like, if you were to set `--port=8080`, then under the hood `--target-port` would also be set to 8080. So, if you know that they are different, you need to assign both options, `--port` & `--target-port`. Port is the external port (the host), and target-port is the internal port (the container).
-
-So basically, on every `pod` inside the `deployment` of "nginx-deployment-name"
-
-we exposed the internal port, of every `container`, running on every `pod`, that is a part of the deployment called "nginx-deployment-name". And on each and every one of those `pods`, we expose that internal port to an external port of 8080.  
-Now let's list out our `services`, and for that we use the command `services`:
-
-```bash
-kubectl get services
-#  or in short…
-kubectl get svc
-```
-
-And we should get back the response:
-
-```bash
-NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE
-kubernetes ClusterIP 10.96.0.1 <none> 443/TCP 2d12h
-nginx-deployment ClusterIP 10.108.5.250 <none> 8080/TCP 98s
-```
-
-We're seeing that we have 2 `services`.  
-The first `service` is the default system service, which is always named as "kubernetes", and the second `service` is the one we just created. We can see that it had assumed the name of the `deployment`. That's because we did not use the `--name` flag to give it a name, so by default, it takes on the name of the `deployment`. Also, we're seeing that the port that we exposed (which we set to 8080), its type (which we set to **_ClusterIP_**), and we see that it has a **_Virtual IP_** address, which was auto-generated by kubernetes, and we can now use it in order to connect to ANY of the pods.
-
-**• Type ClusterIP**
-
-We created a service with a type of ClusterIP. A service with such type allows you to connect to a specific deployment (in our example nginx-deployment) only from within the kubernetes cluster. This is great, for instance, when your kubernetes cluster has a database deployment, like mongodb or mysql, which of course should not be available & accessible from the outside world. So in that case you could create a ClusterIP service for that database deployment, and then have other deployments from within your kubernetes cluster access it using its cluster IP. By default, a Cluster IP would only be available to nodes inside the cluster.
-
-We can get some more details on the service by running the command:
-
-```bash
-kubectl describe service <service-name>
-```
-
-In our case, we need to type:
-
-```bash
-kubectl describe service nginx-deployment
-```
-
-**• Expose a Deployment Externally - NodePort**
-
-Now, what about granting access to the outside world?
-If, for instance, you were to create a web-service deployment, it should of course be available & accessible from the outside world. So, in that case, you'd want to expose it to the outside world using the node's port, or a load-balancer's ip address.
-Earlier, we expose a container's port to the pod's port.
-Now we want to take it one step further, and expose the pod's port to the node's port.
-It is possible to EXPOSE a specific deployment to the IP address of the node, or use a load-balancer. Remember that inside a kubernetes cluster it is possible to have multiple nodes, and pods from a certain deployment could be distributed across different nodes. Therefore, the most common solution is to have a load-balancer IP address, which would serve as the single entry-point for the entire kubernetes cluster for a specific deployment.
-
-Using only that single external IP address, and that load-balancer, you'd be able to connect to your deployment no matter where its pods are created. But such load-balancer IP addresses are usually assigned by specific cloud provider, like AWS or GCP, and such assignments are managed by a `cloud controller manager` - a service that's running on the master node.
-
-Let's create a service which exposes our deployment to the node's port, or rather, to the outside world. For that we use the same command as earlier, only now we'd have to specify a service type using the --type flag, because it is no longer the default one cluster ip. Now it's NodePort.
-
-```bash
-kubectl expose deployment <deployment-name> --type=NodePort --port=<port> --target-port=<tar-port>
-```
-
-Using this command would create reveal the application running inside your containers to your worker node, which is accessible by the outside world.
-But wait!
-We only specified a pod's port (--port), and a container's port (--target-port).
-What about the node's port??
-The answer is: kubernetes would auto-generated some random high port!
-Here's an example:
-You would provide: --port=3000 & --target-port=80
-Kubernetes would do: node:32142 `-->` pod:3000 `-->` container:80
-Then, to access your application, you need the node's ip address, which you could get by:
-
-```bash
-minikube ip
-```
-
-Don't forget that in minikube you have a cluster with only 1 node, so this ip is the ip of the only single node you own.
-Then, simply go to your web browser, and type:
-
-```bash
-<minikube's-ip>:<the-auto-generated-port>
-```
-
-And you should see a response coming back from one you’re the pods inside the exposed deployment! Pretty cool, huh?
-You could also use the built-in minikube's command:
-
-```bash
-minikube service <service-name>
-```
-
-which opens up a web service with the url of node, including the right port, without even check for the port up front.
-You could also use the flag --url to only get back the url address for that service:
-
-```bash
-minikube service <service-name> --url
-```
-
-**• Expose a Deployment with a Load-Balancer**
-
-Let's create a service of type LoadBalancer.
-
-```bash
-kubectl expose deployment <deployment-name> --type=LoadBalancer --port=<port>
-```
-
-By running this command, and immediately after running:
-
-```bash
-kubectl get services
-```
-
-You'd see something like this:
-
-```bash
-NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S)
-my-service LoadBalancer 10.109.195.184 <PENDING> 3000:32268/TCP
-```
-
-The important thing I want you to notice is the part that says: External=ip is pending. You will see `<PENDING>` if you're using minikube, but when deploying the application by using one of the big known cloud providers, like amazon & google cloud, you will see a load balancer ip address assigned automatically.
-When using with minikube though, this results in a behavior that is similar to NodePort type, meaning we will still be able to connect to our deployment using the IP address of the node.
-
-**StrategyType - Update an image version**
-
-**• Introduction**
-
-Earlier in this guide we saw an attribute called: **_StrategyType_**.  
-We also saw that our **StrategyType** has a value of **RollingUpdate**.  
-What does it mean?  
-When you release a new version of your application, of course you want to roll out this new version in production smoothly, without breaking any of the services.
-Kubernetes allows that right out of the box, and it's very easy to utilize.
-This RollingUpdate type means that new pods will be created with the newer image, while the old pods would still be running. So pods would get replaced one by one, and finally after some time, all pods would be running the new updated image.
+What does **RollingUpdate** mean?  
+When you release a new version of your application, of course you want to roll out this new version in production smoothly, without breaking any of the services. Kubernetes allows that right out of the box, and it's very easy to utilize. This **RollingUpdate** type means that new pods will be created with the newer image, while the old pods would still be running. So essentially old pods would get replaced one by one, and finally after some time, there would only be new pods, running the new image.
 
 • When does this happen and how?
-You just modified your application. You made changes and you save them.
-You will now use docker to build your application, and on the way, you'd probably provide a new tag. For instance, app:2.0.0.
-After building the image, you'd probably publish it to some docker-hub-like center.
-Now, here comes the kubernetes part.
-So you have some deployment with like N pods, right?
-All those pods are running a previous version of that image, but hey there's a new one!
-So step 1 is to set the image for that deployment to the new image.
-We do that by using the command:
+
+You just modified your application. You made changes and you save them. You will now use docker to build an image from your updated version of your application, and to that image you'd probably provide a new tag, like 1.0.1. After building the image, you'd probably publish it to some docker-hub-like center. Now, here comes kubernetes part. Inside the cluster, you probably have some deployment running N pods, right? All those pods are running the previous version of that image, but hey here comes a new one! So step 1 is to go to that deployment's yaml, update the image's version for that deployment to the new version. We do that by using the command:
 
 ```bash
 kubectl set image <deployment-name> <deployment-name>=talkohavy/img-name:2.0.0
 ```
 
-After entering this command, the image would be changed, and a roll out update would kick off!
-Right after it you'd see a console log saying:
+After entering this command, the image would be changed, and a roll out update would kick off! Right after that you'd see a console log saying:
+
 `deployment.apps/<deployment-name> image updated`
+
 Be read to quickly run this following command immediately afterwards:
 
 ```bash
@@ -1301,112 +1114,180 @@ and notice the age of those pods. All of them should say **RUNNING**, and all ha
 That's it! We are now running a new version of our application!
 02:09:55
 
-**How to Connect 2 Different Deployments**
+### - Concept 4: Service
 
-Let's now create two deployments, and connect between them. This is a very common thing to do, connecting different parts of the application together. For example, connecting between micro-service A & micro-service B. So, instead of having two configuration files, as we had before, I'm going to show you how we could use only 1 configuration file which contains all the configurations necessary inside.
+#### -- A. What is a Service?
 
-**• Step 1: create a configuration file for each service**
+A **Service** is an abstract way for **exposing** an application running on a set of Pods as a _network service_.
 
-First, create a new configuration yaml called combined.yaml.
+A **service** has 2 main purposes:
 
-- Step 1: copy the contents of the service.yaml presented above, and paste it inside.
-- Step 2: after pasting, at the bottom of combined.yaml, put 3 dashes ---. Exactly 3.
-- Step 3: next copy paste the contents of the deployment.yaml into it.
+1. Define a logical set of **pods** and a **policy** by which to access them.
+2. Load balance the work-load between the set of pods it is in-charge of.
 
-And there you go! Now you have a single configuration file, with the specification of both the `deployment` resource and the `service` resource.  
-Now, this configuration would serve as micro-service A.  
-We now need another configuration file for micro-service B, to complete the picture. Once you have 2 configuration files for both micro-service, you're basically done! Just make sure that one of the services (let's say the one for `deployment` A) gets the type **ClusterIP**, and that the other service (the one for `deployment` B) gets the type **LoadBalancer**.
+The set of pods targeted by a **service** is usually determined by a `selector`.
 
-**• Step 2: running each service as a Deployment with a Service**
+A **service** in kubernetes is a REST object, similar to a **pod**. Being a REST object, it means that a **Service** can be created, updated or deleted. It could also be read in the sense of getting information about it (with the _describe_ command). To be more specific, saying that a **service** is a REST object means that you can send a POST request with a **service** definition to the API server to create a new instance.
 
-The next step is to apply both configuration files. Go to your terminal, and inside the root folder, and run the command:
+#### -- B. Why do we need a **Service**?
 
-```bash
-kubectl delete -f backends.yaml -f frontends.yaml
+If you use a **deployment** to run your app (which you probably are), it can create and destroy **pods** dynamically. Kubernetes **pods** are created and destroyed all the time in order to match the _desired state_ you mentioned in your deployment's yaml. What this means is that **pods** are nonpermanent resources. Each **pod** gets its own IP address, however in a **deployment**, a set of **pods** running in one moment in time could be different from the set of **pods** running in that **deployment** a moment later. **This leads to a problem**. Consider a stateless image-processing server which is running with 3 replicas. Those replicas are identical — The "frontend" pods do not care _which_ image-processing server would reply/serve their request. While the actual "backend" **pods** may change, the "frontend" pods do not need to be aware of that, nor do they need to keep track of the actual set of the "backend" pods themselves.
+
+The Service abstraction enables this decoupling.
+
+#### -- C. Service Types
+
+##### Type 1: ClusterIP (the default)
+
+**ClusterIP** is the default Service type which assigns an IP address from a pool of IP addresses that your cluster has reserved for that purpose.
+
+**ClusterIP** is a type you can use to **expose a deployment internally** inside the cluster.
+
+A **service** of type **ClusterIP** would allows you to connect to its pods **only from within** the kubernetes cluster. This is great when your kubernetes cluster has a database deployment for example, like mongodb or mysql, which of course should not be available & accessible from the outside world.
+
+When choosing the type **Cluster IP**, a **service** would be created with a new virtual IP address assigned to it. Upon its creation you'd be asked to _name_ a **deployment** to which this **service** would be linked to. kubernetes would then do all sorts of magic behind the scenes, which essentially gives this **service** a matching label as that of the **deployment**.  
+With the new virtual IP address given to the new **service** you'd be able to connect to that specific **deployment** and get responses from its **pods**. Also, with this **service**, kubernetes will distribute the load across the different **pods** related to that **deployment**.
+
+##### Type 2: NodePort
+
+**NodePort** is a type you can use to **expose a deployment externally** outside the cluster.
+
+When we want to grant access to a deployment to the outside world, we pick a service of type **NodePort**. Typically, this is something we want for our **frontend server** deployment, and perhaps also our **api-gateway** deployment.
+
+If you set the service's type to **NodePort**, the Kubernetes control plane allocates a port from a range specified by `--service-node-port-range` flag (default: 30000-32767). Each node proxies that port (the same port number on every Node) into your Service. Your Service reports the allocated port in its .spec.ports[*].nodePort field.
+
+Using a NodePort gives you the freedom to set up your own load balancing solution, to configure environments that are not fully supported by Kubernetes, or even to expose one or more nodes' IP addresses directly.
+
+For a node port Service, Kubernetes additionally allocates a port to match the protocol of the Service. Every **node** in the cluster configures itself to listen on that assigned port and to forward traffic to one of the ready endpoints (**pods**) associated with that **Service**. You'll be able to contact the `type: NodePort` **Service**, from outside the cluster, by connecting to any node using the appropriate protocol (for example: TCP), and the appropriate port (as assigned to that Service).
+
+**Choosing your own port**
+
+If you want a specific port number, you can specify a value in the `nodePort` field. The control plane will either allocate you that port or report that the API transaction failed. This means that you need to take care of possible port collisions yourself. You also have to use a valid port number, one that's inside the range configured for `NodePort` use.
+
+Example:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - port: 80
+      # By default and for convenience, the `targetPort` is set to
+      # the same value as the `port` field.
+      targetPort: 80
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane
+      # will allocate a port from a range (default: 30000-32767)
+      nodePort: 30007
 ```
 
-**• Step 3: connecting the services - internal communication**
+##### Type 3: LoadBalancer
 
-Let's first remember what is the kubernetes structure! First we have a kubernetes cluster; We created one using minikube. Any resource living inside our cluster, whether it be a `service` or a `deployment`, has the _potential_ of communicating with other resources in that cluster! All we gotta do is provide a `service` (which we did) that acts as the single point of entry to that `deployment`. The entry point exposes an ip address, which other deployments can use in order to communicate with that specific `deployment`. However, that virtual ip address that gets exposed is **DYNAMIC**! And is known only _after_ creation! Therefore, it is best to use the **NAME** of the `service` inside your application, instead of that exposed ip address. As opposed to the ip address, the name is static! So even if the ip address changes, the name would still work as the hostname. That's how you could very easily connect different `deployments` together. Such resolution (from the word resolve) of the service-name to an ip address is performed by an internal service of the kubernetes cluster, which is called **DNS**.
+On cloud providers which support external load balancers, setting the `type` field to `LoadBalancer` provisions a load balancer for your Service. The actual creation of the load balancer happens asynchronously, and information about the provisioned balancer is published in the Service's .`status.loadBalancer` field. For example:
 
-### • Term 1: Pod
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  clusterIP: 10.0.171.239
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.0.2.127
+```
 
-Pod is the smallest unit in the kubernetes world.  
-In docker world, container is the smallest unit. In kubernetes, it is the pod.  
-Containers are created INSIDE of a pod!  
-The pod's anatomy is as follows:  
-Inside the pod, there could be one or more containers.  
-Also, there are shared volumes, and shared network resources.  
-For example, a shared IP address.
+Traffic from the external load balancer is directed at the backend Pods. The cloud provider decides how it is load balanced.
 
-This means that all containers that inside the same pod, share volumes, and an IP address.  
-The most common scenario is to have a single pod run a single container.  
-But sometimes, when containers have to be tightened together and heavily depend on one other, and they could exist in the same namespace, it is plausible & possible to create several containers in the same pod.  
-But again, single container per pod is the most common use-case.
+To implement a Service of `type: LoadBalancer`, Kubernetes typically starts off by making the changes that are equivalent to you requesting a Service of `type: NodePort`. The cloud-controller-manager component then configures the external load balancer to forward traffic to that assigned node port.
 
-### • Term 2: A Kubernetes Cluster & node
+**Visual example through minikube:**
 
-A kubernetes `cluster` consists of `nodes`.  
-A `node` is actually a server.
+I've created a service of type `LoadBalancer`, fetched its details, and I want to show you something interesting.
 
-You can include multiple `nodes` (servers) inside a kubernetes `cluster`, and they could be located in different data-centers in different parts of the world. But usually, nodes which belong to the same kubernetes cluster are located close to each other. This is in order to perform tasks more efficiently.
+I've created a service manually with:  
+_(this hardly makes any different whether it's declarative or imperative)_
 
-Inside the `nodes`, there are `pods`. A `Pod` is the smallest unit possible in the kubernetes world. And like we said earlier, inside of each `pod` there are `containers`. Usually, 1 `pod` holds 1 `container` inside. While this the most common scenario, no one prevents you from running 2+ containers inside a pod. Each `pod` can have _pod siblings_, meaning that they're all living inside a single node, or _pod cousins_, where 2 pods are living inside different nodes.
+```bash
+kubectl expose deployment <deployment-name> --type=LoadBalancer --port=<port>
+```
 
-Nodes will not automatically form a cluster without your intervention! But after such initial configuration, everything will be automated. And kubernetes will automatically deploy pods on different nodes.
+And now let's do `get services` immediately afterwards:
 
-**Node Communication**
+```bash
+kubectl get services
+```
 
-How do those nodes actually communicate with each other? How are they managed? Well, in a kubernetes cluster there is what's known as a `master node`. The rest of the nodes in the cluster are called `worker nodes`. The `master node` manages the `worker nodes`. It's the `master node`'s job to distribute load across `worker nodes`. All `pods` related to your application are deployed on `worker node`. The `master node` runs only in `system pods`, which are responsible for actual work of the kubernetes cluster in general. Basically, we could say that a master node in a kubernetes cluster is more like "the control plane", and it does not run your client applications.
+You'd see something like this:
+
+```bash
+NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S)
+my-service LoadBalancer 10.109.195.184 <PENDING> 3000:32268/TCP
+```
+
+The important thing I want you to notice is the part that says:  
+`External=ip is pending`  
+You will see `<PENDING>` if you're using **minikube**, but when deploying the application by using one of the big known cloud providers, like amazon & google cloud, you will see a load balancer ip address assigned automatically.
+When using with minikube though, this will forever stay in this `<PENDING>` state, and would result in a behavior that is exactly the same as **NodePort** type, meaning we will still be able to connect to our deployment using the IP address of the node.
+
+##### Type 4: ExternalName
+
+Services of type ExternalName map a Service to a DNS name, not to a typical selector such as `my-service` or `cassandra`. You specify these Services with the spec.externalName parameter.
+
+This Service definition, for example, maps the `my-service` Service in the `prod` namespace to `my.database.example.com`:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: prod
+spec:
+  type: ExternalName
+  externalName: my.database.example.com
+```
+
+When looking up the host `my-service.prod.svc.cluster.local`, the cluster DNS Service returns a `CNAME` record with the value `my.database.example.com`. Accessing `my-service` works in the same way as other Services but with the crucial difference that redirection happens at the DNS level rather than via proxying or forwarding. Should you later decide to move your database into your cluster, you can start its Pods, add appropriate selectors or endpoints, and change the Service's `type`.
+
+### - Concept 5: Using Service Name for internal communication
+
+Any resource living inside our cluster, whether it's a **service** or a **deployment**, has the _potential_ of communicating with other resources in that cluster! All we gotta do is provide a **service** (which we did) that acts as the single point of entry to that **deployment**'s pods. The entry point exposes an ip address, which other deployments can use in order to communicate with that specific deployment. However, that virtual ip address that gets exposed is **DYNAMIC**! And is known only **AFTER** creation! Therefore, it is best to use the **NAME** of the **service** inside your application, instead of that exposed ip address. As opposed to the ip address, the **name is static**! So even if the ip address changes, the name would still work as the hostname. That's how you could very easily connect different **deployments** together. Such resolution (from the word resolve) of the service-name to an ip address is performed by an internal service of the kubernetes cluster, which is called **DNS**.
+
+### - Concept 6: Node Communication
+
+We talked about internal communication between **Services**, but what about **node** communication? How do those nodes actually communicate with each other? How are they managed?
+
+Well, in a kubernetes cluster there is what's known as a `master node`. The rest of the nodes in the cluster are called `worker nodes`. It's the `master node` job to manage communication between `worker nodes`. It is also the `master node`'s job to distribute load across `worker nodes`. All `pods` related to your application are deployed on `worker node`'s. The `master node` runs in what is known as `system pods`, which are responsible for the actual work of the kubernetes cluster in general. Basically, we could say that a master node in a kubernetes cluster is more like "the control plane", and it does not run your client applications.
 
 **Q**: So, what services actually run on different nodes?
 
 **A**: Let's have a look at the following diagram...
 
-There are services such as _kubelet_, _kube-proxy_, and a container runtime.  
-Those services are present ON EACH NODE in the kubernetes cluster.  
-You already know what is a container runtime -- a container runtime runs actual containers inside of each node. We mentioned 3: docker, containerd, CRI-O.
+There are services such as _kubelet_, _kube-proxy_, and a _container runtime_. Those services are present ON EACH NODE in the kubernetes cluster. A container runtime is the mechanism where your containers actually run. We mentioned 3: docker, containerd, CRI-O.
 
-### • Term 3: Kubelet
+### - Concept 7: DNS service
 
-Such service, which exists on each worker node, communicates with an API server service on the master node.
+The **DNS service** is a service which runs on the master node, and is **responsible for names resolution** in the entire kubernetes cluster.
 
-### • Term 4: Kube-Proxy
+### - Concept 8: API Server
 
-Kube-proxy, which same as kubelet is present on each node as well, is responsible for network communication inside of each node, and between nodes.
+**API server** service is the main point of communication between nodes inside the kubernetes world. The **API server** is the main service inside the `master node`.
+Using this **API server** service, you could actually manage the entire kubernetes cluster. It is done by using `kubectl`. Or, kube-control.
 
-### • Term 5: Scheduler
-
-There are services that are present ONLY on the master node.  
-One of them is the scheduler.  
-The scheduler is responsible for planning and distribution of the workload in the cluster.
-
-### • Term 6: Kube Controller Manager
-
-Kube Controller Manager is a single point which controls everything inside the kubernetes cluster, and it controls what happens on each of the nodes in the cluster.
-
-### • Term 7: Cloud Controller Manager
-
-Its job is to interact with your cloud service provider, where you actually run your kubernetes cluster. Because usually you don't create such clusters yourself using just your own servers, instead you could very easily run the kubernetes clusters from one of the cloud providers, which actually performs almost automated creation of all nodes, and the connection between such nodes. And for that, you have to run Cloud Controller Manager service on the master node. Also for example if you want to create deployment of your application inside of the kubernetes cluster, which will be opened to the outside world, and allow connection from outside, you could create a load-balancer IP addresses, and those load-balancer IP addresses are usually provided by those specific cloud providers.
-
-### • Term 8: etcd
-
-Also on master node, there's such a thing called etcd.
-Etcd is a service which actually stores all logs related to the operation of the entire kubernetes cluster, and such logs are stored inside of it as key-value pairs.
-
-### • Term 9: DNS service
-
-Also there are other services which are running on master node, for example, a DNS service, which is responsible for names resolution in the entire kubernetes cluster, and for instance using a DNS service, you could connect to specific deployment by the name of the corresponding deployment service. In such way, you could connect different deployments with each other.
-
-### • Term 10: API Server
-
-API server service is the main point of communication between nodes inside the kubernetes world. The API server is the main service inside the master node.
-Using this API server service, you could actually manage the entire kubernetes cluster.  
-And how is it done?
-
-It is done by using kubectl. Or, kube-control.
-
-### • Term 11: kubectl
+### - Concept 8: kubectl
 
 Kubectl is a separate command-line tool, which allows you to connect with a specific kubernetes cluster, and manage it remotely.  
 kubectl could even be ran on your local machine.  
@@ -1425,6 +1306,42 @@ Pod are the smallest unit in kubernetes.
 Pods could be created, removed, moved from one node to another, and all this happens automatically without your intervention.  
 API Server service is the center main point of communication between master node and other worker nodes.  
 Using the API Server service, you could manage the kubernetes cluster by using the kubectl tool, which has to be installed on your computer, if you perform management from your computer.
+
+### - Concept 9: kubelet
+
+The **kubelet** is the **primary "node agent"** that runs on each **node**. It can register the node with the apiserver using one of:
+
+- the hostname
+- a flag to override the hostname
+- or specific logic for a cloud provider.
+
+The **kubelet** works in terms of a _PodSpec_. A _PodSpec_ is a YAML or JSON object that describes a pod. **The kubelet ensures that the containers described in those PodSpecs are running and healthy**. The kubelet doesn't manage containers which were not created by Kubernetes.
+
+Each worker node has 1 **kubelet** service on it, which communicates with an API server service on the master node.
+
+### - Concept 10: kube-Proxy
+
+A **kube-proxy** service is found on each of the worker nodes, and is responsible for network communication within the node, and between nodes.
+
+### - Concept 11: Scheduler
+
+There are services that are present ONLY on the master node.  
+One of them is the **scheduler**.  
+The **scheduler** is responsible for planning and distributing of the workload inside the cluster.
+
+### - Concept 12: Kube Controller Manager
+
+Kube Controller Manager is a single point which controls everything inside the kubernetes cluster, and it controls what happens on each of the nodes in the cluster.
+
+### - Concept 13: Cloud Controller Manager
+
+Its job is to **interact with your cloud service provider**, where you actually run your kubernetes cluster. Because usually you don't create these clusters to run on your own servers, instead you usually choose to run them on one of the cloud providers.  
+which actually performs almost automated creation of all nodes, and the connection between such nodes. And for that, you have to run Cloud Controller Manager service on the master node. Also for example if you want to create deployment of your application inside of the kubernetes cluster, which will be opened to the outside world, and allow connection from outside, you could create a load-balancer IP addresses, and those load-balancer IP addresses are usually provided by those specific cloud providers.
+
+### - Concept 14: etcd
+
+Also on master node, there's such a thing called etcd.
+Etcd is a service which actually stores all logs related to the operation of the entire kubernetes cluster, and such logs are stored inside of it as key-value pairs.
 
 ---
 
@@ -1488,7 +1405,7 @@ In this guide we'll be creating 2 yaml configuration files for 1 single deployme
 
 ---
 
-## 6. **Kubernetes Configuration Templates**
+## 6. **Configuration Templates**
 
 ### **• Imperative Vs. Declarative**
 
@@ -1588,10 +1505,10 @@ Under the `spec` key, located in the root of the yaml file, add another key call
 **• How to Create a Service Using the Declarative Way**
 
 Let's create a service using the declarative approach.  
-Create a new file and name it as service.yaml.  
-At the top of it, start typing the word "deploy", and the kubernetes extension would kick in, and you should see an auto-completion suggestion. By hitting enter, you should see the that the extension filled in quite a bit of boiler-plate for you automatically.
+Create a new file and name it as `service.yaml`.  
+At the top of it, start typing the word **deploy**, and the `kubernetes extension` would kick in, and you should see an auto-completion suggestion. By hitting enter, you should see the that the extension filled in quite a bit of boiler-plate for you automatically.
 
-A configuration template yaml for creating a Service should look like:
+A configuration template yaml for creating a **Service** should look like:
 
 ```yaml
 apiVersion: v1
@@ -1616,9 +1533,39 @@ There are a few things to notice in this yaml config:
 
 - `spec.selector` is "myapp".
 
-- Both `spec.ports.port` & `spec.ports.targetPort` need to be filled manually. As a reminder, the `targetPort` is the port of the container which you'd like to expose out to the `pod`, and `port` is the port on the `pod` which you would like to expose out to the `service`.
+- Both `spec.ports.port` & `spec.ports.targetPort` need to be filled manually. The `targetPort` is the port number on the container which you'd like to expose out to the `pod`, and `port` is the port number on the `pod` which you would like to expose out to the `service`.
 
 - `type` key is missing! If you recall, we discussed types like **ClusterIP**, **NodePort**, and **LoadBalancer**. If the `type` key isn't mentioned, then by default, kubernetes will assume the type is **ClusterIP**. If you want to be more explicit, you can add a key of `spec.type` and give it either one of the following values: **ExternalName**, **ClusterIP** (default), **NodePort**, and **LoadBalancer**.
+
+**Question**: We only specified a `port` which is the pod's port (`--port`), and a `target-port` which is the container's port (`--target-port`). But what about the node's port??
+**Answer**: kubernetes would auto-generated some random port! Typically a super high number. For example, if you provide --port=3000 and --target-port=80, kubernetes would add: node:32142 `-->` pod:3000 `-->` container:80
+
+Then, to access your application, you need the node's ip address, which you could get by:
+
+```bash
+minikube ip
+```
+
+Don't forget that in minikube you have a cluster with only 1 node, so this ip is the ip of the only single node you own.
+Then, simply go to your web browser, and type:
+
+```bash
+<minikube's-ip>:<the-auto-generated-port>
+```
+
+And you should see a response coming back from one you’re the pods inside the exposed deployment! Pretty cool, huh?
+You could also use the built-in minikube's command:
+
+```bash
+minikube service <service-name>
+```
+
+which opens up a web service with the url of node, including the right port, without even check for the port up front.
+You could also use the flag --url to only get back the url address for that service:
+
+```bash
+minikube service <service-name> --url
+```
 
 Let's now apply this configuration file. Open up a terminal in the same folder as the yaml config file, and run the command:
 
@@ -1642,40 +1589,6 @@ You get a response for any resource that kubernetes was able to delete:
 deployment.apps "<name-of-deployment>" deleted
 service "<name-of-service>" deleted
 ```
-
-### • D. ???
-
-### • E. ReplicaSet
-
-Here's a simple example of a ReplicaSet YAML configuration:
-
-```yaml
-apiVersion: apps/v1
-kind: ReplicaSet
-metadata:
-  name: my-replicaset
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: my-app
-  template:
-    metadata:
-      labels:
-        app: my-app
-    spec:
-      containers:
-      - name: my-container
-        image: my-image:latest
-```
-
-- **replicas**: 3 indicates that the ReplicaSet should maintain three replicas.
-
-- **selector**: specifies the label selector, and matchLabels defines the labels that the Pods managed by this ReplicaSet should have (app: my-app).
-
-- **template**: provides the specification for the Pods created by the ReplicaSet. The Pods will have the label app: my-app and contain a container named my-container running the my-image:latest image.
-
-If a node fails or if the number of Pods falls below the desired state for any reason, the ReplicaSet controller automatically creates new Pods to meet the specified replica count. Similarly, if there are too many Pods, the controller will scale down the number of replicas.
 
 ---
 
