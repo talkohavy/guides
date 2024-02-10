@@ -724,9 +724,48 @@ When creating a minikube cluster for the first time, by default, it's created wi
 - 1 node (that acts like both the master & worker node)
 - 1 pod
 
-### - Command 1: minikube start
+### - Command 1: minikube delete
 
-It's your 1st time running this command:
+**The command:**
+
+```bash
+minikube delete
+```
+
+**Description:**
+
+Deletes a local Kubernetes cluster. This command deletes the VM, and removes all associated files.
+
+<br/>
+
+### - Command 2: minikube profile list
+
+**The command:**
+
+```bash
+minikube profile list
+```
+
+**Description:**
+
+Lists all minikube profiles. Lists all valid minikube profiles and detects all possible invalid profiles.
+
+**A response example would look like:**
+
+```bash
+- Deleting "minikube" in docker ...
+- Deleting container "minikube" ...
+- Removing C:\Users\tal\.minikube\machines\minikube ...
+- Removed all traces of the "minikube" cluster.
+```
+
+<br/>
+
+### - Command 3: minikube start
+
+**The command:**
+
+If it's your 1st time running this command:
 
 - Option 1: start a cluster using the _docker_ driver
 
@@ -741,7 +780,7 @@ minikube config set driver docker
 minikube start
 ```
 
-It's your 2nd+ time running this command:
+If it's your 2nd+ time running this command:
 
 ```bash
 minikube start
@@ -752,6 +791,12 @@ minikube start
 Starts a kubernetes cluster locally on your machine.
 
 For this command to work, your machine's Docker Engine needs to be running. It should take a few minutes to start a minikube cluster. That cluster has only 1 node, which acts as both the master node & the worker node.
+
+The cluster is created with a default profile called `minikube`, which you could override using the `--profile` (`-p`) flag:
+
+```bash
+minikube start --profile prod
+```
 
 **A response example would look like:**
 
@@ -766,7 +811,9 @@ For this command to work, your machine's Docker Engine needs to be running. It s
 
 <br/>
 
-### - Command 2: minikube stop
+### - Command 4: minikube stop
+
+**The command:**
 
 ```bash
 minikube stop
@@ -791,7 +838,9 @@ Stops a local Kubernetes cluster. This command stops the underlying VM or contai
 
 <br/>
 
-### - Command 3: minikube status
+### - Command 5: minikube status
+
+**The command:**
 
 ```bash
 minikube status
@@ -801,7 +850,9 @@ minikube status
 
 Shows the status of your kubernetes cluster.
 
-**An example for a good response would look like:**
+**A response example would look like:**
+
+A good response would look like:
 
 ```bash
 minikube
@@ -812,7 +863,7 @@ apiserver: Running
 kubeconfig: Configured
 ```
 
-**If a cluster does not exist, the response would appear as such:**
+If a cluster does not exist, the response would appear as such:
 
 ```bash
 Profile "minikube" not found.
@@ -820,31 +871,10 @@ Profile "minikube" not found.
 
 <br/>
 
-### - Command 4: minikube delete
+### - Command 6: minikube ip
 
 ```bash
-minikube delete
-```
-
-**Description:**
-
-Deletes an existing minikube cluster.
-
-**A response example would look like:**
-
-```bash
-- Deleting "minikube" in docker ...
-- Deleting container "minikube" ...
-- Removing C:\Users\tal\.minikube\machines\minikube ...
-- Removed all traces of the "minikube" cluster.
-```
-
-<br/>
-
-### - Command 5: minikube ip
-
-```bash
-minikube ip
+minikube ip --node node_name --profile profile_name
 ```
 
 **Description:**
@@ -862,7 +892,7 @@ Returns the IP address of the specified node.
 
 <br/>
 
-### - Command 6: minikube node list
+### - Command 7: minikube node list
 
 ```bash
 minikube node list
@@ -872,33 +902,23 @@ minikube node list
 
 Returns a list of all nodes inside the minikube cluster.
 
-I'm not sure as to why & how this could be useful, since the stupid Russian guys said a minikube cluster can only consist of 1 node, so the list would only contain 1 node, right?
-
 **A response example would look like:**
 
 ```bash
 minikube 192.168.49.2
 ```
 
-I also noticed that after the `node` keyword can come multiple options:
-
-- start
-- stop
-- add
-- delete
-- list
-
 <br/>
 
-### - Command 7: minikube ssh
+### - Command 8: minikube ssh
 
 ```bash
-minikube ssh
+minikube ssh --node node_name --profile profile_name
 ```
 
 **Description:**
 
-A way to connect to your minikube cluster.
+A way to connect to your minikube environment (for debugging).
 
 With this command you don't even need to enter a password! So it's much more comfortable.
 
@@ -908,22 +928,22 @@ With this command you don't even need to enter a password! So it's much more com
 docker@minikube:~$
 ```
 
-We can learn from the output above that when running the command `minikube start`, minikube creates a default _username_ called "docker", with a default _password_ of "tcuser".
+We can learn from the output above that when we ran `minikube start` to create the cluster, minikube by default created a _username_ called "docker", with a default _password_ of "tcuser".
 
 - **Username**: docker
 - **Password**: tcuser
 
 <br/>
 
-### - Command 8: minikube service
+### - Command 9: minikube service
 
 ```bash
-minikube service <name-of-service> <flags>
+minikube service -n <namespace> <name-of-service>
 ```
 
 **Description:**
 
-In a case of a NodePort type of service, this is a way to open up a service in your default browser, without having to know the auto-generated ip address of your node. The ip address which was assigned when using the `expose deployment --type=NodePort` command. You could use the flag `--url`, to get back only the url, without opening a web browser.
+In case of a **NodePort** type of **service**, this is a way to open up a service in your default browser, without having to know the auto-generated ip address of your node. The ip address which was assigned when using the `expose deployment --type=NodePort` command. You could use the flag `--url`, to get back only the url, without opening a web browser.
 
 ---
 
