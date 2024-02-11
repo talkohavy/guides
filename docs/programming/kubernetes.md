@@ -761,7 +761,29 @@ Lists all minikube profiles. Lists all valid minikube profiles and detects all p
 
 <br/>
 
-### - Command 3: minikube start
+### - Command 3: minikube profile
+
+**The command:**
+
+Set profile as **default**:
+
+```bash
+minikube profile profile_name
+```
+
+Get current profile:
+
+```bash
+minikube profile
+```
+
+**Description:**
+
+`profile` sets the current minikube profile, or gets the current profile if no arguments are provided. This is used to run and manage multiple minikube instances. You can return to the default minikube profile by running `minikube profile default`
+
+<br/>
+
+### - Command 4: minikube start
 
 **The command:**
 
@@ -770,7 +792,7 @@ If it's your 1st time running this command:
 - Option 1: start a cluster using the _docker_ driver
 
 ```bash
-minikube start --driver=docker
+minikube start --driver=docker --profile profile_name
 ```
 
 - Option 2: make _docker_ the default driver, then you could use short: `minikube start`
@@ -811,7 +833,7 @@ minikube start --profile prod
 
 <br/>
 
-### - Command 4: minikube stop
+### - Command 5: minikube stop
 
 **The command:**
 
@@ -838,12 +860,12 @@ Stops a local Kubernetes cluster. This command stops the underlying VM or contai
 
 <br/>
 
-### - Command 5: minikube status
+### - Command 6: minikube status
 
 **The command:**
 
 ```bash
-minikube status
+minikube status --profile profile_name
 ```
 
 **Description:**
@@ -871,7 +893,7 @@ Profile "minikube" not found.
 
 <br/>
 
-### - Command 6: minikube ip
+### - Command 7: minikube ip
 
 ```bash
 minikube ip --node node_name --profile profile_name
@@ -892,7 +914,7 @@ Returns the IP address of the specified node.
 
 <br/>
 
-### - Command 7: minikube node list
+### - Command 8: minikube node list
 
 ```bash
 minikube node list
@@ -910,7 +932,7 @@ minikube 192.168.49.2
 
 <br/>
 
-### - Command 8: minikube ssh
+### - Command 9: minikube ssh
 
 ```bash
 minikube ssh --node node_name --profile profile_name
@@ -935,15 +957,25 @@ We can learn from the output above that when we ran `minikube start` to create t
 
 <br/>
 
-### - Command 9: minikube service
+### - Command 10: minikube service
 
 ```bash
-minikube service -n <namespace> <name-of-service>
+minikube service -n <namespace> name_of_service
 ```
 
 **Description:**
 
 In case of a **NodePort** type of **service**, this is a way to open up a service in your default browser, without having to know the auto-generated ip address of your node. The ip address which was assigned when using the `expose deployment --type=NodePort` command. You could use the flag `--url`, to get back only the url, without opening a web browser.
+
+<br/>
+
+### - Command 11: minikube tunnel
+
+```bash
+minikube tunnel
+```
+
+**Description:**
 
 ---
 
