@@ -1485,24 +1485,35 @@ It would look something like:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-name: myapp
+  name: myapp
+  namespace: default
+  labels:
+    app: configuration-server
 spec:
-// replicas: 1 // this line would not appear!
-selector:
-matchLabels:
-app: myapp
-template:
-metadata:
-labels:
-app: myapp
-spec:
-containers: - name: myapp
-Image: <image>
-Resources:
-Limits
-Memory: "128Mi"
-Cpu: "500m"
-ports: - containerPort: <Port>
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: <image>
+        ports:
+        - containerPort: <Port>
+        envFrom:
+        - configMapRef:
+            name: myconfigmapv1.0
+        resources:
+          requests:
+            memory: "16Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
 ```
 
 When using this shortcut, all places with the myapp value would be highlighted, and you could type in the name of your deployment.
