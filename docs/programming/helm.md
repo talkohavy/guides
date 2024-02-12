@@ -5,7 +5,9 @@ sidebar_position: 11
 
 # Guide For Helm
 
-## **2. Helm Daily Workflow**
+## **1. Helm Daily Workflow**
+
+### - A. list all your charts
 
 You start out by listing all your charts with:
 
@@ -13,78 +15,74 @@ You start out by listing all your charts with:
 helm ls
 ```
 
+### - B. Delete a deployment + service
+
 You can uninstall any of the listed charts using:
 
 ```bash
-helm uninstall chart_name
+helm uninstall CHART_NAME
 ```
 
-```bash
-helm status <chart_name>
-```
+### - C. Create new deployment+service template for an app
 
 ```bash
-helm create <my-app>
+helm create CHART_NAME
 ```
 
-```bash
-helm install <my-app>
-```
+### - D. Provision a new deployment + service of an app to the cluster
 
 ```bash
-helm upgrade <my-app> path/to/webapp/ --values path/to/values.yaml
+helm install CHART_NAME . --values path/to/values.yaml --debug --verify
+```
+
+Or by using force:
+
+```bash
+helm install CHART_NAME . --values path/to/values.yaml --debug --verify --force
+```
+
+### - E. Keep track on an installation
+
+```bash
+helm status CHART_NAME
+```
+
+### - F. Upgrade a chart's revision
+
+```bash
+helm upgrade CHART_NAME . --values path/to/values.yaml
 ```
 
 ---
 
-## **1. Helm Commands**
-
-**- The command: status**
-
-```bash
-helm status <chart_name>
-```
-
-**- Description:**
-
-The `helm status` commands is useful when using the `helm install` command. When running `helm install`, Helm does not wait until all of the resources are running before it exits. Many charts require Docker images that are over 600MB in size, and may take a long time to install into the cluster. So, to keep track of a release's state, or to re-read configuration information, you can use `helm status`.
+## **2. Helm Commands**
 
 ### - Command 1: helm ls
 
 **- The command:**
 
 ```bash
-helm ls <my-app>
+helm ls -n namespace_name
 ```
 
 Or...
 
 ```bash
-helm list <my-app>
+helm list -n namespace_name
 ```
 
 **- Description:**
 
 This command lists all of the releases for a specified namespace (uses current namespace context if namespace not specified).
 
-**- Example Usage:**
-
-```bash
-helm ls <my-app>
-```
-
-```bash
-helm ls -n <namespace> <my-app>
-```
-
 <br/>
 
-### - Command 1: helm uninstall
+### - Command 2: helm uninstall
 
 **- The command:**
 
 ```bash
-helm uninstall <release_name>
+helm uninstall RELEASE_NAME
 ```
 
 **- Description:**
@@ -95,17 +93,24 @@ This command takes a release name and uninstalls the release. It removes all of 
 
 <br/>
 
-### - Command 1: helm install
+### - Command 3: helm install
 
 **- The command:**
 
 ```bash
-helm install chart_nickname path/to/root --values path/to/values.yaml
+helm install chart_nickname path/to/root --values path/to/values.yaml --debug
 ```
 
 **- Description:**
 
 This command installs a **chart** archive, and gives it a **nickname** which you provide.
+
+- The `-f`, `--values` flags specify values in a YAML file or a URL (can specify multiple).
+- The `--debug` flag enables verbose output.
+- The `--dry-run` flag simulates an install. `--dry-run` is similar to `--dry-run=client`, which means that it will not attempt cluster connections, while setting `--dry-run=server` attempts to connect the cluster.
+- The `--force` flag forces resource updates through a replacement strategy.
+- The `--verify` flag verifies the package before using it.
+- The `--wait` flag will wait until all Pods, PVCs, Services, and minimum number of Pods of a Deployment, StatefulSet, or ReplicaSet are in a **ready state** before marking the release as **successful**. It will wait for as long as `--timeout`.
 
 The install argument must be a **chart reference**, a **path to a packaged chart**, a **path to an unpacked chart directory**, or a **URL**.
 
@@ -131,33 +136,17 @@ helm install configuration-server-release .
 
 <br/>
 
-### - Command 2: helm history
+### - Command 4: helm status
 
-**- The command:**
+**- The command: status**
 
 ```bash
-helm history <my-app>
+helm status <chart_name>
 ```
 
 **- Description:**
 
-**- Example Usage:**
-
-```bash
-helm history -n <namespace> <my-app>
-```
-
-<br/>
-
-### - Command 2: helm status
-
-**- The command:**
-
-```bash
-helm status <my-app> [flags]
-```
-
-**- Description:**
+The `helm status` commands is useful when using the `helm install` command. When running `helm install`, Helm does not wait until all of the resources are running before it exits. Many charts require Docker images that are over 600MB in size, and may take a long time to install into the cluster. So, to keep track of a release's state, or to re-read configuration information, you can use `helm status`.
 
 Display the status of the named release.
 
@@ -181,25 +170,35 @@ This command shows the status of a named release. The status consists of:
 
 <br/>
 
-### - Command 3: helm rollback
+### - Command 5: helm create
 
 **- The command:**
 
 ```bash
-helm rollback <my-app>
+helm create NAME
 ```
 
 **- Description:**
 
-**- Example Usage:**
+create a new **chart** with the given name.
 
-```bash
-helm rollback -n <namespace> <my-app> <revision-number>
+This command creates a chart directory along with the common files and directories used in a chart. `helm create` takes a _path_ for an argument. If directories in the given path do not exist, Helm will attempt to create them as it goes. If the given destination exists and there are files in that directory, conflicting files will be overwritten, but other files will be left alone.
+
+For example, `helm create foo` will create a directory structure that looks something like this:
+
+```
+foo/
+├── .helmignore   # Contains patterns to ignore when packaging Helm charts.
+├── Chart.yaml    # Information about your chart
+├── values.yaml   # The default values for your templates
+├── charts/       # Charts that this chart depends on
+└── templates/    # The template files
+    └── tests/    # The test files
 ```
 
 <br/>
 
-### - Command 2: helm upgrade
+### - Command 6: helm upgrade
 
 **- The command:**
 
@@ -211,64 +210,67 @@ helm upgrade <my-app> path/to/webapp/ --values path/to/values.yaml
 
 <br/>
 
-### - Command 3: helm rollback
+### - Command 999: helm history
 
 **- The command:**
 
 ```bash
-helm rollback <my-app>
+helm history RELEASE_NAME -n <namespace>
 ```
 
 **- Description:**
+
+Fetch a release's history.
+
+`history` prints out historical revisions for a given release. A default maximum of 256 revisions will be returned. Setting `--max` configures the maximum length of the revision list returned.
 
 <br/>
 
-### - Command 4: helm package
+### - Command 999: helm rollback
 
 **- The command:**
 
 ```bash
-helm package <my-app>
+helm rollback RELEASE_NAME REVISION_NUMBER -n <namespace>
 ```
 
 **- Description:**
+
+Roll back a release to a previous revision.
+
+The first argument of the rollback command is the name of a release, and the second is a revision (version) number. _If this argument is omitted or set to 0, it will roll back to the **previous** release_.
+
 <br/>
 
-### - Command 5: helm create
+### - Command 999: helm package
 
 **- The command:**
 
 ```bash
-helm create <my-app>
+helm package path/to/root [flags] --version VERSION_NUMBER --debug
 ```
 
 **- Description:**
+
+Package a chart directory into a chart archive.
+
+This command packages a chart into a **versioned** chart archive file. If a path is given, this will look at that path for a chart (which must contain a `Chart.yaml` file) and then package that directory.
+
+Versioned chart archives are used by Helm package repositories.
+
+To sign a chart, use the '--sign' flag. In most cases, you should also provide '--keyring path/to/secret/keys' and '--key keyname'.
+
+```bash
+helm package --sign ./mychart --key mykey --keyring ~/.gnupg/secring.gpg
+```
+
+If '--keyring' is not specified, Helm usually defaults to the public keyring unless your environment is otherwise configured.
+
 <br/>
 
 ---
 
-## **2. Introduction**
-
-Helm is a package manager for kubernetes, that make it easy to take applications and services that are highly repeatable or get used in a lot of different scenarios and it makes it easier to deploy them to a typical kubernetes cluster.
-chart = template
-Your chart is going to consist of all the files that you're going to be template'ing here.
-Helm talks to a component that needs to be installed on your kubernetes cluster called **Tiller**. Tiller is basically just the server-side component of helm. It's gonna take the commands you've sent with helm client, and turn it into something that your kubernetes cluster will understand. Now, this becomes extra useful when you wanna doo things like "upgrade to a new configuration" or "rollback to an older version".
-What Helm will also give you is that it actually keeps a version history for you of different configurations you've sent over the wire with help, so you can rollback to the last known working configuration whenever you want to.
-Good things to template:
-
-- the `namespace`
-- the `selector` name
-- the `image`:
-  - its `name`
-  - its `tag`
-- the `configmap.name`
-  Create a NOTES.txt file, which outputs to the user on every upgrade command.
-  This file could also be templated.
-  You can create 1 values.yaml file for production and one for development.
-
----
-
-## 2. Getting Started
+## 3. Helm Architecture
 
 Prerequisites:
 
@@ -296,3 +298,24 @@ With these concepts in mind, we can now explain Helm like this:
 Helm installs **charts** into Kubernetes, creating a new **release** for each installation. And to find new charts, you can search Helm chart **repositories**.
 
 helm show values
+
+---
+
+## **4. What is helm?**
+
+**Helm** is a **package manager** for **kubernetes**, that makes it easy to take applications and services that are highly repeatable or get used in a lot of different scenarios and it makes it easier to deploy them to a typical kubernetes cluster.
+chart = template
+Your chart is going to consist of all the files that you're going to be template'ing here.
+Helm talks to a component that needs to be installed on your kubernetes cluster called **Tiller**. Tiller is basically just the server-side component of helm. It's gonna take the commands you've sent with helm client, and turn it into something that your kubernetes cluster will understand. Now, this becomes extra useful when you wanna doo things like "upgrade to a new configuration" or "rollback to an older version".
+What Helm will also give you is that it actually keeps a version history for you of different configurations you've sent over the wire with help, so you can rollback to the last known working configuration whenever you want to.
+Good things to template:
+
+- the `namespace`
+- the `selector` name
+- the `image`:
+  - its `name`
+  - its `tag`
+- the `configmap.name`
+  Create a NOTES.txt file, which outputs to the user on every upgrade command.
+  This file could also be templated.
+  You can create 1 values.yaml file for production and one for development.
