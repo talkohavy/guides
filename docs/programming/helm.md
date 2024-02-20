@@ -23,13 +23,13 @@ You can uninstall any of the listed charts using:
 helm uninstall CHART_NAME
 ```
 
-### - C. Create new deployment+service template for an app
+### - C. Create a new chart-template with deployment+service for an app
 
 ```bash
 helm create CHART_NAME
 ```
 
-### - D. Provision a new deployment + service of an app to the cluster
+### - D. Provision a deployment+service for the first time
 
 ```bash
 helm install CHART_NAME . --values path/to/values.yaml --debug --verify
@@ -41,16 +41,32 @@ Or by using force:
 helm install CHART_NAME . --values path/to/values.yaml --debug --verify --force
 ```
 
-### - E. Keep track on an installation
+### - E. Keep track of an installation progress
 
 ```bash
 helm status CHART_NAME
 ```
 
-### - F. Upgrade a chart's revision
+### - F. Upgrade (update) a chart's revision
 
 ```bash
 helm upgrade CHART_NAME . --values path/to/values.yaml
+```
+
+### - G. Abort unsuccessful upgrade of a chart
+
+When an upgrade is unsuccessful, and the `rollingUpdate` seems to fail, you might need to abort the upgrade. Here's how you do it:
+
+If you know the **revision number** of the current successful chart, simply **rollback** to it:
+
+```bash
+helm rollback CHART_NAME REVISION_NUMBER -n default
+```
+
+If you need to check the current revision number, you can use the **history** command:
+
+```bash
+helm history backend -n default
 ```
 
 ---
