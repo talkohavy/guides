@@ -31,14 +31,24 @@ helm create CHART_NAME
 
 ### - D. Provision a deployment+service for the first time
 
+If you're trying to create a chart on a namespace that doesn't exist, the command will fail. You'll first need to create the namespace manually with `kubectl`, `helm` won't do that for you.
+
+To create a namespace run the following command:
+
 ```bash
-helm install CHART_NAME . --values path/to/values.yaml --debug --verify
+kubectl create namespace namespace_name
+```
+
+When you have a `namespace` exists, you can run `helm install`:
+
+```bash
+helm install CHART_NAME . --values values.yaml --debug --verify
 ```
 
 Or by using force:
 
 ```bash
-helm install CHART_NAME . --values path/to/values.yaml --debug --verify --force
+helm install CHART_NAME . --values values.yaml --debug --verify --force
 ```
 
 ### - E. Keep track of an installation progress
