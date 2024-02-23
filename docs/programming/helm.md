@@ -31,36 +31,26 @@ helm create CHART_NAME
 
 ### - D. Provision a deployment+service for the first time
 
-If you're trying to create a chart on a namespace that doesn't exist, the command will fail. You'll first need to create the namespace manually with `kubectl`, `helm` won't do that for you.
-
-To create a namespace run the following command:
-
 ```bash
-kubectl create namespace namespace_name
-```
-
-When you have a `namespace` exists, you can run `helm install`:
-
-```bash
-helm install CHART_NAME . --values values.yaml --debug --verify
+helm install CHART_NAME . --values values.yaml --debug --verify -n namespace --create-namespace
 ```
 
 Or by using force:
 
 ```bash
-helm install CHART_NAME . --values values.yaml --debug --verify --force
+helm install CHART_NAME . --values values.yaml --debug --verify -n namespace --create-namespace --force
 ```
 
 ### - E. Keep track of an installation progress
 
 ```bash
-helm status CHART_NAME
+helm status CHART_NAME -n default
 ```
 
 ### - F. Upgrade (update) a chart's revision
 
 ```bash
-helm upgrade CHART_NAME . --values path/to/values.yaml
+helm upgrade CHART_NAME . --values values.yaml -n default --create-namespace
 ```
 
 ### - G. Abort unsuccessful upgrade of a chart
@@ -108,7 +98,7 @@ This command lists all of the releases for a specified namespace (uses current n
 **- The command:**
 
 ```bash
-helm uninstall RELEASE_NAME
+helm uninstall RELEASE_NAME -n default
 ```
 
 **- Description:**
@@ -124,7 +114,7 @@ This command takes a release name and uninstalls the release. It removes all of 
 **- The command:**
 
 ```bash
-helm install chart_nickname path/to/root --values path/to/values.yaml --debug
+helm install chart_nickname path/to/root --values path/to/values.yaml -n default --debug
 ```
 
 **- Description:**
@@ -157,7 +147,7 @@ To override values in a chart, use either the '--values' flag and pass in a file
 **- Example Usage:**
 
 ```bash
-helm install configuration-server-release .
+helm install user ./user --values ./user/values.yaml -n application --create-namespace
 ```
 
 <br/>
@@ -167,7 +157,7 @@ helm install configuration-server-release .
 **- The command: status**
 
 ```bash
-helm status <chart_name>
+helm status chart_name -n default
 ```
 
 **- Description:**
@@ -229,7 +219,7 @@ foo/
 **- The command:**
 
 ```bash
-helm upgrade <my-app> path/to/webapp/ --values path/to/values.yaml
+helm upgrade my-app path/to/root/ --values path/to/values.yaml -n default
 ```
 
 **- Description:**
@@ -241,7 +231,7 @@ helm upgrade <my-app> path/to/webapp/ --values path/to/values.yaml
 **- The command:**
 
 ```bash
-helm history RELEASE_NAME -n <namespace>
+helm history RELEASE_NAME -n default
 ```
 
 **- Description:**
