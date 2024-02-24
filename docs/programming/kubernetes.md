@@ -367,7 +367,49 @@ Now kubernetes is able to resolve the name of the service, to the corresponding 
 
 <br/>
 
-### - Command 14: describe pod
+### - Command 14: port-forward
+
+**The command:**
+
+```bash
+kubectl port-forward TYPE/NAME [options] [LOCAL_PORT:]REMOTE_PORT [...[LOCAL_PORT_N:]REMOTE_PORT_N]
+```
+
+**Description:**
+
+You way of connecting to a pod from the host.
+
+Use resource type/name such as deployment/mydeployment to select a pod. Resource type defaults to 'pod' if omitted.
+
+**Common Use-Case:**
+
+Listen on port 8888 locally (on the host), forwarding to port 5000 in the pod:
+
+```bash
+kubectl port-forward pod/mypod 8888:5000
+```
+
+Listen on ports 5000 and 6000 locally, forwarding data to/from ports 5000 and 6000 in the pod:
+
+```bash
+kubectl port-forward pod/mypod 5000 6000
+```
+
+Listen on ports 5000 and 6000 locally, forwarding data to/from ports 5000 and 6000 in a pod selected by the deployment
+
+```bash
+kubectl port-forward deployment/mydeployment 5000 6000
+```
+
+Listen on port 8443 locally, forwarding to the targetPort of the service's port named "https" in a pod selected by the service
+
+```bash
+kubectl port-forward service/myservice 8443:https
+```
+
+<br/>
+
+### - Command 15: describe pod
 
 **The command:**
 
@@ -397,7 +439,7 @@ Some really useful information coming from the response is:
 
 <br/>
 
-### - Command 15: describe deployment
+### - Command 16: describe deployment
 
 **The command:**
 
@@ -473,7 +515,7 @@ Normal ScalingReplicaSet 11m deployment-controller Scaled up replica set nginx-d
 
 <br/>
 
-### - Command 16: describe service
+### - Command 17: describe service
 
 ```bash
 kubectl describe service <my-service>
@@ -519,7 +561,7 @@ Events: <none>
 
 <br/>
 
-### - Command 17: manually delete a pod
+### - Command 18: manually delete a pod
 
 **The command:**
 
@@ -536,7 +578,7 @@ A pod that's deleted, which was created by a deployment, would also be deleted f
 
 <br/>
 
-### - Command 18: manually create pod
+### - Command 19: manually create pod
 
 **The command:**
 
@@ -556,7 +598,7 @@ We usually don't use this command to create new pods. We would use `create deplo
 
 <br/>
 
-### - Command 19: manually create deployment
+### - Command 20: manually create deployment
 
 **The command:**
 
@@ -597,7 +639,7 @@ Google's Documentation: Deployments represent a set of multiple identical Pods w
 
 <br/>
 
-### - Command 20: manually expose a deployment
+### - Command 21: manually expose a deployment
 
 **The command:**
 
@@ -633,7 +675,7 @@ service/my-service exposed
 
 <br/>
 
-### - Command 21: manually scale a deployment
+### - Command 22: manually scale a deployment
 
 **The command:**
 
@@ -653,7 +695,7 @@ deployment.apps/nginx-deployment scaled
 
 <br/>
 
-### - Command 22: manually delete all resources
+### - Command 23: manually delete all resources
 
 **The command:**
 
@@ -676,7 +718,7 @@ immediately after the `delete all` command, you'll see some pods are still alive
 
 <br/>
 
-### - Command 23: set image
+### - Command 24: set image
 
 **The command:**
 
@@ -690,7 +732,7 @@ kubectl set image <deployment-name>=talkohavy/img-name:2.0.0
 
 <br/>
 
-### - Command 24: rollout status deploy
+### - Command 25: rollout status deploy
 
 **The command:**
 
