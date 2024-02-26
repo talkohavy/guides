@@ -78,8 +78,14 @@ curl --cacert http_ca.crt -u elastic:$ELASTIC_PASSWORD https://localhost:9200
 You'll always be able to reset your password using:
 
 ```bash
+docker exec -it es01 sh
+```
+
+```bash
 bin/elasticsearch-reset-password -u elastic
 ```
+
+and hit 'Yes' to print it to console.
 
 ---
 
