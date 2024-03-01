@@ -232,7 +232,17 @@ This can be done by using `align-self`.
 ``
 ```
 
-### - H. How is it calculated with padding & margins?
+### - H. Flex Flow
+
+This is a shorthand for the flex-direction and flex-wrap properties, which together define the flex container’s main and cross axes. The default value is `row nowrap`.
+
+```css
+.container {
+  flex-flow: column wrap;
+}
+```
+
+### - I. How is it calculated with padding & margins?
 
 When flexbox is doing its calculations, it's **NOT** taking into account each flex item's paddings & border widths.
 
