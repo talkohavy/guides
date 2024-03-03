@@ -249,3 +249,360 @@ When flexbox is doing its calculations, it's **NOT** taking into account each fl
 Now what does that mean exactly? And why they decided it should behave like that?
 
 So, we know that flex items can either shrink or grow to fill the parent element's width. Think about it this way: do you really want the _border width_ to grow or shrink? Now that wouldn't make much sense, does it? So, what flexbox does it it deducts all those border widths up front, and hen proceeds to fit the flex items in the space that's left. For instance, if a parent element has a width of 600, and 1 flex item has a border width of 2, then flexbox takes the 600 and deducts 4 from it (because there's a border of each side), and proceed to divide 596 by 3.
+
+---
+
+## **2. Grid**
+
+### - A. Grid Terminology
+
+Grid container
+
+Grid items
+
+Grid gaps
+
+Grid tracks
+
+### - B. Grid Behavior
+
+```css
+.gridContainer {
+  display: grid;
+}
+```
+
+Applying `display: grid` by itself doesn't do anything. By default, any with no further input, its children would act as normal div's inside of a container. `display: grid` in itself doesn't define any rows or columns for us to work with.
+
+To make a grid display as an actual grid, we need to define specific rows or columns manually.
+
+### - C. Grid template columns
+
+There's a property called `grid-template-columns`, with which we can define our columns. In it we need to provide a value, which is a list of all the different columns sizes we want. You can use percentage, pixels, em, rem, whatever you want.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-template-columns: 200px 100px;
+}
+```
+
+The example above shows a grid defined with 2 columns, where the first one has a width of 200px, and the second column has 100px.
+
+### - D. Flexible columns - The Fraction Unit
+
+What if we wanted our columns to flexibly size themselves based on the items inside of them?
+
+That's when we use the `fraction` unit.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+```
+
+In the above example, I've used 2fr and 1fr as my units. The container's full width is then assumed to be 3frs (fraction units) in total, and the first columns would take 2/3 of its total, and the second column would take 1/3 of its total.
+
+### - E. Gap & Padding
+
+When giving the container a gutter gap or padding, you should be aware that it takes up from the space that would be left for the grid items. So, grid items will shrink in order to fit their container. The grid container will first deduct the size of the gaps and its padding, and then divide the remaining space amongst the grid items.
+
+### - F. Repeat
+
+Consider a case where you wanted a large number of columns, lets say 12, and you wanted them all the same size (the "same size" part is important!). In this case, what you would normally do is:
+
+```css
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+```
+
+Looks awful, right? You can really understand how many columns are there with how it's written above. A better way is to use the `repeat` value. `repeat` is basically a css function (like `calc`), that accepts 2 arguments: the columns count, and the unit to repeat over those columns.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+```
+
+### - G. Grid template rows
+
+Same as with `grid-template-columns`, you can define rows with `grid-template-columns`.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-template-rows: 200px 150px;
+}
+```
+
+The above example will have the first row as 200px height, and the second row with 150px height. But what if I have more than 2 rows? Will it activate as a pattern? Odd rows and even rows? Well, the answer is **no**...
+
+Only the rows you defined (one & two) will follow the given height you provided. The rest of them will take the container's leftover space and divide it equally between them. In case of no space left, they will shrink down to their minimum height, and overflow the container if they can't all fit inside.
+
+So how can we solve this for a case we don't know how many rows there gonna be?Meet `grid-auto-rows`.
+
+### - H. Grid auto rows
+
+If you don't know how many rows a container is going to have, you can use the property known as `grid-auto-rows`. The property `grid-auto-rows` plays well together with `grid-template-rows` property in the sense that rows defined by `grid-template-rows` get defined and follow the rule it dictates, and each row that comes **after** the rows defined in `grid-template-rows`, follow the rule which the `grid-auto-rows` property dictates.
+
+So, for example:
+
+```css
+.gridContainer {
+  display: grid;
+  grid-template-rows: 200px 150px;
+  grid-auto-rows: 100px;
+}
+```
+
+In the above example, the first row is going to have a height of 200px, the second row is going to have a height of 150px, and the remaining rows (which either will or will not get created) are going to have a height of 100px.
+
+In case a `grid-template-rows` property isn't defined, then all rows will be affected by the `grid-auto-rows` property, starting from the first row.
+
+### - I. minmax css function
+
+Let's say you defined a row height using either `grid-template-rows` or `grid-auto-rows`, but the cell's content needs much more space.
+
+What will happen then?
+
+Let's give an example:
+
+```css
+.gridContainer {
+  display: grid;
+  grid-auto-rows: 100px;
+}
+```
+
+```javascript
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2,1fr)',
+  gridAutoRows: '120px',
+  gap: 10,
+}}>
+  <div>lorem ipsum(100)</div>
+  <div>lorem ipsum(25)</div>
+  <div>hello</div>
+  <div>world</div>
+</div>
+```
+
+In the above example, the first row is going to have a fixed height of 120px, but the contents of the first cell is going to be huge, it's going to overflow the cell and be display on the cell below. Usually, grid items stretch according to their content, and a row's height is determined by the highest cell within that row, but when we force a row to a certain height, the contents has no choice but to either fit in case it fits, or to overflow in case it needs more space.
+
+A useful trick to solve for this case is to say "well, be at least 150px, instead of hardcoded 150px".
+
+To do that, we can use the css function called `minmax` as a value for the property `grid-auto-rows`.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-auto-rows: minmax(100px, auto);
+}
+```
+
+In the above scenario, I gave a minimum height of 100px, and set the maximum height to `auto`, which means our grid items can now grow and stretch to fill that minimum content requirement.
+
+### - J. gap (new) and grid-row-gap & grid-column-gap (old)
+
+We usually use `gap` since even gaps make the most sense at 95% of cases, but in those rare cases you need gaps only between rows or only between columns, or just have an uneven gap for rows and cols, you can use `grid-row-gap` & `grid-column-gap`.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-auto-rows: 100px;
+  grid-row-gap: 10px;
+  grid-column-gap: 5px;
+}
+```
+
+You should know that `grid-row-gap` & `grid-column-gap` (as well as `grid-gap` which can be used to set both) got **_DEPRECATED_**, and got replaced with `gap`. You should use `gap` instead in the following manner:
+
+```css
+.gridContainer {
+  display: grid;
+  grid-auto-rows: 100px;
+  gap: 10px 5px;
+}
+```
+
+### - K. grid-template-areas
+
+I can't see the usefulness of this, and it seems super hard to maintain in the long run, but oh well... here's the jest of it:
+
+`grid-template-area` allows you to define template areas using nicknames, and then grid items can later then grab these nicknames using the `grid-area` property to layout themselves within the grid.
+
+Here's an example:
+
+```css
+.gridContainer {
+  display: grid;
+  gap: 10px;
+  grid-templates-areas:
+    "header" "header" "header"
+    "sidebar" "content" "content"
+    "sidebar" "content" "content"
+}
+
+.gridItem1 {
+  grid-area: header;
+  background-color: red;
+}
+
+.gridItem2 {
+  grid-area: sidebar;
+  background-color: blue;
+}
+
+.gridItem2 {
+  grid-area: content;
+  background-color: green;
+}
+```
+
+Again, you'l rarely be using this, since there's a better way to achieve the same result in a more maintainable way. And that is with a property called `grid-column-start`.
+
+### - L. grid-column-start & grid-column-end
+
+These two are properties given to the _grid item_ element.  
+Using `grid-column-start`, you can tell a grid item from which column it should start spanning from, counting starts from 1, and using `grid-column-end` you can tell it to which column to span.
+
+You might be thinking that start 1 and end 2 will span for 2 columns, but it actually counts as 1 column. The counting is actually that of lines on the grid. In a grid layout of 2 columns, there are 3 separating lines. 2 being that in the middle. In a grid layout of 5 columns, there are 6 separating lines. 3 being that which is in the middle.
+
+There's a special value of negative 1 (-1), which tells the grid item to span all the way across the end of the row.
+
+```css
+.gridContainer {
+  display: grid;
+  grid-auto-rows: 100px;
+  grid: repeat(4,1fr);
+  gap: 10px;
+}
+
+.gridItem1 {
+  grid-column-start: 1;
+  grid-column-end: -1;
+}
+
+.gridItem2 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.gridItem3 {
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+```
+
+There's even a shorthand writing for both the start & end properties, and that's called `grid-column`, which accept 2 arguments. The first one is the start, and the second one is the end:
+
+```css
+.gridItem1 {
+  grid-column: 1 / -1;
+}
+```
+
+NOTE! By not mentioning a `grid-column-start`, but do mention a `grid-column-end`, the value for `grid-column-start` is being automatically set to the value you set under `grid-column-end`, minus 1.
+
+```css
+.gridItem1 {
+  grid-column-end: 4; /* `grid-column-start` will implicitly be set to 3! */
+}
+```
+
+**• The `span \d` value:**
+
+Instead of giving numbers as values, you can say `span 2` as the value for `grid-column`:
+
+```css
+.gridItem1 {
+  grid-column: span 2;
+}
+```
+
+As you can imagine, `span 1` is the default value.
+
+### - L. grid-row-start & grid-row-end
+
+Just as we have `grid-column-start` & `grid-column-end`, we also have `grid-row-start` & `grid-row-end`.
+
+The counting is the same. The total row lines are the amount of rows + 1.
+
+### - M. justify-content & align-content & justify-items & align-items
+
+This can be confusing, since you're used to `justify-content` from flexbox.
+
+What does `justify-content` do in the grid layout sense?
+
+Just like in flexbox, `justify-content` is used on the container. Consider the following case: You have a container, and for some reason, you gave fixed values for the width and height for the grid items. What would happen if the sum of those was smaller then the actual width & height of the container? How would the grid be aligned within that container?
+
+There are a few options for `justify-content`:
+
+- start
+- center
+- end
+- space-around
+- space-evenly
+
+Notice how it's `start` and not `flex-start`, and `end` not `flex-end`. Because we're not talking about flex here.
+
+As you can just about now imagine, start would have them (the grid items) stick to the left, end would have them stick to the right, and center would center them.
+
+`align-content` is much like flexbox's `align-items`, in the sense that it controls the **vertical alignment** of the items.
+
+The options for `align-content` are:
+
+- stretch
+- center
+- ...
+
+`justify-items` allows you control over how to align each item within its column.
+
+The options for `justify-items` are:
+
+- center
+- start
+- end
+- stretch
+
+start being to align to the left of the column, and end being to align to the right of the column. By default, the value is `stretch`.
+
+`align-items` allows you control over how to align each item within its row.
+
+The options for `align-items` are:
+
+- center
+- start
+- end
+- stretch
+
+start being the top of the row, and end being the bottom of the row. By default, the value is set to stretch.
+
+### - N. align-self & justify-self
+
+Just like flexbox, grid has a property called `align-self`, where each grid item can choose to use in order to break from the setting which was set on the grid parent container, and align itself differently.
+
+Since `grid` is 2-dimensional, it has two of those, whereas `flexbox`, which is only 1-dimensional, only has one.
+
+The options for `align-self` are:
+
+- start
+- end
+- center
+- stretch
+
+where `start` means to align to the **top** of the column, and `end` means to align to the **bottom** of the column.
+
+The options for `justify-self` are:
+
+- start
+- end
+- center
+- stretch
+
+where `start` means to align to the **left** of the column, and `end` means to align to the **right** of the column.
