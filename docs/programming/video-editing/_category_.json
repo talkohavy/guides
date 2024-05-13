@@ -1,0 +1,12 @@
+{
+  "label": "2. Video Editing",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "slug": "video-edit",
+    "title": "Video Editing - overview",
+    "description": "All about video editing & subtitles."
+  },
+  "collapsed": true,
+  "collapsible": true
+}
