@@ -5,21 +5,58 @@ sidebar_position: 1
 
 # FFMPEG
 
-## 1. Compress Video (H.265)
+## 1. Compress Video to H.265
+
+Extract a thumbnail:
 
 ```bash
-ffmpeg -i aaa.mp4 -c:v libx265 -preset slow -crf 28 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" output.mkv
+ffmpeg -i aaa.mp4 -vf "thumbnail" -frames:v 1 thumbnail.jpg
+```
+
+Compress the video:
+
+```bash
+ffmpeg -i aaa.mp4 -c:v libx265 -preset medium -crf 28 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -f mp4 aaa-muxed.mp4
+```
+
+Attach the thumbnail:
+
+```bash
+ffmpeg -i aaa.mp4 -i thumbnail.jpg -map 0 -map 1 -c copy -c:v:1 png -disposition:v:1 attached_pic aaa-muxed-final.mp4
 ```
 
 The default -crf value is 28, which is parallel to x263 23. Choose the highest value which still provides an acceptable quality for you.
 
 ### Possible Flags:
 
-#### • Option 1: Video Encoding (flag -c:v)
+#### • Option 1: Video Resolution (flag -s width-x-height)
+
+By default, it maintains the resolution of the input video.
+
+Options are:
+
+- 3840 x 2160 (or 2160p)
+- 2560 x 1440 (or 1440p)
+- 1920 x 1080 (or 1080p)
+- 1280 x 720 (or 720p)
+- 854 x 480 (or 480p)
+- 640 x 360 (or 360p)
+
+| Resolution Type            | Common Name | Aspect Ratio | Pixel Size  |
+| -------------------------- | ----------- | ------------ | ----------- |
+| SD (Standard Definition)   | 480p        | 4:3          | 640 x 480   |
+| HD (High Definition)       | 720p        | 16:9         | 1280 x 720  |
+| Full HD (FHD)              | 1080p       | 16:9         | 1920 x 1080 |
+| QHD (Quad HD)              | 1440p       | 16:9         | 2560 x 1440 |
+| 2K video                   | 1080p       | 1:1.77       | 2048 x 1080 |
+| 4K video or Ultra HD (UHD) | 4K or 2160p | 16:9         | 3840 x 2160 |
+| 8K video or Full Ultra HD  | 8K or 4320p | 16:9         | 7680 x 4320 |
+
+#### • Option 2: Video Encoding (flag -c:v)
 
 Leave it as-is. This is what activates the H.265 encoding.
 
-#### • Option 2: Preset (flag -preset)
+#### • Option 3: Preset (flag -preset)
 
 Defaults to `medium`.  
 Options are: `ultrafast` | `superfast` | `veryfast` | `faster` | `medium` | `slow` | `slower` | `veryslow`
@@ -38,7 +75,7 @@ Use the slowest preset you have patience for, with a crf that is acceptable, giv
 
 Different presets balance encoding _speed_ and _output quality_, with faster presets sacrificing quality for speed and slower presets providing better compression efficiency and higher quality output. Here are some common options for the -preset option:
 
-#### • Option 3: Constant Rate Factor (flag -crf)
+#### • Option 4: Constant Rate Factor (flag -crf)
 
 Use this mode if you want to retain good visual quality and don't care about the exact bitrate or filesize of the encoded file. The mode works exactly the same as in x264, except that maximum value is always 51, even with 10-bit support, so please read the H.264 guide for more info.
 
@@ -50,7 +87,7 @@ As with x264, you need to make several choices:
 
 * Choose a tune (optional). By default, this is disabled, and it is generally not required to set a tune option. x265 supports the following `-tune` options: `psnr`, `ssim`, `grain`, `zerolatency`, `fastdecode`. They are explained in the H.264 guide.
 
-#### • Option 4: Tune (flag -tune)
+#### • Option 5: Tune (flag -tune)
 
 You can optionally use -tune to change settings based upon the specifics of your input. Current tunings include:
 
@@ -63,24 +100,66 @@ zerolatency – good for fast encoding and low-latency streaming
 
 For example, if your input is animation then use the animation tuning, or if you want to preserve grain in a film then use the grain tuning. If you are unsure of what to use or your input does not match any of tunings then omit the -tune option. You can see a list of current tunings with -tune help, and what settings they apply with x264 --fullhelp.
 
-#### • Option 5: Filters (flag -vf)
+#### • Option 6: Filters (flag -vf)
 
 ```bash
 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2
 ```
 
-#### • Option 6: Strict (flag -strict)
+#### • Option 7: Strict (flag -strict)
 
 -strict strict
 
-#### • Option 7: Format (flag -f)
+#### • Option 8: Format (flag -f)
 
 Options are: `matroska` | `mp4`
 
 ---
 
-## 2. Trim Video
+## 2. Compress Video to Webm
 
 ```bash
-
+ffmpeg -i aaa.mp4 aaa-muxed.webm
 ```
+
+Essentially it is the same as writing it explicitly like so:
+
+```bash
+ffmpeg -i aaa.mp4 -c:v vp9 -c:a libvorbis aaa-muxed.webm
+```
+
+---
+
+## 3. Trim A Video
+
+```bash
+ffmpeg -i aaa.mp4 -c:v copy -c:a copy -ss 00:13:00 -t 10 aaa-muxed.mp4
+```
+
+`t` is in seconds. 13 here means 13 minutes. To the left are the hours, and to the right are the seconds.
+
+If you encounter a case of multi-language video file, then run:
+
+```bash
+ffmpeg -i aaa.mp4
+```
+
+And find out the number of the audio stream file you desire. Typically, 0:0 is the video, 0:1 is the English audio, and going from 0:2 upwards, are the other languages.
+
+Now use `-map` on the input file:
+
+```bash
+ffmpeg -i aaa.mkv -map 0:0 -map 0:2 -c:v copy -c:a copy -ss 00:20:39 -t 59 aaa-muxed.mp4
+```
+
+---
+
+## 4. Extract just the Audio
+
+Sometimes you don't really care about the video, you just want the audio. Luckily this is very straightforward in FFmpeg with the `-vn` flag:
+
+```bash
+ffmpeg -i input.mkv -vn audio_only.ogg
+```
+
+This command extracts only the audio from the input, encodes it as Vorbis, and saves it into audio_only.ogg. Now you have an isolated audio stream. You can also use the -an and -sn flags in the same manner to strip out audio and subtitle streams.
