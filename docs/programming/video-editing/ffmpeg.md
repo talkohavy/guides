@@ -132,11 +132,23 @@ ffmpeg -i aaa.mp4 -c:v vp9 -c:a libvorbis aaa-muxed.webm
 
 ## 3. Trim A Video
 
+### - A. When you know the start point & end point
+
+Use the '-to' flag
+
+```bash
+ffmpeg -i aaa.mkv -c:v copy -c:a copy -ss 00:20:39 -to 00:24:00 aaa-muxed.mp4
+```
+
+### - B. When you know the start point & the amount of seconds needed
+
 ```bash
 ffmpeg -i aaa.mp4 -c:v copy -c:a copy -ss 00:13:00 -t 10 aaa-muxed.mp4
 ```
 
 `t` is in seconds. 13 here means 13 minutes. To the left are the hours, and to the right are the seconds.
+
+### - C. When the input has multiple audios in different languages
 
 If you encounter a case of multi-language video file, then run:
 
@@ -151,6 +163,18 @@ Now use `-map` on the input file:
 ```bash
 ffmpeg -i aaa.mkv -map 0:0 -map 0:2 -c:v copy -c:a copy -ss 00:20:39 -t 59 aaa-muxed.mp4
 ```
+
+### - D. With Accuracy
+
+If you need frame accuracy, don't use -c copy, which means the same as -c:a copy -c:v copy -c:s copy. It copies the bitstream, and if the specified start or end time isn't falling on an I-Frame, you get the nearest one, which can be quite far away from the desired location. See also the Seeking wiki.
+
+You can however re-encode the video to get accurate cutting. The audio can be copied, as basically, an audio stream has "only keyframes". For example, in order to encode the video to H.264 and copy the audio, apply the command:
+
+```bash
+ffmpeg -ss 191 -i aaa.mp4 -c:v libx264 -c:a copy -t 6 aaa-muxed.mp4
+```
+
+Note that this time '-ss' value was the frame number, however '-t' value still remain in seconds.
 
 ---
 
