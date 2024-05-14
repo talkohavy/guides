@@ -106,6 +106,12 @@ For example, if your input is animation then use the animation tuning, or if you
 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2
 ```
 
+The filtergraph -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" is a concise way to resize a video using the `scale` filter in FFmpeg. Let's break down what each part of the filtergraph does:
+
+- `-vf`: This flag indicates that a video filtergraph follows.
+
+- `"scale=trunc(iw/2)*2:trunc(ih/2)*2"`: This is the filter expression that specifies how the video should be scaled. `scale` Specifies the scale filter, indicating that the video will be resized. `iw` & `ih` Represents the input width & height of the video respectively. `trunc(iw/2)*2` essentially divides the width of the video by 2, floors it, and then multiplies it by 2. This is necessary because the result of iw/2 might be a floating-point number. This step ensures that the width is divisible by 2, which is a requirement for many video codecs, thus ensuring compatibility with certain video codecs and maintaining the aspect ratio of the original video as closely as possible.
+
 #### • Option 7: Strict (flag -strict)
 
 -strict strict
