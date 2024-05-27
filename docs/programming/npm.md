@@ -210,7 +210,20 @@ While the lack of `name`, a `version` would fail the _publish_ process, the lack
 - exports
 - files
 
-The `exports` field in package.json is a relatively new addition to the npm ecosystem. It allows you as the package's author to explicitly define which modules are available for consumption when the package is imported. This helps in providing a more controlled and secure interface, limiting access to internal files that shouldn't be exposed to end-users.
+The `exports` field in package.json is a relatively new addition to the npm ecosystem. It allows you as the package's author to explicitly define which modules are available for consumption when the package is imported. This helps in providing a more controlled and secure interface, limiting access to internal files that shouldn't be exposed to end-users.  
+The `exports` field **OVERRIDES** whatever that is written under the `main` key, and can replace it entirely.
+
+```json
+{
+  // "main": "lib/index.js", // <--- not needed now that exports exists. Has no affect.
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
+}
+```
 
 The `files` key is mean for whitelisting. Only files specified under files will end up in the end-result output of the publish.
 
