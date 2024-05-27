@@ -45,6 +45,7 @@ Create the following structure:
 
 - An `src` directory with an `index.js`
 - A **\_test\_** folder
+- A README.md file
 
 And later on:
 
