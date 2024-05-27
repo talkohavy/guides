@@ -421,6 +421,8 @@ While you can use `npm version patch/minor/major`, it's impractical.
 
 The flow of versioning is made easy with the help of a tool called `changesets/cli`.
 
+### - A. Getting Started
+
 ```bash
 npm install -D @changesets/cli
 ```
@@ -449,9 +451,127 @@ Two things you'll most definitely want/need to change are:
 1. "baseBranch": "main", which determines the branch that Changesets uses when finding what packages have changed. If you set a branch name that doesn't exists, the process will fail.
 2. "commit": false, set it to `true` instead.
 
+### - B. Add new scripts to package.json
+
+Add these new scripts to your package.json:
+
+```json
+{
+  "scripts:" {
+    "cs-add": "pnpm changeset add",
+    "cs-bump": "pnpm changeset version",
+    "cs-status": "pnpm changeset status --verbose",
+    "cs-publish": "cd dist && pnpm changeset publish"
+  }
+}
+```
+
+### - C. Add copy changeset to your copy flow
+
+```js {11-12,18-26} showLineNumbers
+import { execSync } from 'child_process';
+import fs, { cpSync } from 'fs';
+
+const outDirName = 'dist';
+
+buildPackageConfig();
+
+async function buildPackageConfig() {
+  cleanDistDirectory();
+  // ...
+  copyChangesetDirectory();
+  copyNpmIgnore();
+  // ...
+
+  console.log('DONE !!!');
+}
+
+function copyChangesetDirectory() {
+  console.log('- Step 5: copy the .changeset directory');
+  cpSync('.changeset', `${outDirName}/.changeset`, { recursive: true });
+}
+
+function copyNpmIgnore() {
+  console.log('- Step 6: copy the .npmignore file');
+  cpSync('.npmignore', `${outDirName}/.npmignore`);
+}
+```
+
+### - D. Versioning Flow - How to use
+
 Once you've completed the initial setup, the flow is very simple:
 
-1. run `pnpm changeset add`
+#### Step 1: Make changes & commit them
+
+Adding a new feature, fixing a bug, or having breaking changes are the only time that this flow is valid. Needless to say that usually when doing either one of these you are standing on a `side-branch`, away from `master`.
+
+:::note
+You DO NOT publish a new version of your package simply because you added eslint, or prettier! Theses aren't bugs, or feature that affect the end result package!
+:::
+
+#### Step 2: Run the changeset ADD command
+
+When all commits are done, it's then time to log what has been done.
+
+Run the newly created script:
+
+```bash
+pnpm run cs-add
+```
+
+Choose the semver, and give a short description of what has been done.
+
+You _can_, and sometimes _should_, run the "cs-add" command several times, once for each change that has been made for this current release.
+
+Each time you run the "cs-add" command, an md file with some weird name will be created under the `.changesets` directory.
+
+#### Step 3: Run the changeset STATUS command
+
+To view everything that's going to be added to this release using the ADD command, you can use the STATUS command:
+
+```bash
+pnpm run cs-status
+```
+
+#### Step 4: Run the changeset VERSION command
+
+When you're ready to bump the version, with all the logs you've made, run the BUMP script we've added earlier:
+
+```bash
+pnpm run cs-bump
+```
+
+This action will take all those md files with weird names, calculate the version number, create or update the CHANGELOG.md file with everything you wrote as notes, and then delete all those weird named files, as they've already served their purpose. These files are meant to be temporary. Their only role is to serve as information guide to the VERSION command.
+
+#### Step 5: Run the changeset PUBLISH command
+
+The **PUBLISH** command of changesets looks at the `config.json` file under `.changesets`, and makes a publish based on the instruction given to it there.
+
+---
+
+## 13. Finalize Process - test & build
+
+In order to have the flow easy, let's make sure we are running as few script as possible, in a way that makes sense.
+
+Look at the following snippet from my package.json:
+
+```json
+{
+  "scripts": {
+    "clean": "rm -rf dist",
+    "test": "node --test",
+    "build-full": "node build.config.js",
+    "cs-add": "pnpm changeset add",
+    "cs-bump": "npm test && pnpm changeset version",
+    "cs-status": "pnpm changeset status --verbose",
+    "cs-publish": "pnpm run build-full && cd dist && pnpm changeset publish"
+  },
+}
+```
+
+Notice that right before running the "bump" command, that's when I'm running my tests, so there can never be a version upgrade when tests are failing.
+
+Notice that right before running the "publish" command, that's when I'm running the full-build process that creates the dist folder, along with everything needed for its publish. Since the publish itself is tightly coupled with the output of the build process, it made sense to chain them together.
 
 ---
 
