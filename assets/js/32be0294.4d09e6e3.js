@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocusaurus_guides=self.webpackChunkdocusaurus_guides||[]).push([[1157],{7266:s=>{s.exports=JSON.parse('{"label":"greetings","permalink":"/guides/blog/tags/greetings","allTagsPath":"/guides/blog/tags","count":1,"unlisted":false}')}}]);
