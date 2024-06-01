@@ -196,7 +196,7 @@ The `package.json` file plays a huge role when it comes to publishing a package 
 
 It contains keys/fields, that could make or break the publish's output.
 
-**REQUIRED** keys within your `package.json`:
+### - A. **REQUIRED** keys within your `package.json`
 
 - name
 - version
@@ -205,7 +205,7 @@ It contains keys/fields, that could make or break the publish's output.
 Your `package.json` MUST include a `name`, a `version`, and a `main`.  
 While the lack of `name`, a `version` would fail the _publish_ process, the lack of main would not. However, you would not be able to import _anything_ from the end result package! You would even get a runtime error if you try.
 
-**IMPORTANT** keys inside your `package.json`:
+### - B. **IMPORTANT** keys inside your `package.json`
 
 - exports
 - files
@@ -227,7 +227,7 @@ The `exports` field **OVERRIDES** whatever that is written under the `main` key,
 
 The `files` key is mean for whitelisting. Only files specified under files will end up in the end-result output of the publish.
 
-**Nice to have** keys inside your `package.json`:
+### - C. **Nice to have** keys inside your `package.json`
 
 - repository
 - publishConfig
@@ -414,13 +414,40 @@ And finally, i'll create a script that looks like:
 
 ## 10. Typescript Types
 
-If you are using plain javascript, you can skip this section.
+When you involve typescript, everything changes. New behaviors are introduced, and subtle differences are brought to the table.
 
-When writing a project in typescript, you'll end up needing to compile it to javascript. Doesn't matter which tool you use, they all use **tsc** under the hood. The end result will create a `dist` folder, along with some js files, and a main declaration file - `index.d.ts`. There can be other declaration files emitted during the process, which will be sibling to that `index.d.ts`.
+### - A. Emitting Pure Javascript
 
-Their location within the end result package output matters!!!
+If your package emits a plain javascript, without so much as a declaration file (.d.ts file) then nothing changes for you. Everything will work as expected.
 
-Typically, aim to have all them declaration files at the root of the `dist` folder.
+### - B. Emitting .js & .d.ts files
+
+This is the most common use-case.
+
+When writing a package in typescript, you'll end up needing to compile it down to javascript. Doesn't matter which tool you use, under the hood they all use **tsc**, so I'll be using it directly.
+
+The end result of the compilation process will create a `dist` folder, along with some js files, and a main declaration file - `index.d.ts`. There can be other declaration files emitted during the process, which will be sibling to that `index.d.ts`.
+
+In this setting, where there are .d.ts files in the final output, there are some subtle differences.
+
+**The difference between "exports" and "main"**
+
+### - C. Using ONLY .ts files
+
+Let's compare 3 cases:
+
+1. Having an only js package with `"main": "lib/index.js"`,
+2. Having an only js package with `"exports": {".": { "import": "./lib/index.js" }}`
+3. Having Case 1 with `"types": "index.d.ts"`
+4. Having Case 2 with `"types": "index.d.ts"`
+
+First of all, it is important to know - not including a `"types": "index.d.ts"`, in your `package.json`, doesn't mean that it defaults to nothing. In fact, the defaults _is_ `"types": "index.d.ts"`!
+
+The "types" field only exists for when you have a root .d.ts file with a name that's outside the convention on `index.d.ts`, or that it is located deeper in some nested folder, and not on the root.
+
+By default, using the `exports` key sets every possible key that can be added under it to null.
+
+"."
 
 ---
 
