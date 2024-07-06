@@ -73,11 +73,12 @@ Pipes in nest are used for 2 main purposes: data transformation & data validatio
 
 So it's either to transform your data, or to validate your data.
 
-- Transform
+#### • Type 1: Data Transformation
 
-For example, let's assume you have a route that passes an id in its path. Now since it's part of the path, it will always come in as a string. Using a pipe, you could have its value transformed to int. Nest has many of those built-in pipes. One of them is called `ParseIntPipe`, which you can use just for that case:
+The simplest way to explain data transformation, is the very common use case getting `:path` as a string, when it is in fact wanted as an integer.
+Since `path` always comes as a string, we would need to convert it to a number every time. Using a pipe, you could have its value transformed to int. Nest has many of those built-in pipes. One of them is called `ParseIntPipe`, which you can use just for that case:
 
-```js
+```js {6} showLineNumbers
 @Controller()
 export class GatewayController {
 	constructor(private readonly httpService: HttpService) {}
@@ -95,9 +96,9 @@ export class GatewayController {
 
 You can, of course, create your own pipes. Nest allows you to do that very easily.
 
-- Validation
+#### • Type 2: Data Validation
 
-```ts title=create-user.dto.ts
+```ts title=create-user.dto.ts {1,4,8} showLineNumbers
 import { MinLength } from 'class-validator';
 
 export class CreateUserDto {
@@ -110,7 +111,7 @@ export class CreateUserDto {
 }
 ```
 
-```ts title=users.controller.ts
+```ts title=users.controller.ts {6} showLineNumbers
 import { CreateUserDto } from './create-user-dto.ts';
 
 // ...
