@@ -67,7 +67,10 @@ HttpException
 
 ### - D. Pipes
 
-Pipes are used for 2 main purposes: transformation & validation.  
+You can think of pipes in nest as kind of "middleware".
+
+Pipes in nest are used for 2 main purposes: data transformation & data validation.
+
 So it's either to transform your data, or to validate your data.
 
 - Transform
@@ -75,13 +78,18 @@ So it's either to transform your data, or to validate your data.
 For example, let's assume you have a route that passes an id in its path. Now since it's part of the path, it will always come in as a string. Using a pipe, you could have its value transformed to int. Nest has many of those built-in pipes. One of them is called `ParseIntPipe`, which you can use just for that case:
 
 ```js
-@Get(':id')
-getOnUser(@Param('id', ParseIntPipe) id: number){
-  try{
-    return this.service.getUser(id);
-  }catch(err){
-    throw new NotFoundException();
-  }
+@Controller()
+export class GatewayController {
+	constructor(private readonly httpService: HttpService) {}
+
+    @Get(':id')
+    getOnUser(@Param('id', ParseIntPipe) id: number){
+        try{
+            return this.service.getUser(id);
+        }catch(err){
+            throw new NotFoundException();
+        }
+    }
 }
 ```
 
@@ -288,10 +296,50 @@ The only "gotcha" above is that the @ApiProperty does not automatically catch th
 
 You are able to represent the schema for the response using the @ApiCreatedResponse decorator.
 
-```ts title=user.controller.ts {2} showLineNumbers
-@Post()
-@ApiCreatedResponse({ type: User })
-createUser(@Body() body: CreateUserDto){
-    return this.service.createUser();
+```ts title=user.controller.ts {6,12} showLineNumbers
+@Controller()
+export class GatewayController {
+	constructor(private readonly httpService: HttpService) {}
+
+    @Post()
+    @ApiCreatedResponse({ type: User })
+    createUser(@Body() body: CreateUserDto){
+        return this.service.createUser();
+    }
+
+    @Get()
+    @ApiOkResponse({ type: User, isArray: true, description: 'Get multiple users' })
+    getUsers(@Query(name) name?: string){
+        return this.service.getUsers();
+    }
+
+    @Get(':id')
+    @ApiNotFoundResponse()
+    getOnUser(@Param('id', ParseIntPipe) id: number){
+        const user = this.service.getUser(id);
+
+        if (!user) throw new NotFoundException();
+
+        return user;
+    }
 }
 ```
+
+### - D. Expected Query
+
+When fetching an array of objects, you often filter out using query params. This is the most common use-case for the @Query() decorator of nest. You can let swagger know of the structure of your query params using the @ApiQuery() decorator.
+
+```ts {6} showLineNumbers
+@Controller()
+export class GatewayController {
+	constructor(private readonly httpService: HttpService) {}
+
+    @Get()
+    @ApiQuery({name: 'name', required: false})
+    getUsers(@Query(name) name?: string){
+        return this.service.getUsers();
+    }
+}
+```
+
+Note that once again, the '?' isn't telling swagger that this prop is optional, you need to specify that explicitly within the @ApiQuery decorator.
