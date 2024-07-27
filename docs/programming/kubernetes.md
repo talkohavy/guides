@@ -1,8 +1,3 @@
----
-sidebar_label: '11. Kubernetes'
-sidebar_position: 10
----
-
 # Guide For Kubernetes
 
 ## **1. Kubectl Commands**

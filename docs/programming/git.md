@@ -1,8 +1,3 @@
----
-sidebar_label: '6. Git'
-sidebar_position: 5
----
-
 # Guide for Git
 
 ## 1. Path of .gitconfig

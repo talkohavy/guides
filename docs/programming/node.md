@@ -1,8 +1,3 @@
----
-sidebar_label: '3. Node'
-sidebar_position: 1.5
----
-
 # Guide For NodeJS - the Hard Parts
 
 ## 1. Introduction

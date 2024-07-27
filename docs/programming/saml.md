@@ -1,8 +1,3 @@
----
-sidebar_label: '18. SAML'
-sidebar_position: 17
----
-
 # Guide on SAML
 
 ## 1. SAML: The Good Parts

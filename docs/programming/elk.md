@@ -1,8 +1,3 @@
----
-sidebar_label: '19. ELK'
-sidebar_position: 18
----
-
 # Guide For ELK
 
 Elasticsearch, Logstash & Kibana.

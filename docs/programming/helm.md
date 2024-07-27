@@ -1,8 +1,3 @@
----
-sidebar_label: '12. Helm'
-sidebar_position: 11
----
-
 # Guide For Helm
 
 ## **1. Helm Daily Workflow**
