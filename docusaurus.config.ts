@@ -64,13 +64,27 @@ const config: Config = {
       hideOnScroll: false, // <--- defaults to false.
       // style: 'primary', // Possible options are: 'dark' | 'primary'
       title: 'Home',
-      logo: { alt: 'My Site Logo', src: IMAGES.siteLogo },
+      logo: {
+        alt: 'My Site Logo',
+        src: IMAGES.siteLogo,
+        srcDark: 'img/logo_dark.svg',
+        // target: '_blank', // <--- defaults to _self
+      },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'mySidebar',
           position: 'left',
           label: 'Guides',
+          href: APP_URLS.docs.programming.index,
+          alt: 'Developer Guides',
+          // target: '_blank', // <--- defaults to _self
+          // src: 'img/logo.svg',
+          // srcDark: 'img/logo_dark.svg',
+          // width: 132,
+          // height: 132,
+          // className: 'custom-navbar-logo-class',
+          // style: { border: 'solid red' },
         },
         { to: APP_URLS.blogs, label: 'Blogs', position: 'left' },
         { type: 'localeDropdown', position: 'right' },

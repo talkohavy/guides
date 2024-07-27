@@ -43,7 +43,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Programming',
       collapsible: true, // Set the category to be collapsible
-      collapsed: true, // Set the category to be initially collapsed or open by default
+      collapsed: false, // Set the category to be initially collapsed or open by default
       link: {
         type: 'generated-index',
         title: 'Programming Guides',
