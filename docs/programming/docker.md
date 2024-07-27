@@ -1,8 +1,3 @@
----
-sidebar_label: '10. Docker'
-sidebar_position: 9
----
-
 # Guide For Docker
 
 ## 1. Overall Project Workflow Process

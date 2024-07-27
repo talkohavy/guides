@@ -1,8 +1,3 @@
----
-sidebar_label: '20. CSS'
-sidebar_position: 19
----
-
 # Guide For CSS
 
 ## **1. Flexbox**

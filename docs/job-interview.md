@@ -1,8 +1,3 @@
----
-sidebar_position: 2
-sidebar_label: '- Job Interview'
----
-
 # What to say in a job interview
 
 ## Topic 1: How to present knowledge in frontend

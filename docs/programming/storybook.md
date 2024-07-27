@@ -1,8 +1,3 @@
----
-sidebar_label: '9. Storybook'
-sidebar_position: 8
----
-
 # Guide for Storybook
 
 ## 1. Getting started
@@ -142,8 +137,8 @@ The default export metadata controls how Storybook lists your stories and provid
 import Button from './Button';
 
 export default {
-  component: Button
-}
+  component: Button,
+};
 ```
 
 :::info
@@ -164,7 +159,7 @@ export default {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'centered',
   },
-}
+};
 ```
 
 ## 5 Writing a Story
@@ -180,14 +175,14 @@ If a stories.js file does not export a single story, no visuals of that componen
 ```js title="YourComponent.stories.jsx"
 import { YourComponent } from './YourComponent';
 
-//👇 This default export determines where your story goes in the story list
+// 👇 This default export determines where your story goes in the story list
 export default {
   component: YourComponent,
 };
 
 export const FirstStory = {
   args: {
-    //👇 The args you need here will depend on your component
+    // 👇 The args you need here will depend on your component
   },
 };
 ```
@@ -209,7 +204,7 @@ export default {
  * to learn how to use render functions.
  */
 export const Primary = {
-  render: () => <Button primary label="Button" />,
+  render: () => <Button primary label='Button' />,
 };
 ```
 
@@ -223,7 +218,7 @@ import { Button } from './Button';
 
 export const Primary = {
   name: 'I am the primary',
-  render: () => <Button primary label="Button" />,
+  render: () => <Button primary label='Button' />,
 };
 
 export default { component: Button };
@@ -240,8 +235,8 @@ const Default = {
     isPrimary: true,
     color: 'blue',
     disabled: false,
-  }
-}
+  },
+};
 ```
 
 These are the strongest args, and will take precedence over Component level args & global level args.
@@ -355,7 +350,7 @@ export default {
   component: Button,
   argTypes: {
     propName1: {
-      control: 'boolean'
+      control: 'boolean',
     },
   },
 };
@@ -384,8 +379,8 @@ export default {
   argTypes: {
     propName1: {
       control: 'number',
-      min:1,
-      max:30,
+      min: 1,
+      max: 30,
       step: 2,
     },
   },
@@ -405,7 +400,7 @@ export default {
         type: 'range',
         min: 1,
         max: 30,
-        step: 3
+        step: 3,
       },
     },
   },
@@ -454,7 +449,7 @@ export default {
   argTypes: {
     propName1: {
       control: 'check', // <--- or 'inline-check'
-      options: ['email', 'phone', 'mail']
+      options: ['email', 'phone', 'mail'],
     },
   },
 };
@@ -495,7 +490,7 @@ export default {
         },
       },
     },
-  }
+  };
 ```
 
 - Control Type 9: `color`
@@ -560,7 +555,7 @@ export default {
     propName1: {
       control: {
         type: 'file',
-        accept: '.png'
+        accept: '.png',
       },
     },
   },
@@ -695,13 +690,12 @@ Use decorators to "wrap" every story in the necessary context providers. The `.s
 
 ```js title=".storybook/preview.js"
 import React from 'react';
-
 import { ThemeProvider } from 'styled-components';
 
 export default {
   decorators: [
     (Story) => (
-      <ThemeProvider theme="default">
+      <ThemeProvider theme='default'>
         {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
         <Story />
       </ThemeProvider>
@@ -762,12 +756,12 @@ import { Button } from './Button';
 
 export default {
   component: Button,
-  //👇 Creates specific argTypes
+  // 👇 Creates specific argTypes
   argTypes: {
     backgroundColor: { control: 'color' },
   },
   args: {
-    //👇 Now all Button stories will be primary.
+    // 👇 Now all Button stories will be primary.
     primary: true,
   },
 };
@@ -797,7 +791,7 @@ export default {
       themeOverride: 'light', // component level override
     },
   },
-}
+};
 ```
 
 ## 10. Loaders
@@ -826,7 +820,7 @@ export const Primary = {
       // Servier-side code here!!!
       const data = await fetch('https://jsonplaceholder.typicode.com/todos/1').then((response) => response.json());
 
-      return { todo: data }
+      return { todo: data };
     },
   ],
 };
@@ -867,7 +861,7 @@ export default {
       </div>
     ),
   ],
-}
+};
 ```
 
 ---
@@ -903,10 +897,8 @@ Addons can enhance args. For instance, [Actions](https://storybook.js.org/docs/e
 Storybook's play function and the [@storybook/addon-interactions](https://storybook.js.org/addons/@storybook/addon-interactions) are convenient helper methods to test component scenarios that otherwise require user intervention. They're small code snippets that execute once your story renders. For example, suppose you wanted to validate a form component, you could write the following story using the play function to check how the component responds when filling in the inputs with information:
 
 ```js title="LoginForm.stories.jsx"
-import { userEvent, within } from '@storybook/testing-library';
-
 import { expect } from '@storybook/jest';
-
+import { userEvent, within } from '@storybook/testing-library';
 import { LoginForm } from './LoginForm';
 
 export default {
@@ -930,8 +922,8 @@ export const FilledForm = {
     // 👇 Assert DOM structure
     await expect(
       canvas.getByText(
-        'Everything is perfect. Your account is ready and we should probably get you started!'
-      )
+        'Everything is perfect. Your account is ready and we should probably get you started!',
+      ),
     ).toBeInTheDocument();
   },
 };
@@ -946,6 +938,7 @@ add background options to storybook
 ```js
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import '../styles/tailwind.css';
+
 // import 'tailwindcss/tailwind.css'; <--- an index.css file from tailwind inside node-modules, which only contains the 3 lines.
 
 export const decorators = [

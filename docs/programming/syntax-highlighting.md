@@ -1,8 +1,3 @@
----
-sidebar_label: '21. Syntax Highlighting'
-sidebar_position: 20
----
-
 # Syntax Highlighting in Docusaurus
 
 ## **1. Highlight 1 line**

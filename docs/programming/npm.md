@@ -1,8 +1,3 @@
----
-sidebar_label: '8. npm publish a package'
-sidebar_position: 7
----
-
 # How to publish your NPM Package
 
 ## 1. Init a project package.json
@@ -331,7 +326,7 @@ What I like to do is create a `build.config.js` at the root of the project, and 
 
 ```js
 import { execSync } from 'child_process';
-import fs, { cpSync } from 'fs';
+import fs from 'fs';
 
 const outDirName = 'dist';
 

@@ -1,8 +1,3 @@
----
-sidebar_label: '22. Nest JS'
-sidebar_position: 21
----
-
 # Guide For Nest JS
 
 ## **1. Nest Objects**
@@ -79,15 +74,16 @@ The simplest way to explain data transformation, is the very common use case get
 Since `path` always comes as a string, we would need to convert it to a number every time. Using a pipe, you could have its value transformed to int. Nest has many of those built-in pipes. One of them is called `ParseIntPipe`, which you can use just for that case:
 
 ```js {6} showLineNumbers
+/* eslint-disable */
 @Controller()
 export class GatewayController {
 	constructor(private readonly httpService: HttpService) {}
 
     @Get(':id')
-    getOnUser(@Param('id', ParseIntPipe) id: number){
-        try{
+    getOnUser(@Param('id', ParseIntPipe) id: number) {
+        try {
             return this.service.getUser(id);
-        }catch(err){
+        } catch (err) {
             throw new NotFoundException();
         }
     }
@@ -107,7 +103,7 @@ export class CreateUserDto {
 
     // You can even provide your own customized error message.
     @IsEnum(['dog', 'cat'], { message: 'Use correct Pet!' })
-    pet: 'dog' | 'cat'
+    pet: 'dog' | 'cat';
 }
 ```
 
@@ -200,8 +196,9 @@ How to decide whether to return true or false is up to your business logic.
 Check out the code below. You can see that we're passing an `ExecutionContext` object, and what you'd usually want to do is parse the request out of that context.
 
 ```ts
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+/* eslint-disable */
 import { Observable } from 'rxjs';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class IsAuthenticatedGuard implements CanActivate {
@@ -214,7 +211,6 @@ export class IsAuthenticatedGuard implements CanActivate {
 		return isAllowed;
 	}
 }
-
 ```
 
 ## **2. Nest Swagger**
@@ -232,6 +228,7 @@ yarn add @nestjs/swagger swagger-ui-express
 Next you need to go to `main.ts` file:
 
 ```ts title=main.ts {3,9-17} showLineNumbers
+/* eslint-disable */
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -250,7 +247,7 @@ async function bootstrap() {
 
 	SwaggerModule.setup('/', app, document);
 
-	await app.listen(8000, () => console.log(`app is running on 8000`));
+	await app.listen(8000, () => console.log('app is running on 8000'));
 }
 
 bootstrap();
@@ -263,15 +260,16 @@ The '/' tells nest where to serve swagger-ui. In the above case, it will be serv
 You can add TAGs to controllers, to have them grouped differently:
 
 ```ts {1} showLineNumbers
+/* eslint-disable */
 @ApiTags('infra-chat-service')
 @Controller()
 export class GatewayController {
-	constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) {}
 
-	@Get('is-alive')
-	isAlive(): string {
-		return 'OK';
-	}
+  @Get('is-alive')
+  isAlive(): string {
+    return 'OK';
+  }
 }
 ```
 
@@ -300,29 +298,29 @@ You are able to represent the schema for the response using the @ApiCreatedRespo
 ```ts title=user.controller.ts {6,12} showLineNumbers
 @Controller()
 export class GatewayController {
-	constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) {}
 
-    @Post()
-    @ApiCreatedResponse({ type: User })
-    createUser(@Body() body: CreateUserDto){
-        return this.service.createUser();
-    }
+  @Post()
+  @ApiCreatedResponse({ type: User })
+  createUser(@Body() body: CreateUserDto) {
+    return this.service.createUser();
+  }
 
-    @Get()
-    @ApiOkResponse({ type: User, isArray: true, description: 'Get multiple users' })
-    getUsers(@Query(name) name?: string){
-        return this.service.getUsers();
-    }
+  @Get()
+  @ApiOkResponse({ type: User, isArray: true, description: 'Get multiple users' })
+  getUsers(@Query(name) name?: string) {
+    return this.service.getUsers();
+  }
 
-    @Get(':id')
-    @ApiNotFoundResponse()
-    getOnUser(@Param('id', ParseIntPipe) id: number){
-        const user = this.service.getUser(id);
+  @Get(':id')
+  @ApiNotFoundResponse()
+  getOnUser(@Param('id', ParseIntPipe) id: number) {
+    const user = this.service.getUser(id);
 
-        if (!user) throw new NotFoundException();
+    if (!user) throw new NotFoundException();
 
-        return user;
-    }
+    return user;
+  }
 }
 ```
 
@@ -333,13 +331,13 @@ When fetching an array of objects, you often filter out using query params. This
 ```ts {6} showLineNumbers
 @Controller()
 export class GatewayController {
-	constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) {}
 
-    @Get()
-    @ApiQuery({name: 'name', required: false})
-    getUsers(@Query(name) name?: string){
-        return this.service.getUsers();
-    }
+  @Get()
+  @ApiQuery({ name: 'name', required: false })
+  getUsers(@Query(name) name?: string) {
+    return this.service.getUsers();
+  }
 }
 ```
 

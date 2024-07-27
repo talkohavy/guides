@@ -1,8 +1,3 @@
----
-sidebar_label: '2.1. ffmpeg'
-sidebar_position: 1
----
-
 # FFMPEG
 
 ## 1. Compress Video to H.265

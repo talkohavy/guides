@@ -1,8 +1,3 @@
----
-sidebar_label: '16. Micro-Frontends'
-sidebar_position: 15
----
-
 # Guide For Micro-Frontends
 
 ## 1. Pros & Cons

@@ -1,8 +1,3 @@
----
-sidebar_label: '7. SSH'
-sidebar_position: 6
----
-
 # Guide for SSH
 
 ## 1. Private/Public Key Cryptography

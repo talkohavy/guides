@@ -1,8 +1,3 @@
----
-sidebar_label: '3. Crypto'
-sidebar_position: 2
----
-
 # Crypto
 
 ## 1. Introduction

@@ -1,8 +1,3 @@
----
-sidebar_label: '15. Regex'
-sidebar_position: 14
----
-
 # Guide for Regex
 
 ## Lesson 1: Positive & Negative Lookahead & Lookbehinds
