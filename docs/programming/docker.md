@@ -80,11 +80,7 @@ docker images
 ### • B: Delete an image
 
 ```bash
-IMAGE_ID=
-```
-
-```bash
-docker image rm ${IMAGE_ID} -f
+docker image rm IMAGE_ID -f
 ```
 
 ### • C: List docker containers
@@ -96,11 +92,16 @@ docker ps -a
 ### • D: Delete a container
 
 ```bash
-CONTAINER_ID=
-docker container rm ${CONTAINER_ID}
+docker container rm CONTAINER_ID
 ```
 
 ### • E: Build an image
+
+```bash
+docker build . -f /path/to/Dockerfile -t <name> --no-cache
+```
+
+Or the more simple one:
 
 ```bash
 docker build . -t <name>
@@ -111,16 +112,28 @@ docker build . -t <name>
 To run an image and print all stdout in your terminal:
 
 ```bash
-docker run -t --rm imageName
+docker run -t --rm -e BACKEND_ENDPOINT="http://a.com" -e PORT=3000 IMAGE_ID
+```
+
+Or the more simple one:
+
+```bash
+docker run -t --rm IMAGE_NAME
 ```
 
 To run an image and also go inside the container to its terminal:
 
 ```bash
+docker run -it --rm -e BACKEND_ENDPOINT="http://a.com" -e PORT=3000 IMAGE_ID sh
+```
+
+Or the more simple one:
+
+```bash
 docker run -it --rm imageName sh
 ```
 
-To run an image and expose its port to the host:
+To run an image and also expose its port to the host machine:
 
 ```bash
 docker run -t --rm -p 8888:8888 imageName
@@ -131,7 +144,7 @@ docker run -t --rm -p 8888:8888 imageName
 To print out a container's logs:
 
 ```bash
-docker logs <name-or-image-id>
+docker logs IMAGE_NAME_OR_ID
 ```
 
 To ssh into a running container:
@@ -146,31 +159,41 @@ docker exec -it <container_name_or_id> bash
 
 <font size={6}>Table of contents</font>
 
-- [• Command 1: docker system prune](#-command-1-docker-system-prune)
-- [• Command 2: docker pull](#-command-2-docker-pull)
-- [• Command 3: docker build](#-command-3-docker-build)
-- [• Command 4: docker create](#-command-4-docker-create)
-- [• Command 5: docker run](#-command-5-docker-run)
-- [• Command 6: docker start / restart](#-command-6-docker-start--restart)
-- [• Command 7: docker stop / kill](#-command-7-docker-stop--kill)
-- [• Command 8: docker images](#-command-8-docker-images)
-- [• Command 9: docker ps](#-command-9-docker-ps)
-- [• Command 10: docker container rm](#-command-10-docker-container-rm)
-- [• Command 11: docker image rm](#-command-11-docker-image-rm)
-- [• Command 12: docker logs](#-command-12-docker-logs)
-- [• Command 13: exec - debugging](#-command-13-exec---debugging)
-
 <br/>
 
 ### • Command 1: docker system prune
 
 ```bash
-docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+docker system prune [OPTIONS] NAME[:TAG|@DIGEST]
 ```
 
 **Description:**
 
 Remove all unused containers, networks, images (both _dangling_ and _unreferenced_), and optionally, volumes.
+
+<br/>
+
+### • Command 2: docker login
+
+```bash
+docker login artifactory.playtika.com --username tal.kohavy --password token_key
+```
+
+Or use `--password-stdin` instead of `--password`
+
+```bash
+cat ~/my_password.txt | docker login artifactory.playtika.com --username tal.kohavy --password-stdin
+```
+
+Or the more simple form:
+
+```bash
+docker login
+```
+
+**Description:**
+
+Log in to a registry
 
 <br/>
 
@@ -205,8 +228,16 @@ By default the Docker daemon will pull three layers of an image at a time. If yo
 
 ### • Command 3: docker build
 
+The most simple form:
+
 ```bash
 docker build .
+```
+
+A complex example:
+
+```bash
+docker build . -f /path/to/Dockerfile -t ai_gateway_service --no-cache
 ```
 
 **Description:**
