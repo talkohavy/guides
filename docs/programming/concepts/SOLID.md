@@ -1,6 +1,4 @@
 ---
-sidebar_label: '1.1. SOLID'
-sidebar_position: 0
 slug: solid
 ---
 

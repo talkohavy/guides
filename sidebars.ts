@@ -20,6 +20,17 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Photoshop',
+      description: 'this is so wrong',
+      collapsible: true, // Set the category to be collapsible
+      collapsed: true, // Set the category to be initially collapsed or open by default
+      link: {
+        type: 'generated-index',
+        title: 'Photoshop Guides',
+        description: 'Learn about photoshop concepts!',
+        slug: '/category/photoshop-guides',
+        keywords: ['photoshop'],
+        image: '/img/undraw_docusaurus_react.svg',
+      },
       items: [
         {
           type: 'doc',
@@ -31,20 +42,38 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Programming',
+      collapsible: true, // Set the category to be collapsible
+      collapsed: true, // Set the category to be initially collapsed or open by default
+      link: {
+        type: 'generated-index',
+        title: 'Programming Guides',
+        description: 'All the information a developer needs',
+        slug: '/programming', // defaults to: '/category/[categoryName]'
+        keywords: ['programming', 'git', 'css', 'ssh', 'docker', 'helm', 'node', 'nestjs'],
+        image: '/img/undraw_docusaurus_react.svg',
+      },
       items: [
         {
           type: 'category',
-          label: 'Software Concepts',
+          label: '- Software Concepts',
+          link: {
+            type: 'generated-index',
+            title: 'Software Concepts Guides',
+            description: 'Software development concepts',
+            slug: '/software-concepts', // defaults to: '/category/[categoryName]'
+            keywords: ['software'],
+            image: '/img/heart.svg',
+          },
           items: [
             {
               type: 'doc',
-              id: 'programming/concepts/SOLID',
-              label: '- SOLID',
+              id: 'programming/concepts/solid',
+              label: '-- SOLID',
             },
             {
               type: 'doc',
               id: 'programming/concepts/design-by-contract',
-              label: '- Design By Contract',
+              label: '-- Design By Contract',
             },
           ],
         },

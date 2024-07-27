@@ -3,40 +3,120 @@
     "message": "Next",
     "description": "The label for version current"
   },
-  "sidebar.tutorialSidebar.category.- Programming": {
-    "message": "- Programming",
-    "description": "The label for category - Programming in sidebar tutorialSidebar"
+  "sidebar.mySidebar.category.Photoshop": {
+    "message": "Photoshop",
+    "description": "The label for category Photoshop in sidebar mySidebar"
   },
-  "sidebar.tutorialSidebar.category.- Programming.link.generated-index.title": {
-    "message": "Programming Guides - overview",
-    "description": "The generated-index page title for category - Programming in sidebar tutorialSidebar"
+  "sidebar.mySidebar.category.Programming": {
+    "message": "Programming",
+    "description": "The label for category Programming in sidebar mySidebar"
   },
-  "sidebar.tutorialSidebar.category.- Programming.link.generated-index.description": {
-    "message": "All the Programming Guides in one place!",
-    "description": "The generated-index page description for category - Programming in sidebar tutorialSidebar"
+  "sidebar.mySidebar.category.Software Concepts": {
+    "message": "Software Concepts",
+    "description": "The label for category Software Concepts in sidebar mySidebar"
   },
-  "sidebar.tutorialSidebar.category.1. Software Concepts": {
-    "message": "1. Software Concepts",
-    "description": "The label for category 1. Software Concepts in sidebar tutorialSidebar"
+  "sidebar.mySidebar.category.Video Editing": {
+    "message": "Video Editing",
+    "description": "The label for category Video Editing in sidebar mySidebar"
   },
-  "sidebar.tutorialSidebar.category.1. Software Concepts.link.generated-index.title": {
-    "message": "Software Concepts - overview",
-    "description": "The generated-index page title for category 1. Software Concepts in sidebar tutorialSidebar"
+  "sidebar.mySidebar.category.MISC": {
+    "message": "MISC",
+    "description": "The label for category MISC in sidebar mySidebar"
   },
-  "sidebar.tutorialSidebar.category.1. Software Concepts.link.generated-index.description": {
-    "message": "All the important programming concepts you need to know.",
-    "description": "The generated-index page description for category 1. Software Concepts in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.- Photoshop": {
+  "sidebar.mySidebar.doc.- Photoshop": {
     "message": "- Photoshop",
-    "description": "The label for category - Photoshop in sidebar tutorialSidebar"
+    "description": "The label for the doc item - Photoshop in sidebar mySidebar, linking to the doc photoshop/index"
   },
-  "sidebar.tutorialSidebar.category.- Photoshop.link.generated-index.title": {
-    "message": "Photoshop Intro",
-    "description": "The generated-index page title for category - Photoshop in sidebar tutorialSidebar"
+  "sidebar.mySidebar.doc.- SOLID": {
+    "message": "- SOLID",
+    "description": "The label for the doc item - SOLID in sidebar mySidebar, linking to the doc programming/concepts/SOLID"
   },
-  "sidebar.tutorialSidebar.category.- Photoshop.link.generated-index.description": {
-    "message": "Welcome to the Photoshop Guide",
-    "description": "The generated-index page description for category - Photoshop in sidebar tutorialSidebar"
+  "sidebar.mySidebar.doc.- Design By Contract": {
+    "message": "- Design By Contract",
+    "description": "The label for the doc item - Design By Contract in sidebar mySidebar, linking to the doc programming/concepts/design-by-contract"
+  },
+  "sidebar.mySidebar.doc.- Crypto": {
+    "message": "- Crypto",
+    "description": "The label for the doc item - Crypto in sidebar mySidebar, linking to the doc programming/crypto"
+  },
+  "sidebar.mySidebar.doc.- CSS": {
+    "message": "- CSS",
+    "description": "The label for the doc item - CSS in sidebar mySidebar, linking to the doc programming/css"
+  },
+  "sidebar.mySidebar.doc.- Design Patterns": {
+    "message": "- Design Patterns",
+    "description": "The label for the doc item - Design Patterns in sidebar mySidebar, linking to the doc programming/design-patterns"
+  },
+  "sidebar.mySidebar.doc.- Docker": {
+    "message": "- Docker",
+    "description": "The label for the doc item - Docker in sidebar mySidebar, linking to the doc programming/docker"
+  },
+  "sidebar.mySidebar.doc.- ELK Stack": {
+    "message": "- ELK Stack",
+    "description": "The label for the doc item - ELK Stack in sidebar mySidebar, linking to the doc programming/elk"
+  },
+  "sidebar.mySidebar.doc.- Git": {
+    "message": "- Git",
+    "description": "The label for the doc item - Git in sidebar mySidebar, linking to the doc programming/git"
+  },
+  "sidebar.mySidebar.doc.- Helm": {
+    "message": "- Helm",
+    "description": "The label for the doc item - Helm in sidebar mySidebar, linking to the doc programming/helm"
+  },
+  "sidebar.mySidebar.doc.- Kubernetes": {
+    "message": "- Kubernetes",
+    "description": "The label for the doc item - Kubernetes in sidebar mySidebar, linking to the doc programming/kubernetes"
+  },
+  "sidebar.mySidebar.doc.- Micro-Frontends": {
+    "message": "- Micro-Frontends",
+    "description": "The label for the doc item - Micro-Frontends in sidebar mySidebar, linking to the doc programming/micro-frontends"
+  },
+  "sidebar.mySidebar.doc.- NestJS": {
+    "message": "- NestJS",
+    "description": "The label for the doc item - NestJS in sidebar mySidebar, linking to the doc programming/nest"
+  },
+  "sidebar.mySidebar.doc.- Node": {
+    "message": "- Node",
+    "description": "The label for the doc item - Node in sidebar mySidebar, linking to the doc programming/node"
+  },
+  "sidebar.mySidebar.doc.- npm publish a package": {
+    "message": "- npm publish a package",
+    "description": "The label for the doc item - npm publish a package in sidebar mySidebar, linking to the doc programming/npm"
+  },
+  "sidebar.mySidebar.doc.- Regex": {
+    "message": "- Regex",
+    "description": "The label for the doc item - Regex in sidebar mySidebar, linking to the doc programming/regex"
+  },
+  "sidebar.mySidebar.doc.- SAML": {
+    "message": "- SAML",
+    "description": "The label for the doc item - SAML in sidebar mySidebar, linking to the doc programming/saml"
+  },
+  "sidebar.mySidebar.doc.- Software Architecture": {
+    "message": "- Software Architecture",
+    "description": "The label for the doc item - Software Architecture in sidebar mySidebar, linking to the doc programming/software-architecture"
+  },
+  "sidebar.mySidebar.doc.- SSH": {
+    "message": "- SSH",
+    "description": "The label for the doc item - SSH in sidebar mySidebar, linking to the doc programming/ssh"
+  },
+  "sidebar.mySidebar.doc.- Storybook": {
+    "message": "- Storybook",
+    "description": "The label for the doc item - Storybook in sidebar mySidebar, linking to the doc programming/storybook"
+  },
+  "sidebar.mySidebar.doc.- Syntax Highlighting": {
+    "message": "- Syntax Highlighting",
+    "description": "The label for the doc item - Syntax Highlighting in sidebar mySidebar, linking to the doc programming/syntax-highlighting"
+  },
+  "sidebar.mySidebar.doc.- What is Long-Polling": {
+    "message": "- What is Long-Polling",
+    "description": "The label for the doc item - What is Long-Polling in sidebar mySidebar, linking to the doc programming/what-is-long-polling"
+  },
+  "sidebar.mySidebar.doc.- FFmpeg": {
+    "message": "- FFmpeg",
+    "description": "The label for the doc item - FFmpeg in sidebar mySidebar, linking to the doc video-editing/ffmpeg"
+  },
+  "sidebar.mySidebar.doc.- Job Interview": {
+    "message": "- Job Interview",
+    "description": "The label for the doc item - Job Interview in sidebar mySidebar, linking to the doc job-interview"
   }
 }

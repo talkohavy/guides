@@ -1,8 +1,3 @@
----
-sidebar_label: '1.2. Design by Contract'
-sidebar_position: 1
----
-
 # Design by Contract
 
 <font size="4">An approach for designing software using interfaces.</font>
