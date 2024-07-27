@@ -38,11 +38,13 @@
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
     "@docusaurus/module-type-aliases": "3.4.0",
+    "@docusaurus/tsconfig": "^3.4.0",
     "@docusaurus/types": "3.4.0",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-ezlint": "^1.6.2",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.7",
     "eslint-plugin-prettier": "^5.1.3",

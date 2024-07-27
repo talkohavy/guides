@@ -1,14 +1,9 @@
-// @ts-check
-// `@type` JSDoc annotations allow editor autocompletion and type checking
-// (when paired with `@ts-check`).
-// There are various equivalent ways to declare your Docusaurus config.
-// See: https://docusaurus.io/docs/api/docusaurus-config
-
+import type * as Preset from '@docusaurus/preset-classic';
+import type { Config } from '@docusaurus/types';
 import { APP_URLS } from './utils/appConstants.js';
 import { IMAGES } from './utils/images/index.js';
 
-/** @type {import('@docusaurus/types').Config} */
-const config = {
+const config: Config = {
   // -------------------------
   // Category 1: Site Metadata
   // -------------------------
@@ -35,7 +30,6 @@ const config = {
   presets: [
     [
       'classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
       {
         docs: {
           sidebarPath: './sidebars.js',
@@ -47,7 +41,7 @@ const config = {
           editUrl: APP_URLS.gitRepositoryURL, // <--- Remove this to remove the "edit this page" links.
         },
         theme: { customCss: './src/css/custom.css' },
-      },
+      } satisfies Preset.Options,
     ],
   ],
 
@@ -59,7 +53,6 @@ const config = {
   // -------------------------------
   // Category 5: Theme Configuration
   // -------------------------------
-  /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
   themeConfig: {
     // Replace with your project's social card
     image: IMAGES.docusaurusSocialCard,
@@ -137,7 +130,7 @@ const config = {
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     },
-  },
+  } satisfies Preset.ThemeConfig,
 
   // ------------------------------------
   // Category 6: Deployment Configuration
