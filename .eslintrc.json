@@ -1,8 +1,12 @@
 {
   "root": true,
   "extends": ["plugin:ezlint/recommended", "plugin:ezlint/react"],
+  "ignorePatterns": ["build"],
   "rules": {
     "import/exports-last": "off",
-    "react/no-unstable-nested-components": "off"
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "react/no-unstable-nested-components": "off",
+    "tailwindcss/no-custom-classname": "off"
   }
 }

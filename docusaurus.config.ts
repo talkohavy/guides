@@ -32,7 +32,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.js',
+          sidebarPath: './sidebars.ts',
           editUrl: APP_URLS.gitRepositoryURL, // <--- Remove this to remove the "edit this page" links.
           // sidebarCollapsed: false, // <--- defaults to `true`. Collapsible categories are collapsed by default. If you want them to be expanded on the first render, you can set collapsed to false.
         },
