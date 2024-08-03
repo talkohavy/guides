@@ -242,7 +242,7 @@ Narrow terminals:
 Split diffs can be hard to read on narrow terminals, so we revert to unified diffs if we cannot fit two lines of `min-line-width` on screen. This value is configurable:
 
 ```bash
-git config split-diffs.min-line-width 40
+git config --global split-diffs.min-line-width 40
 ```
 
 This defaults to `80`, so screens below `160` characters will display unified diffs. Set it to `0` to always show split diffs.
