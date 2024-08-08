@@ -134,13 +134,13 @@ It is **SUPER** important to know this command and understand what it does under
 
 Not only that `npm logout` logs you out, it also **DELETES** the .npmrc file. So if you find yourself asking "where did my npmrc file go?", it could very much be that you ran `npm logout`, which deleted your file.
 
-Another important piece of information is: if you had a token that should last a year, and you just commit an `npm logout`, you have invalidated your token permanently! And it can no longer be used!
+Another important piece of information is: if you had a token that should last a year, and you just committed an `npm logout`, you have invalidated your token permanently! And it can no longer be used!
 
 To sum it up, npm logout does 2 things:
 
 1. It deleted the line which includes the token from your .npmrc file.
    - If your `.npmrc` file contains only that 1 line with the token, the .npmrc file is deleted for good.
-2. It in validates the token.
+2. It invalidates the token.
 
 ### - C. .npmignore
 
@@ -150,7 +150,7 @@ However, since we'll be using the `divide & conquer` approach, the use of `.npmi
 
 ### - D. npm login Deep Dive
 
-When you run `npm login`, an `.npmrc` file is created, or is being updated with a fresh new token. This means that if a previous existing (either by `npm login` or by copy-pasting a generated _Access Token_ from npm), it is now gone. Erased.
+When you run `npm login`, an `.npmrc` file is created (or is being updated if it already exists) with a fresh new token. This means that if a previous existing (either by `npm login` or by copy-pasting a generated _Access Token_ from npm), it is now gone. Erased.
 
 ---
 
@@ -163,7 +163,7 @@ In fact, that's the _only_ change that's required by npm in order to be able to 
 
 To bump a version there are 3 commands ou can use:
 
-When doing a bug fix:
+When doing a bugfix:
 
 ```bash
 npm version patch -m 'Upgrade to %s: some-message'
@@ -504,6 +504,7 @@ Add these new scripts to your package.json:
 ### - C. Add copy changeset to your copy flow
 
 ```js {11-12,18-26} showLineNumbers
+/* eslint-disable */
 import { execSync } from 'child_process';
 import fs, { cpSync } from 'fs';
 
