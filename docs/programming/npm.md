@@ -1,5 +1,250 @@
 # How to publish your NPM Package
 
+## 0. TLDR
+
+### - A. Init a project
+
+Open terminal, create a folder, give it a meaningful name, and then run:
+
+```bash
+npm init
+```
+
+Or if it should be scoped:
+
+```bash
+npm init --scope=talkohavy
+```
+
+### - B. Connect project to GitHub
+
+This step is mandatory. Every npm package needs to be connected to a remote git repo.
+
+```
+git remote add origin git@github.com:talkohavy/<name>.git
+git push -u origin master
+```
+
+### - C. Add some content to
+
+Here are some good options:
+
+- An `src` folder with an `index.js`
+- A **\_test\_** folder
+- A README.md file
+
+### - D. Create an .npmrc file
+
+Create an `.npmrc` file in the root project.
+
+Its contents should be:
+
+```bash
+registry=https://registry.example.com/
+//registry.npmjs.org/:_authToken=npm_some-long-hash
+```
+
+You'll of course need to create an **access token** on npm's website, under your profile. The token always starts with "npm\_", so it's easy to recognize.
+
+:::danger
+Make sure to NOT commit the `.npmrc` file! The token is highly sensitive!  
+You must add it to your `.gitignore`!
+:::
+
+### - E. create an .npmignore
+
+At the root of your project create am `.npmignore` file.  
+Inside it put:
+
+```
+.changeset/
+```
+
+:::info
+When we'll create a `dist` folder, we will cd into it, and run the publish command from there. When we do, we will use `changeset`'s publish command, which checks the `config.json` file under `.changeset/` folder, so we need to copy it into our dist. However, we don't want to include it in our published files, so we exclude it here.
+:::
+
+### - F. Create a build.config.js file
+
+This fil will serve as your `build` script.  
+At the root of your project, create a `build.config.js` file:
+
+```js
+import { execSync } from 'child_process';
+import fs, { cpSync } from 'fs';
+
+/**
+ * @typedef {{
+ *   main: string,
+ *   types: string,
+ *   private?: string | boolean,
+ *   scripts?: Record<string, string>,
+ *   publishConfig: {
+ *     access: string
+ *   },
+ * }} PackageJson
+ */
+
+const outDirName = 'dist';
+
+buildPackageConfig();
+
+async function buildPackageConfig() {
+  cleanDistDirectory();
+
+  buildWithTsc();
+
+  copyReadmeFile();
+
+  copyChangesetDirectory();
+
+  copyNpmIgnore();
+
+  copyAndManipulatePackageJsonFile();
+
+  console.log('DONE !!!');
+}
+
+function cleanDistDirectory() {
+  console.log('- Step 1: clear the dist directory');
+  execSync('rm -rf dist');
+}
+
+function buildWithTsc() {
+  console.log('- Step 2: build with vite');
+  execSync('tsc -p ./tsconfig.build.json');
+}
+
+function copyReadmeFile() {
+  console.log('- Step 3: copy the README.md file');
+  const readStreamReadmeMd = fs.createReadStream('./README.md');
+  const writeStreamReadmeMd = fs.createWriteStream(`./${outDirName}/README.md`);
+  readStreamReadmeMd.pipe(writeStreamReadmeMd);
+}
+
+function copyAndManipulatePackageJsonFile() {
+  console.log('- Step 4: copy & manipulate the package.json file');
+  // Step 1: get the original package.json file
+  /** @type {PackageJson} */
+  const packageJson = JSON.parse(fs.readFileSync('./package.json').toString());
+
+  // Step 2: Remove all scripts
+  delete packageJson.scripts;
+  console.log('-- deleted `scripts` key');
+
+  // Step 3: Change from private to public
+  delete packageJson.private;
+  packageJson.publishConfig.access = 'public';
+  console.log('-- changed from private to public');
+  console.log('-- changed publishConfig access to public');
+
+  // Step 4: remove 'outDirName/' from "main" & "types"
+  packageJson.main = packageJson.main.replace(`${outDirName}/`, '');
+  packageJson.types = packageJson.types.replace(`${outDirName}/`, '');
+
+  // Step 5: create new package.json file in the output folder
+  fs.writeFileSync(`./${outDirName}/package.json`, JSON.stringify(packageJson));
+  console.log('-- package.json file written successfully!');
+}
+
+function copyChangesetDirectory() {
+  console.log('- Step 5: copy the .changeset directory');
+  cpSync('.changeset', `${outDirName}/.changeset`, { recursive: true });
+}
+
+function copyNpmIgnore() {
+  console.log('- Step 6: copy the .npmignore file');
+  cpSync('.npmignore', `${outDirName}/.npmignore`);
+}
+```
+
+### - G. install Changesets/cli
+
+The flow of versioning is made easy with a tool like `changesets/cli`.
+
+Install it:
+
+```bash
+pnpm add -D @changesets/cli
+```
+
+Init it:
+
+```bash
+pnpm changeset init
+```
+
+Change the content of `.changeset/config.json` file:
+
+```json {4,7-8} showLineNumbers
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.2/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": true,
+  "fixed": [],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "master",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
+```
+
+Add the scripts:
+
+```json
+{
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format-check": "prettier . --check --config .prettierrc.mjs --ignore-path .prettierignore",
+    "format": "prettier . --write --log-level silent --config .prettierrc.json --ignore-path .prettierignore",
+    "test": "node --test",
+    "build": "node build.config.js",
+    "cs-add": "pnpm changeset add",
+    "cs-bump": "npm run test && pnpm changeset version && npm run cs-bump-reset-format-commit",
+    "cs-bump-reset-format-commit": "git reset head~1 && npm run format && git add . && git commit -m 'RELEASING: Releasing 1 package(s)'",
+    "cs-status": "pnpm changeset status --verbose",
+    "cs-publish": "pnpm run build && cd dist && pnpm changeset publish",
+    "prepublishOnly": "npm run build"
+  },
+}
+```
+
+### - H. Edit your package.json
+
+Change these keys in your `package.json` file:
+
+```json {3,6-7,9-11} showLineNumbers
+{
+  "name": "@talkohavy/dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "scripts": {},
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "restricted"
+  },
+  "devDependencies": {},
+}
+```
+
+### - I. Your new workflow
+
+• Step 1: Open a `side-branch`, make changes & commit them.
+• Step 2: Run the command `npm run cs-add`, choose a semver, and add a short description.
+• Step 3: Run the command `npm run cs-add`, choose a semver, and add a short description of what has been done.
+• Step 4: Make a pull request to the `master` branch.
+• Step 5: It's up to the master branch (the CICD pipeline) to bump the version, with `npm run cs-bump`. This creates a new commit.
+• Step 6: Also, it's up to the master branch (the CICD pipeline) to publish the version, with `npm run cs-publish`. This does NOT create a new commit.
+
+The **publish** command of changesets looks at the `config.json` file under `.changesets`, and makes a publish based on the instruction given to it there.
+
+---
+
 ## 1. Init a project package.json
 
 Create a new folder, and init a git project (Give it a meaningful name).
