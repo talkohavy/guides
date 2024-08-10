@@ -1,3 +1,4 @@
+import { themes as prismThemes } from 'prism-react-renderer';
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import { APP_URLS } from './utils/appConstants.js';
@@ -54,6 +55,43 @@ const config: Config = {
   // Category 5: Theme Configuration
   // -------------------------------
   themeConfig: {
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+      magicComments: [
+        // 1. Override the 'highlight-start' & 'highlight-end' magic-comments
+        {
+          block: { start: 'highlight-start', end: 'highlight-end' },
+          className: 'theme-code-block-highlighted-line',
+        },
+        // 2. Override the 'highlight-next-line' magic-comment
+        {
+          line: 'highlight-next-line',
+          className: 'theme-code-block-highlighted-line',
+        },
+        // 3. New Block: `diff-remove-start` & `diff-remove-end` magic comments
+        {
+          block: { start: 'diff-remove-start', end: 'diff-remove-end' },
+          className: 'custom-code-block-diff-remove',
+        },
+        // 4. New Block: `diff-add-start` & `diff-add-end` magic comment
+        {
+          block: { start: 'diff-add-start', end: 'diff-add-end' },
+          className: 'custom-code-block-diff-add',
+        },
+        // 5. New next-line: `diff-remove-next-line` magic comment
+        {
+          line: 'diff-remove-next-line',
+          className: 'custom-code-block-diff-remove',
+        },
+        // 6. New next-line: `diff-add-next-line` magic comment:
+        {
+          line: 'diff-add-next-line',
+          className: 'custom-code-block-diff-add',
+        },
+      ],
+    },
+
     // Replace with your project's social card
     image: IMAGES.docusaurusSocialCard,
     tableOfContents: {
