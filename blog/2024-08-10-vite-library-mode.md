@@ -8,8 +8,6 @@ tags: [vite, react, typescript, tutorial]
 hide_table_of_contents: false
 ---
 
-<!-- truncate -->
-
 ## 1. Set up a new Vite project
 
 Start a new project:
@@ -75,6 +73,8 @@ export default defineConfig({
 // diff-add-end
 })
 ```
+
+<!-- truncate -->
 
 ## 4. tsconfig.json dedicated for build
 
