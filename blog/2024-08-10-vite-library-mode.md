@@ -3,7 +3,7 @@ title: How to Create a Component Library with Vite
 description: How to create a components library fast using Vite's library mode, typescript, css modules, and publish to npm.
 slug: vite-library-mode
 authors: [talkohavy]
-image: https://i.imgur.com/mErPwqL.png
+image: https://ibb.co/pbF136q
 tags: [vite, react, typescript, tutorial]
 hide_table_of_contents: false
 ---
