@@ -21,3 +21,21 @@ talkohavy:
   title: Full Stack Developer
   url: https://github.com/talkohavy
   image_url: https://avatars.githubusercontent.com/u/51020442
+
+gaowei:
+  name: Gao Wei
+  title: Docusaurus Core Team
+  url: https://github.com/wgao19
+  image_url: https://github.com/wgao19.png
+
+joel_marcy:
+  name: Joel Marcy
+  title: Co-creator of Docusaurus 1
+  url: https://github.com/JoelMarcey
+  image_url: https://github.com/JoelMarcey.png
+  
+sebastian_lor:
+  name: Sebastian Lor
+  title: Docusaurus maintainer
+  url: https://sebastienlorber.com
+  image_url: https://github.com/slorber.png
