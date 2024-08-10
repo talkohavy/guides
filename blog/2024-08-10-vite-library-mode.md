@@ -1,8 +1,11 @@
 ---
-slug: vite-library-mode
 title: Create a Component Library Fast 🚀 (using Vite's library mode)
+description: This is my first post on Docusaurus.
+slug: vite-library-mode
 authors: [talkohavy]
+image: https://i.imgur.com/mErPwqL.png
 tags: [vite, react, typescript, tutorial]
+hide_table_of_contents: false
 ---
 
 If you are managing multiple React applications and want consistency across your user interfaces, sooner or later you'll find that you need a component library.
@@ -12,6 +15,8 @@ When I first wanted to create a React component library, it took me a lot of tim
 A guide like this would've spared me a great amount of energy wrestling with this stuff myself. I hope it can help you as much as it would have helped me.
 
 This post covers setting up and publishing a React component library, including configuring your build process and publishing your package to npm so you and/or others can use it.
+
+<!-- truncate -->
 
 **I've done my best to keep all configurations simple and concise, using default settings whenever possible.**
 
