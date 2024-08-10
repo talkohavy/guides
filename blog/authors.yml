@@ -1,3 +1,9 @@
+talkohavy:
+  name: Tal Kohavy
+  title: Full Stack Developer
+  url: https://github.com/talkohavy
+  image_url: https://github.com/talkohavy.png
+
 endi:
   name: Endilie Yacop Sucipto
   title: Maintainer of Docusaurus
@@ -15,12 +21,6 @@ slorber:
   title: Docusaurus maintainer
   url: https://sebastienlorber.com
   image_url: https://github.com/slorber.png
-
-talkohavy:
-  name: Tal Kohavy
-  title: Full Stack Developer
-  url: https://github.com/talkohavy
-  image_url: https://avatars.githubusercontent.com/u/51020442
 
 gaowei:
   name: Gao Wei
