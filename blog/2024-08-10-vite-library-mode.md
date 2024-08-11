@@ -330,7 +330,7 @@ export { default as Button } from './components/Button';
 export { default as Label } from './components/Label';
 ```
 
-If you `npm run build` again you will notice that the transpiled file `my-component-library.js` now has **78kb** 😮 (a bit less because I removed "Input" from my example)
+If you `npm run build` again you will notice that the transpiled file `my-component-library.js` now has **78kb** 😮
 
 ## 9. Remove `react` & `react/jsx-runtime` from the bundle
 

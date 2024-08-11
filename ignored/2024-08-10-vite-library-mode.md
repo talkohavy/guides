@@ -325,7 +325,7 @@ export { Button } from './components/Button';
 export { Label } from './components/Label';
 ```
 
-If you `npm run build` again you will notice that the transpiled file `my-component-library.js` now has **78kb** 😮 (a bit less because I removed "Input" from my example)
+If you `npm run build` again you will notice that the transpiled file `my-component-library.js` now has **78kb** 😮
 
 The implementation of the components above contains React JSX code and therefore `react` (and `react/jsx-runtime`) gets bundled as well.
 
