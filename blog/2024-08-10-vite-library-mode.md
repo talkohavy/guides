@@ -262,7 +262,26 @@ To use `tsconfig.build.json` for building you need to pass the configuration fil
 
 You will also need to copy the file `vite-env.d.ts` from `src` to `lib`. Without this file Typescript will miss some types definitions provided by Vite when building (because we don't include `src` in our `tsconfig.build.ts`).
 
-You can now execute `npm run build` and this is what you will see in your dist folder:
+## 7. Set `emptyOutDir` to `false`
+
+By default, vite empties the output directory.
+
+This _would_ have been a good behavior, if we weren't using types being compiled with typescript.
+
+See, what happens now is that typescript creates types (just the types), puts them inside the `dist` folder, and then comes along vite and deletes them. We want to cancel that behavior:
+
+```tsx title=cite.config.ts
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  build: {
+    // ...
+    emptyOutDir: false, // <--- defaults to `true`
+  },
+});
+```
+
+You can now execute `npm run build` and this is what you will see in your `dist` folder:
 
 ```bash
  📂dist
@@ -276,7 +295,7 @@ You can now execute `npm run build` and this is what you will see in your dist f
 💡 The name of the output file is identical with the `name` property in your package.json per default. This can be changed in the Vite config (`build.lib.fileName`) but we will do something else about this later.
 :::
 
-## 7. Get rid of the `vite.svg` file
+## 8. Get rid of the `vite.svg` file
 
 The file `vite.svg` is in your `dist` folder because Vite copies all files from the `public` directory to the output folder. Let's disable this behavior:
 
@@ -290,7 +309,7 @@ export default defineConfig({
 });
 ```
 
-## 8. Create a basic component
+## 9. Create a basic component
 
 What is a React component library without components?  
 Let's create one or two:
@@ -332,7 +351,7 @@ export { default as Label } from './components/Label';
 
 If you `npm run build` again you will notice that the transpiled file `my-component-library.js` now has **78kb** 😮
 
-## 9. Remove `react` & `react/jsx-runtime` from the bundle
+## 10. Remove `react` & `react/jsx-runtime` from the bundle
 
 The implementation of the components above contains React JSX code and therefore `react` (and `react/jsx-runtime`) gets bundled as well. As this library will be used in projects that have React installed anyways, you can **externalize** this dependencies to _remove the code from bundle_:
 
@@ -370,7 +389,7 @@ Now take a look at your `package.json` file under `dependencies` key. Right now 
 }
 ```
 
-## 10. Handle CSS files
+## 11. Handle CSS files
 
 This library will use **CSS modules** to style the components.
 
@@ -485,7 +504,7 @@ import './main.css';
 💡 You may notice that the CSS filename has changed from style.css to main.css. This change occurs because the plugin generates a separate CSS file for each chunk, and in this case the name of the chunk comes from the filename of the entry file.
 :::
 
-## 11. Split up the CSS
+## 12. Split up the CSS
 
 But there's still the second problem: when you import something from your library, `main.css` is also imported and all the CSS styles end up in your application bundle. Even if you only import the **Button**.
 
@@ -580,7 +599,7 @@ Transpile the library again and all JavaScript files should now be in the same o
 
 Notice that the name of the main file has changed from "my-component-library.js" to "main.js". That's great!
 
-## 12. Update your `package.json` file
+## 13. Update your `package.json` file
 
 main & types should be `dist/main.js` and `dist/main.d.ts`.
 
@@ -601,7 +620,7 @@ The same applies to the types' entry point: `dist/main.d.ts`
 }
 ```
 
-## 13. Add CSS to Side effects
+## 14. Add CSS to Side effects
 
 To prevent the CSS files from being accidentally removed by the consumer's tree-shaking efforts, you should also specify the generated CSS as side effects:
 
@@ -614,7 +633,7 @@ To prevent the CSS files from being accidentally removed by the consumer's tree-
 }
 ```
 
-## 14. Use `prepublishOnly` to ensure build prior to publish
+## 15. Use `prepublishOnly` to ensure build prior to publish
 
 You can use the special lifecycle script `prepublishOnly` to guarantee that your changes are always built before the package is published:
 
@@ -630,7 +649,7 @@ You can use the special lifecycle script `prepublishOnly` to guarantee that your
 }
 ```
 
-## 15. Demo page
+## 16. Demo page
 
 To just play around with your components on the demo page, you can simply import the components directly from the root of your project. This works because your `package.json` points to the transpiled main file `dist/main.ts`.
 
