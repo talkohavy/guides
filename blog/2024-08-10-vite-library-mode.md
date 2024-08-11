@@ -253,7 +253,7 @@ To use `tsconfig.build.json` for building you need to pass the configuration fil
 // diff-remove-next-line
   "build": "tsc && vite build",
 // diff-add-next-line
-  "build": "tsc -p ./tsconfig-build.json && vite build",
+  "build": "tsc -p ./tsconfig.build.json && vite build",
   }
 }
 ```
