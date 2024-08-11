@@ -318,7 +318,7 @@ export default function Button(props: React.ButtonHTMLAttributes<HTMLButtonEleme
 ```
 
 ```tsx title=lib/components/Label/Label.tsx
-export function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
+export default function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return <label {...props} />;
 }
 ```
@@ -326,8 +326,8 @@ export function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
 Finally export the components from the library's main file:
 
 ```tsx title=lib/main.ts
-export { Button } from './components/Button';
-export { Label } from './components/Label';
+export { default as Button } from './components/Button';
+export { default as Label } from './components/Label';
 ```
 
 If you `npm run build` again you will notice that the transpiled file `my-component-library.js` now has **78kb** 😮 (a bit less because I removed "Input" from my example)
