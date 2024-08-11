@@ -59,7 +59,7 @@ Like so (do not copy code yet!):
 import { defineConfig } from 'vite'
 // diff-add-next-line
 import { resolve } from 'path'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 
 export default defineConfig({
   plugins: [react()],
