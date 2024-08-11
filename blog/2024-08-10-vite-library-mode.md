@@ -374,7 +374,7 @@ Now take a look at your `package.json` file under `dependencies` key. Right now 
 
 This library will use **CSS modules** to style the components.
 
-CSS modules are supported by Vite by default. All you have to do is to create CSS files that end with `.module.css`.
+CSS modules are supported by Vite by default. All you have to do is to create CSS files that end with `.module.css` (or `.module.scss`).
 
 ```bash
  📂my-component-library
@@ -383,24 +383,24 @@ CSS modules are supported by Vite by default. All you have to do is to create CS
   ┃ ┃ ┣ 📂Button
   ┃ ┃ ┃ ┣ 📂Button.tsx
   ┃ ┃ ┃ ┣ 📜index.ts
-+ ┃ ┃ ┃ ┗ 📂Button.module.css
++ ┃ ┃ ┃ ┗ 📂Button.module.scss
   ┃ ┃ ┗ 📂Label
   ┃ ┃   ┣ 📂Label.tsx
   ┃ ┃   ┣ 📜index.ts
-+ ┃ ┃   ┗ 📂Label.module.css
++ ┃ ┃   ┗ 📂Label.module.scss
   ┃ ┗ 📜main.ts
   …
 ```
 
 And add some basic CSS classes:
 
-```css title=lib/components/Button/Button.module.css
+```css title=lib/components/Button/Button.module.scss
 .button {
     padding: 1rem;
 }
 ```
 
-```css title=lib/components/Label/Label.module.css
+```css title=lib/components/Label/Label.module.scss
 .label {
     font-weight: bold;
 }
@@ -409,7 +409,7 @@ And add some basic CSS classes:
 And import/use them inside your components:
 
 ```tsx
-import styles from './Button.module.css';
+import styles from './Button.module.scss';
 
 export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { className, ...restProps } = props;
@@ -417,7 +417,13 @@ export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 }
 ```
 
-After transpiling your library you will notice that there is a new file in your distribution folder:
+If you choose to use `.scss` instead of `.css` files, you'll need `sass`:
+
+```bash
+pnpm add -D sass
+```
+
+So now, after transpiling your library you will notice that there is a new file in your distribution folder:
 
 ```bash
  📂dist
