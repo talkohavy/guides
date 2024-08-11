@@ -56,9 +56,9 @@ To activate vite's library mode, inside of our `vite.config.ts` file, we will ne
 Like so (do not copy code yet!):
 
 ```jsx showLineNumbers
-import { defineConfig } from 'vite'
 // diff-add-next-line
 import { resolve } from 'path'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
 export default defineConfig({
