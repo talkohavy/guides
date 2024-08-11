@@ -350,6 +350,26 @@ export default defineConfig({
 });
 ```
 
+Now take a look at your `package.json` file under `dependencies` key. Right now there should be only two there: `react` and `react-dom` You can move both to the `devDependencies`. Additionally, add them as `peerDependencies`, so that the consuming application is aware that it must have React installed to use this package.
+
+```json title=package.json
+{
+// diff-remove-next-line
+"dependencies": {
+  // diff-add-next-line
+"peerDependencies": {
+  "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+// diff-add-start
+"react": "^18.2.0",
+"react-dom": "^18.2.0",
+// diff-add-end
+  }
+}
+```
+
 ## 10. Handle CSS files
 
 This library will use **CSS modules** to style the components.
@@ -575,33 +595,7 @@ The same applies to the types' entry point: `dist/main.d.ts`
 }
 ```
 
-## 13. Dependencies, devDependencies & peerDependencies
-
-Now take a look at your `dependencies`.
-
-Right now there should be only two there: `react` and `react-dom` You can move both to the `devDependencies`.
-
-Additionally, add them as `peerDependencies`, so that the consuming application is aware that it must have React installed to use this package.
-
-```json title=package.json
-{
-// diff-remove-next-line
-"dependencies": {
-  // diff-add-next-line
-"peerDependencies": {
-  "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-// diff-add-start
-"react": "^18.2.0",
-"react-dom": "^18.2.0",
-// diff-add-end
-  }
-}
-```
-
-## 14. Add CSS to Side effects
+## 13. Add CSS to Side effects
 
 To prevent the CSS files from being accidentally removed by the consumer's tree-shaking efforts, you should also specify the generated CSS as side effects:
 
@@ -614,7 +608,7 @@ To prevent the CSS files from being accidentally removed by the consumer's tree-
 }
 ```
 
-## 15. Use `prepublishOnly` to ensure build prior to publish
+## 14. Use `prepublishOnly` to ensure build prior to publish
 
 You can use the special lifecycle script `prepublishOnly` to guarantee that your changes are always built before the package is published:
 
@@ -630,7 +624,7 @@ You can use the special lifecycle script `prepublishOnly` to guarantee that your
 }
 ```
 
-## 16. Demo page
+## 15. Demo page
 
 To just play around with your components on the demo page, you can simply import the components directly from the root of your project. This works because your `package.json` points to the transpiled main file `dist/main.ts`.
 
