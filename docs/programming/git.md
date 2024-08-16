@@ -152,7 +152,7 @@ Check out from it if necessary.
 Renaming a local branch is easy:
 
 ```bash
-git branch -m %old_name% %new_name%
+git branch -m OLD_BRANCH_NAME NEW_BRANCH_NAME
 ```
 
 ### `Command 11: Rename a remote branch`
@@ -168,19 +168,19 @@ So, first you need to rename the local branch, then delete the remote branch, an
 Step 1: rename the local branch
 
 ```bash
-git branch -m %old_name% %new_name%
+git branch -m OLD_BRANCH_NAME NEW_BRANCH_NAME
 ```
 
 Step 2: delete the remote branch
 
 ```bash
-git push origin :%old_name%
+git push origin :OLD_BRANCH_NAME
 ```
 
 Step 3: push the newly-named branch to the remote branch
 
 ```bash
-git push origin %new_name%
+git push origin NEW_BRANCH_NAME
 ```
 
 ### `Command 11: create an alias for a git command`
