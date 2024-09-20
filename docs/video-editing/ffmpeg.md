@@ -17,7 +17,7 @@ ffmpeg -i aaa.mp4 -c:v libx265 -preset medium -crf 28 -vf "scale=trunc(iw/2)*2:t
 Attach the thumbnail:
 
 ```bash
-ffmpeg -i aaa.mp4 -i thumbnail.jpg -map 0 -map 1 -c copy -c:v:1 png -disposition:v:1 attached_pic aaa-muxed-final.mp4
+ffmpeg -i aaa-muxed.mp4 -i thumbnail.jpg -map 0 -map 1 -c copy -c:v:1 png -disposition:v:1 attached_pic aaa-muxed-final.mp4
 ```
 
 The default -crf value is 28, which is parallel to x263 23. Choose the highest value which still provides an acceptable quality for you.
@@ -188,3 +188,14 @@ ffmpeg -i input.mkv -vn audio_only.ogg
 ```
 
 This command extracts only the audio from the input, encodes it as Vorbis, and saves it into audio_only.ogg. Now you have an isolated audio stream. You can also use the -an and -sn flags in the same manner to strip out audio and subtitle streams.
+
+## 5. Shrink Audio
+
+When you have an audio file which is too large you can run:
+
+```bash
+ffmpeg -i input.mp3 -b:a 128k output.mp3
+```
+
+Set the audio bit rate to 128 kbps, which is a common compression setting.  
+You can adjust the bit rate (128k) to a lower value to further reduce the size, but note that lowering the bit rate too much may degrade the audio quality.

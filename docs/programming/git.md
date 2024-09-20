@@ -138,7 +138,7 @@ git push --force -u origin master
 ### `Command 9: Delete a local branch`
 
 ```bash
-git branch --delete "name-of-branch"
+git branch --delete NAME_OF_BRANCH
 ```
 
 :::caution
