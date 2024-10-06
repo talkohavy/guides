@@ -139,6 +139,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'programming/postgres-sql',
+          label: '- postgressql',
+        },
+        {
+          type: 'doc',
           id: 'programming/regex',
           label: '- Regex',
         },
