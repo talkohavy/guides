@@ -100,16 +100,26 @@ Let's create out first table now:
 ```sql
 CREATE TABLE words (
     id SERIAL PRIMARY KEY,
-    word VARCHAR(255),  -- or use TEXT for longer strings
+    spelling VARCHAR(255),  -- or use TEXT for longer strings
     score INT CHECK (score >= 0 AND score <= 100)
 );
+```
+
+Let's add a few records to the new "words" table:
+
+```sql
+INSERT INTO words (word, score) VALUES
+('Hello world', 10),
+('PostgreSQL is great', 20),
+('Database management', 30),
+('Learning SQL', 40);
 ```
 
 ---
 
 ## 2. Commands
 
-### - A. psql
+### - 1. psql
 
 ```bash
 psql [username]
@@ -117,7 +127,7 @@ psql [username]
 
 Log into your sql server.
 
-### - B. \list
+### - 2. \list
 
 ```sql
 \list
@@ -133,7 +143,7 @@ for short
 
 Lists out all your databases.
 
-### - C. \q
+### - 3. \q
 
 ```sql
 \q
@@ -141,7 +151,7 @@ Lists out all your databases.
 
 Quit the postgresql terminal.
 
-### - D. \du
+### - 4. \du
 
 ```sql
 \du
@@ -158,7 +168,7 @@ Example output:
  talkohavy | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
 ```
 
-### - E. \password
+### - 5. \password
 
 ```sql
 \password USERNAME
@@ -168,7 +178,7 @@ Set a password for user USERNAME.
 
 You'll be prompted to enter a new password and confirm it.
 
-### - F. \dt
+### - 6. \dt
 
 ```sql
 \dt
@@ -181,3 +191,11 @@ or:
 ```
 
 List out all your tables.
+
+### - 7 \c
+
+```sql
+\c DATABASE_NAME
+```
+
+Switch to a different database on your server.
