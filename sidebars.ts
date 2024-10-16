@@ -144,6 +144,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'programming/python-server',
+          label: '- Python Server',
+        },
+        {
+          type: 'doc',
           id: 'programming/regex',
           label: '- Regex',
         },
