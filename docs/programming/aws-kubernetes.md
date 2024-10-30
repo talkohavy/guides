@@ -1,8 +1,3 @@
----
-sidebar_label: "13. AWS Kubernetes"
-sidebar_position: 12
----
-
 # AWS kubernetes Cluster Guide
 
 This guide will help you get to a stage where you can see all your kubernetes clusters on AWS.

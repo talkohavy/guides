@@ -79,6 +79,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'programming/aws-kubernetes',
+          label: '- AWS Kubernetes',
+        },
+        {
+          type: 'doc',
           id: 'programming/crypto',
           label: '- Crypto',
         },
