@@ -5,7 +5,7 @@
   // --------------------------
   "window.zoomLevel": 0,
   "editor.formatOnSave": true,
-  "editor.fontSize": 22,
+  "editor.fontSize": 20,
   "window.zoomPerWindow": true, // <--- defaults to true. It used to be false before version 1.86.
   "workbench.tree.stickyScrollMaxItemCount": 7, // <--- defaults to 7. It used to be 1 before version 1.86.
   "search.exclude": {

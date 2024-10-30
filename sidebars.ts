@@ -104,6 +104,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'programming/elasticsearch',
+          label: '- ElasticSearch',
+        },
+        {
+          type: 'doc',
           id: 'programming/elk',
           label: '- ELK Stack',
         },
