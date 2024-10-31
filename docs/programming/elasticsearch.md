@@ -268,7 +268,7 @@ GET /NAME_OF_INDEX/_search
 }
 ```
 
-### - Action 5: Count how many instances of a certain value are there
+### - Action 6: Count how many instances of a certain value are there
 
 **The command:**
 
@@ -287,7 +287,7 @@ GET /NAME_OF_INDEX/_search
 
 ```
 
-### - Action 6: Get the sum value of FIELD_NAME
+### - Action 7: Get the sum value of FIELD_NAME
 
 **The command:**
 
@@ -307,7 +307,7 @@ GET /products/_search
 
 `sum` Adds up values of a numeric field.
 
-### - Action 7: Get the avg value of FIELD_NAME
+### - Action 8: Get the avg value of FIELD_NAME
 
 **The command:**
 
@@ -325,7 +325,7 @@ GET /products/_search
 }
 ```
 
-### - Action 8: Get the min/max value of FIELD_NAME
+### - Action 9: Get the min/max value of FIELD_NAME
 
 **The command:**
 
@@ -377,7 +377,7 @@ The results will be in epoch milliseconds by default, but you can format them to
 }
 ```
 
-### - Action 7: Group by some field name
+### - Action 10: Group by some field name
 
 **The command:**
 
@@ -397,7 +397,7 @@ GET /products/_search
 
 Here, terms aggregation creates a bucket for each unique category and counts the products in each.
 
-### - Action 8: Group documents by time intervals (day, week, month).
+### - Action 11: Group documents by time intervals (day, week, month).
 
 **The command:**
 
