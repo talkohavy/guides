@@ -366,6 +366,17 @@ GET /your_index/_search
 }
 ```
 
+The results will be in epoch milliseconds by default, but you can format them to human-readable dates by adding the "format" parameter. For example:
+
+```json
+"earliest_date": {
+  "min": {
+    "field": "your_date_field",
+    "format": "yyyy-MM-dd"
+  }
+}
+```
+
 ### - Action 7: Group by some field name
 
 **The command:**
