@@ -249,3 +249,170 @@ If the `format` parameter is omitted, Elasticsearch will use the default format 
 - If your date values match the default format (e.g., `yyyy-MM-dd` or ISO 8601), the query works without specifying `format`.
 
 - If your dates use a non-standard format (e.g., `dd-MM-yyyy`), Elasticsearch might fail to parse them correctly unless `format` is explicitly specified to match the custom format.
+
+### - Action 5: Get avg value of field
+
+**The command:**
+
+```json
+GET /NAME_OF_INDEX/_search
+{
+  "size": 0,
+  "aggs": {
+    "my_average_price": {
+      "avg": {
+        "field": "FIELD_NAME"
+      }
+    }
+  }
+}
+```
+
+### - Action 5: Count how many instances of a certain value are there
+
+**The command:**
+
+```json
+GET /NAME_OF_INDEX/_search
+{
+  "size": 0,
+  "aggs": {
+    "products_by_category": {
+      "terms": {
+        "field": "FIELD_NAME.keyword"
+      }
+    }
+  }
+}
+
+```
+
+### - Action 6: Get the sum value of FIELD_NAME
+
+**The command:**
+
+```json
+GET /products/_search
+{
+  "size": 0,
+  "aggs": {
+    "total_value": {
+      "sum": {
+        "field": "price"
+      }
+    }
+  }
+}
+```
+
+`sum` Adds up values of a numeric field.
+
+### - Action 7: Get the avg value of FIELD_NAME
+
+**The command:**
+
+```json
+GET /products/_search
+{
+  "size": 0,
+  "aggs": {
+    "average_price": {
+      "avg": {
+        "field": "price"
+      }
+    }
+  }
+}
+```
+
+### - Action 8: Get the min/max value of FIELD_NAME
+
+**The command:**
+
+```json
+GET /products/_search
+{
+  "size": 0,
+  "aggs": {
+    "lowest_price": {
+      "min": {
+        "field": "price"
+      }
+    }
+  }
+}
+```
+
+`min` / `max` finds the minimum or maximum value. Works on date fields as well.
+
+Here's an example with a date:
+
+```json
+GET /your_index/_search
+{
+  "size": 0,
+  "aggs": {
+    "earliest_date": {
+      "min": {
+        "field": "your_date_field"
+      }
+    },
+    "latest_date": {
+      "max": {
+        "field": "your_date_field"
+      }
+    }
+  }
+}
+```
+
+### - Action 7: Group by some field name
+
+**The command:**
+
+```json
+GET /products/_search
+{
+  "size": 0,
+  "aggs": {
+    "products_by_category": {
+      "terms": {
+        "field": "category.keyword"
+      }
+    }
+  }
+}
+```
+
+Here, terms aggregation creates a bucket for each unique category and counts the products in each.
+
+### - Action 8: Group documents by time intervals (day, week, month).
+
+**The command:**
+
+```json
+GET /logs/_search
+{
+  "size": 0,
+  "aggs": {
+    "logs_per_day": {
+      "date_histogram": {
+        "field": "timestamp",
+        "calendar_interval": "day"
+      }
+    }
+  }
+}
+```
+
+## 7. Learn about the Operations
+
+### - Setting Size to 0
+
+Setting "size": 0 in an Elasticsearch query tells Elasticsearch not to return any document results—only the aggregation data. This is useful when you're only interested in summary information or metrics, not in individual documents.
+
+For example, in a query where you're aggregating sales data by category, if you set "size": 0, Elasticsearch skips loading individual documents, which can speed up the query, reduce resource usage, and simplify the response.
+
+If you need both the documents and the aggregation results, you can adjust the size to get a limited number of documents. But for aggregations-only requests, setting "size": 0 is a common best practice.
+
+If you don't specify "size" in an Elasticsearch query, the default is 10. This means Elasticsearch will return up to 10 matching documents along with the aggregation results (if any aggregations are included).
