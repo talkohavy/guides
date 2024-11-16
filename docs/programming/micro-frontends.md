@@ -1,5 +1,160 @@
 # Guide For Micro-Frontends
 
+## A. Getting Started With Vite
+
+### - 1. Vite Dev mode
+
+As Vite is built on esbuild in dev development mode, we provide separate support for dev mode to take advantage of Vite's high performance development server in the case of remote module deployment.
+
+:::info
+Only the Host side supports dev mode, the Remote side requires the RemoteEntry.js package to be generated using `vite build`. This is because Vite Dev mode is Bundleless and you can use `vite build --watch` to achieve a hot update effect.
+:::
+
+### - 2. Static import
+
+Static import and dynamic import of components are supported, the following shows the difference between the two methods, you can see examples of dynamic import and static import in the project in examples, here is a simple example.
+
+- React
+
+```tsx
+// static import
+import myButton from 'remote/myButton';
+
+// dynamic import
+const myButton = React.lazy(() => import('remote/myButton'));
+```
+
+:::info
+
+- Static imports may rely on the browser's `Top-level await` feature, so you will need to set `build.target` in the configuration file to 'next' or use the plugin `vite-plugin-top-level-await`. You can see the [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#browser_) of top-level await here compatibility)
+  :::
+
+### - 3. Configuration
+
+Here is a list of props you can pass to the federation plugin, and their descriptions:
+
+#### prop: `name`
+
+Required as the module name of the remote module.
+
+#### prop: `filename`
+
+As the entry file of the remote module, not required, default is `remoteEntry.js`.
+
+#### prop: `exposes`
+
+As the remote module, the list of components exposed to the public, required for the remote module.
+
+```tsx
+exposes: {
+// 'externally exposed component name': 'externally exposed component address'
+    './remote-simple-button': './src/components/Button.vue',
+    './remote-simple-section': './src/components/Section.vue'
+},
+```
+
+- If you need a more complex configuration
+
+```tsx
+exposes: {
+    './remote-simple-button': {
+        import: './src/components/Button.vue',
+        name: 'customChunkName',
+        dontAppendStylesToHead: true
+    },
+},
+```
+
+The `import` property is the address of the module. If you need to specify a custom chunk name for the module use the `name` property.
+
+The `dontAppendStylesToHead` property is used if you don't want the plugin to automatically append all styles of the exposed component to the `<head>` element, which is the default behavior. It's useful if your component uses a ShadowDOM and the global styles wouldn't affect it anyway. The plugin will then expose the addresses of the CSS files in the global window object, so that your exposed component can append the styles inside the ShadowDOM itself. The key under the window object used for styles will be `css__{name_of_the_app}__{key_of_the_exposed_component}`. In the above example it would be `css__App__./remote-simple-button`, assuming that the global `name` option (not the one under exposed component configuration) is `App`. The value under this key is an array of strings, which contains the addresses of CSS files. In your exposed component you can iterate over this array and manually create `<link>` elements with `href` attribute set to the elements of the array like this:
+
+```tsx
+const styleContainer = document.createElement('div');
+const hrefs = window['css__App__./remote-simple-button'];
+
+hrefs.forEach((href: string) => {
+    const link = document.createElement('link');
+    link.href = href;
+    link.rel = 'stylesheet';
+    styleContainer.appendChild(link);
+});
+```
+
+#### prop: `remotes`
+
+The remote module entry file referenced as a local module
+
+- remote module address, e.g. `https://localhost:5011/remoteEntry.js`
+- You can simply configure it as follows
+  ```tsx
+  remotes: {
+    // 'remote module name': 'remote module entry file address'
+    'remote-simple': 'http://localhost:5011/remoteEntry.js',
+  }
+  ```
+- Or do a slightly more complex configuration, if you need to use other fields
+  ```tsx
+  remotes: {
+    'remote-simple': {
+        external: 'http://localhost:5011/remoteEntry.js',
+        format: 'var',
+    }
+  }
+  ```
+
+##### format:'esm'|'systemjs'|'var'
+
+default: 'esm'
+
+Specify the format of the remote component, this is more effective when the host and the remote use different packaging formats, for example the host uses vite + esm and the remote uses webpack + var, in which case you need to specify `type : 'var'`.
+
+##### from : 'vite'|'webpack'
+
+default: 'vite'
+
+Specify the source of the remote component, from `vite-plugin-federation` select `vite`, from `webpack` select `webpack`.
+
+#### prop: shared
+
+Dependencies shared by local and remote modules. Local modules need to configure the dependencies of all used remote modules; remote modules need to configure the dependencies of externally provided components.
+
+##### import: boolean
+
+default: `true`
+
+The `import` property relates to the way shared modules are handled on the "remote" side in a module federation setup. Here's the full explanation:
+
+When `import` is `true`, the `remote` (the module being consumed) will attempt to fetch shared modules from the `host` (the application that loads the remote). If a shared module isn't available on the host side, it will throw an error because the remote expects this dependency to be available and won't package it itself. It will report an error directly, because there is no fallback module available
+
+If you set `import` to `false`, the `remote` will stop relying on the `host` for that shared module. Instead, it will package the module independently, leading to potentially larger bundles but reducing dependency on the host.
+
+Why set `import` to false then?
+
+At runtime, `host` & `remote` can have different versions of package A. The remote's A serves as a backup. This means that that the `host`'s version wins, if it exists. BUT! There are 2 flags to help fine-tune the exact behavior in such case, and those flags are `version` & `requiredVersion`.
+
+##### version: string
+
+The `version` prop is set on the `host` side (Only works on the `host`).  
+There's no real reason/use-case for you to use this property.  
+By default, the version is set as the version listed under the `host`'s `package.json`.  
+You can provide a string value here if you need to configure it manually only if you can't get `version`.
+
+##### requiredVersion: string
+
+The `version` prop is set on the `remote` side (Only works on the `remote`).  
+The `remote` can specify the **required version** it expects to find on the `host`'s `shared`.
+When the version of the host side does not meet the `requiredVersion` requirement, it will use its own `shared` module (provided that it is configured with `import=true`, which is enabled by default).
+
+#### generate: boolean
+
+default: true
+
+Should the remote generate a shared chunk file or not.  
+If you're sure that the host side always has a shared chunk that can be used, then you can set `generate:false` to **NOT** generate a shared file on the remote side to reduce the size of the remote's chunk file, which is only effective on the remote side, the host side will generate a shared chunk no matter what.
+
+---
+
 ## 1. Pros & Cons
 
 • Monolith Pros
@@ -61,13 +216,13 @@ The main challenges are:
 
 ### - 1. Communication between micro-frontends
 
-Communication should happen via callbacks oe events.  
-Like we stressed out earlier, avoid communication as much as you can.  
+Communication should happen via callbacks oe events.
+Like we stressed out earlier, avoid communication as much as you can.
 Make sure that you _really_ need to communicate between them.
 
 ### - 2. Sharing css & design issues
 
-Use css-in-js library.  
+Use css-in-js library.
 Always try to manually namespace the css.
 
 ### - 3. Sharing dependencies
@@ -111,7 +266,7 @@ The next one is **Run time integration**. This can take place:
 - via JavaScript
 - via Web Components
 
-Under optimal circumstances, and as for best practices sake, the runtime integration should always happen via JavaScript.  
+Under optimal circumstances, and as for best practices sake, the runtime integration should always happen via JavaScript.
 The timeline of making runtime integration using javascript is as follows:
 
 1. Development of application A
@@ -120,7 +275,7 @@ The timeline of making runtime integration using javascript is as follows:
 4. Navigate to Container app
 5. Fetch **app-a.js** and execute it in that container application
 
-So how the runtime integration works here is anytime that application A has an update, it will be redeployed to that same url, that the container already has a reference to. So whenever the container gets loaded, it will be loaded with the updated app-a.js, and the container will always show the updated version of application A, and it would be highly decoupled, and that would be an advantage for both of the teams.  
+So how the runtime integration works here is anytime that application A has an update, it will be redeployed to that same url, that the container already has a reference to. So whenever the container gets loaded, it will be loaded with the updated app-a.js, and the container will always show the updated version of application A, and it would be highly decoupled, and that would be an advantage for both of the teams.
 So this was the timeline of runtime integration via JavaScript.
 
 ## 5. Differences between build-time & runtime integrations
@@ -133,7 +288,7 @@ I this section we will look at webpack module federation, that allows us to crea
 
 This will be (and also "is") the development process that we take when we want to implement a runtime integration via javascript.
 First, we will create on a child application called LIST. We will then build it, and then deploy it to its own URL (i.e. http://localhost:8001).
-The **build** and the **hosting part** will be taken care of by **Webpack**. These two are very basic functionalities provided to us by webpack.  
+The **build** and the **hosting part** will be taken care of by **Webpack**. These two are very basic functionalities provided to us by webpack.
 After that, we will go to the container application. Keep in mind that the container application has to have the LIST code, since the container application is only used as kind of a "host" of all the applications that are being built by different teams. And next, what we'll do is go fetch **list.js** from the url http://localhost:8001, where we host it, and have it executed on demand.
 
 ## 7. Implementing Webpack's Module Federation
@@ -143,7 +298,6 @@ Now that you have a host (container) application and a remote application, you w
 Going to the webpack official website, you will see the following:
 
 ```javascript title="webpack.config.js"
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 /** @type {import('webpack').Configuration} */
