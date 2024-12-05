@@ -204,7 +204,7 @@ GET NAME_OF_INDEX/_search
 }
 ```
 
-### - Action 3: Field name match exact value
+### - Action 3: Get Documents where FIELD is an exact match to value
 
 **The command:**
 
@@ -219,7 +219,7 @@ GET /NAME_OF_INDEX/_search
 }
 ```
 
-### - Action 4: Field value ranges between x & Y
+### - Action 4: Get Documents where Field value ranges between x & Y
 
 **The command:**
 
