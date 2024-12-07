@@ -11,156 +11,261 @@
 
 ---
 
-## **1. Create a new Index**
+## **1. How to Query in ElasticSearch**
 
-```bash
-PUT NAME_OF_INDEX
-```
+There are 2 main ways to search in elasticsearch: `queries` & `aggregations`. Queries are used to retrieve documents that meet certain criteria.
 
-An example response is:
+There are 2 types of queries under the "query" command:
 
-```
-{
-    acknowledged: true,
-    shards_acknowledged: true,
-    index: 'users',
-}
-```
+- **Leaf Query Clauses**: These clauses search for a specific value in a specific field.
+- **Compound Query Clauses**: These clauses combine multiple leaf or compound query clauses to build complex queries.
 
----
+Some examples of **leaf query** nodes are:
 
-## **2. Delete an index**
+- match
+- multi_match
+- query_string
+- term
+- range
+- match_all
 
-```bash
-DELETE NAME_OF_INDEX
-```
+After all those queries there cannot be any nested queries within.
 
-To check that the index was in fact deleted, simply run `GET NAME_OF_INDEX/_search` and get the error which says `index_not_found_exception`.
+And then there are the **compound queries**.
 
----
+Compound is in the sense that it helps combine a bunch of leaf queries together. And this is something we do often, we want several conditions to be met, so we need to combine a number of leaf query nodes.
 
-## **3. Insert a new document**
+Some examples of **compound query** arrays:
 
-There are 4 ways for us to add a new document.  
-But first, let's discuss the verb words to be used:  
-When indexing a new document both the words PUT or POST can be used.
+- bool
+- dis_max
+- function_score
+- boosting
+- constant_score
 
-- You use **POST** when you want elasticsearch to _auto-generate an id_ for your document.
-- You use **PUT** when you want to _assign a specific id_ to your document.
+### A. Leaf Nodes
 
-### - Way Number 1: POST + \_doc
+#### - match
 
-```bash
-POST NAME_OF_INDEX/_doc
-{
-  "field1": "value1",
-  "field2": "value2"
-}
-```
+...write here...
 
-As you can see, the syntax is using a JSON object, and as such, all the annoying rules that apply to a JSON object apply. For example, everything must be quoted, the last key cannot have a comma after it, etc, etc.
+#### - multi_match
 
-An example of a good POST response is:
+...write here...
+
+#### - query_string
+
+...write here...
+
+#### - term
+
+...write here...
+
+### B. Compound Queries
+
+#### - Command parent: `bool`
+
+**The form:**
 
 ```json
 {
-    "_index": "NAME_OF_INDEX",
-    "type": "_doc",
-    "_id": "kKjg26F",
-    "_version": "1",
-    "result": "created",
-    "shards": {
-        "total": 2,
-        "successful": 1,
-        "failed": "0,
+  "query": {
+    "bool": {
+      "must": [],
+      "filter": [],
+      "should": [],
+      "must_not": []
     }
+  }
 }
 ```
 
-Notice the `version` field? Version tells you how many time your document has been created, updated, or deleted.
+**Description:**
 
-### - Way Number 2: PUT + \_doc + id:
+The bool compound is useful when you want to combine a number of leaf queries by using a boolean operation like an `AND` or `OR` or `NOT`.
 
-```bash
-PUT NAME_OF_INDEX/_doc/id-you-want-to-assign
-{
-    "field1": "value1",
-    "field2": "value2"
-}
-```
+Use `bool.must` when you need to implement an `AND`.  
+Use `bool.should` when you need to implement an `OR` operator.  
+Use `bool.must_not` when you need to implement a `NOT` operator.
 
-Notice the additional id at the end of the path.  
-Usage Example:
+All 3 are nothing but arrays of sub-documents, inside which we need to write all the leaf queries.
 
-```bash
-PUT users/_doc/1
-{
-  "nickname": "YourLoverBoy",
-  "city": "Ramat-Gan"
-}
-```
+Like `bool.must`, the `bool.must_not` has an `AND` relation between all its leaf nodes.
 
-### - Way Number 3: PUT + \_create + id:
+**_<font size="4">`bool.filter` V.S. `bool.must`</font>_**
 
-The problem with the PUT & \_doc combination is that it allows you overwrite existing documents. Now, sometimes that's good, but sometimes it's really bad. Sometimes we don't actually want to overwrite existing documents. To prevent that from happening, we could use the \_create endpoint.  
-The syntax is very much similar:
+There's a fourth member called `bool.filter` we haven't talked about.
 
-```bash
-PUT NAME_OF_INDEX/_create/id-you-want-to-assign
-{
-  "field1": "value1",
-  "field2": "value2"
-}
-```
+In a way, the `bool.filter` and the `bool.must` are very much alike. They only differ by some small things. When we write a leaf query inside a `bool.must`, that query will contribute to the **relevance score**, but if it written inside the `bool.filter`, it will not have any effect on the score. Use `bool.filter` for faster searches, because there is no score to compute and no ranking to be done.
 
-So now, in case of an \_id duplication it doesn't do anything, it would just throw an error. The error code is 409 - conflict, telling us that the document already exists.
+<br/>
+<br/>
 
-### - Way Number 4: BULK
+#### - Command 1: `bool.must`
 
-**The command:**
+**The form:**
 
 ```json
-POST _bulk
-{ "create": { "_index": "users", "_id": 1 } }
-{ "name": "jake", "salary": 5000, "job_desc": "Vice President" }
-{ "create": { "_index": "users", "_id": 2 } }
-{ "name": "tal", "salary": 12000, "job_desc": "Full Stack Developer" }
-```
-
-## **4. Update an existing document by id**
-
-**The command:**
-
-```json
-POST NAME_OF_INDEX/_update/id_of_doc
 {
-    "doc": {
-        "field1": "value1",
-        "field2": "value2"
+  "query": {
+    "bool": {
+      "must": [],
     }
+  }
 }
 ```
 
-IMPORTANT!!! Inside the json object, make sure that you have this "doc" as a context.
-What this is telling you is "I want to update this document, but only the fields with the values that I specify".
+**Description:**
 
----
+`bool.must` is like an `AND` operation. The `must` is an array of checks, and **ALL** checks must be met in order for a document to go through and be considered a result. `must` goes really well together with the `match` leaf query.
 
-## **5. Delete a document by id**
+**Usage Example:**
 
-**The command:**
+```json
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "fieldName": "Luna" } }
+      ],
+    }
+  }
+}
+```
 
-```bash
-DELETE NAME_OF_INDEX/_doc/id-of-doc
+<br/>
+<br/>
+
+#### - Command 2: `bool.filter`
+
+**The form:**
+
+```json
+{
+  "query": {
+    "bool": {
+      "must": [],
+    }
+  }
+}
+```
+
+**Description:**
+
+Only documents that meet the criteria mentioned under `bool.filter` would pass through. The `bool.filter` field _DOES NOT affect the ranking_ score of each document. Using ONLY the `bool.filter` field in our query would result in all returned documents having a score of 0, because we haven't specified a "relevance" factor to be taken into consideration.
+
+**Usage Example:**
+
+```json
+{
+  "query": {
+    "bool": {
+      "filter": [
+        { "match": { "fieldName": "Luna" } },
+        { "exists": { "field": "fieldName" } },
+        { "range": { "salary": { "gte": 5000, "lte": 20000 } } }
+      ],
+    }
+  }
+}
+```
+
+<br/>
+<br/>
+
+#### - Command 3: `bool.should`
+
+**The form:**
+
+```json
+{
+  "query": {
+    "bool": {
+      "should": [],
+    }
+  }
+}
+```
+
+**Description:**
+
+`bool.should` is like an `OR` operation. It is an array of checks, and **AT LEAST ONE** check must be met in order for a document to go through and be considered a result. Like `bool.must`, the `bool.should` goes really well with the `match` leaf node.
+
+**Usage Example:**
+
+```json
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "match": { "job_desc": "President" } },
+        { "match": { "name": "Anna" } },
+      ],
+    }
+  }
+}
+```
+
+In the example above, the documents to be returned would:
+
+- Either have a name of "Anna".
+- Either have a job description of President
+- Or both!
+
+<br/>
+<br/>
+
+#### - Command 4: `bool.filter`
+
+**The form:**
+
+```json
+{
+  "query": {
+    "bool": {
+      "must": [],
+    }
+  }
+}
+```
+
+**Description:**
+
+We use the `bool.filter` to filter out results based on a "yes / no" questions. Only documents that meet the criteria mentioned under this field would pass through. The filter field _DOES NOT affect the ranking_ score of each document. Using ONLY the `bool.filter` field in our query would result in all returned documents having a score of 0, because we haven't specified a "relevance" factor to be taken into consideration.
+
+**Usage Example:**
+
+```json
+{
+  "query": {
+    "bool": {
+      "filter": [
+        { "match": { "fieldName": "Luna" } },
+        { "exists": { "field": "fieldName" } },
+        { "range": { "salary": { "gte": 5000, "lte": 20000 } } }
+      ],
+    }
+  }
+}
 ```
 
 ---
 
-## **6. How to Query in ElasticSearch**
+## **2. Misc.**
 
-To query data in elasticsearch we have a special keyword known as `_search`.
-`_search` comes with a TON of options, and we'll only cover the ones most relevant to us in this lesson. With `_search`, there are 2 main ways to search in elasticsearch: `queries` & `aggregations`. Now we will only be focusing on `query`.  
-Queries are used to retrieve documents that meet certain criteria.
+### - A. `track_total_hits`
+
+Generally the total hit count can't be computed accurately without visiting all matches, which is costly for queries that match lots of documents. The `track_total_hits` parameter allows you to control how the total number of hits should be tracked.
+
+The default value `track_total_hits` is set to 10,000.
+
+This means that requests will count the total hit accurately up to 10,000 hits. It is a good trade off to speed up searches if you don’t need the accurate number of hits after a certain threshold.
+
+When `track_total_hits` is set to `true` the search response will always track the accurate number of hits that match the query.
+
+---
+
+## **3. Practical Examples**
 
 ### - Action 1: Get a Document by id
 
