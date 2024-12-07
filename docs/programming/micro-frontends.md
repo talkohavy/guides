@@ -1,6 +1,108 @@
 # Guide For Micro-Frontends
 
-## A. Getting Started With Vite
+## A. Vite Module Federation using @module-federation/vite (modern way)
+
+### Quick Guide
+
+install `@module-federation/vite`
+
+```bash
+pnpm add @module-federation/vite
+```
+
+In your host, import it and use like so:
+
+```ts
+import { defineConfig } from 'vite';
+import { federation } from '@module-federation/vite';
+import react from '@vitejs/plugin-react-swc';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    federation({
+      name: 'host',
+      filename: 'remoteEntry.js',
+      remotes: {
+        // Note about the key for the object (i.e. '@mf-books'), it can be whatever you want. with this you'll do the import. i.e. '@mf-books/SomeComponent'
+        '@mf-books': {
+          name: '@mf-books', // <--- this needs to match the EXACT name of the remote MF.
+          type: 'module', // <--- IMPORTANT!!! without this you'll get an error. Your remote vite apps are bundled as esm.
+          entry: 'http://localhost:3001/remoteEntry.js',
+        },
+      },
+      shared: ['react', 'react-dom'],
+    }),
+  ],
+  build: {
+    modulePreload: false,
+    target: 'esnext', // <--- or 'chrome89' , just as long as you have top-level-await in the runtime environment it's fine.
+    minify: false,
+    cssCodeSplit: false,
+    sourcemap: true,
+  },
+});
+```
+
+In your remote, import it and use it like so:
+
+```tsx
+import { defineConfig } from 'vite';
+import { federation } from '@module-federation/vite';
+import react from '@vitejs/plugin-react-swc';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    federation({
+      name: '@mf-books',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './App': './src/exposes/ExposedBooksMF',
+      },
+      shared: ['react', 'react-dom'],
+    }),
+  ],
+  server: {
+    port: 3001,
+  },
+  build: {
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false,
+  },
+});
+```
+
+Now you can import the component like so:
+
+```tsx
+import { Suspense, lazy } from 'react';
+import MicroFrontendErrorBoundary from '@src/components/ErrorBoundaries/MicroFrontendErrorBoundary';
+
+const RemoteApp = lazy(() => import('@mf-books/A1pp'));
+
+export default function BooksMF() {
+  return (
+    <MicroFrontendErrorBoundary>
+      <Suspense fallback={<div>loading...</div>}>
+        <RemoteApp />
+      </Suspense>
+    </MicroFrontendErrorBoundary>
+  );
+}
+```
+
+#### Dynamic Import of Remote Modules
+
+For that you'll need to install:
+
+...continue this some day...
+
+---
+
+## B. Vite Module Federation using @originjs/vite-plugin-federation
 
 ### - 1. Vite Dev mode
 
