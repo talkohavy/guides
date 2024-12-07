@@ -255,6 +255,19 @@ We use the `bool.filter` to filter out results based on a "yes / no" questions. 
 
 ### - A. `track_total_hits`
 
+**The form:**
+
+```json
+{
+  "track_total_hits": true,
+  "query": {
+    "match_all": { }
+  }
+}
+```
+
+**Description**
+
 Generally the total hit count can't be computed accurately without visiting all matches, which is costly for queries that match lots of documents. The `track_total_hits` parameter allows you to control how the total number of hits should be tracked.
 
 The default value `track_total_hits` is set to 10,000.
@@ -265,10 +278,46 @@ When `track_total_hits` is set to `true` the search response will always track t
 
 ### -B. `from` & `size` (Pagination)
 
+**The form:**
+
+```json
+{
+  "size": 10,
+  "from": 0,
+  "query": {
+    "match_all": { }
+  }
+}
+```
+
+**Description**
+
 The `size` parameter is the maximum number of hits to return. Defaults to 10.
 The `from` parameter defines the number of hits to skip. Defaults to 0.
 
 Combine these two together, these parameters define a page of results.
+
+### -C. `_source`
+
+**The form:**
+
+```json
+{
+  "_source": [ "firstName", "age" ],
+  "from": 0,
+  "query": {
+    "match_all": { }
+  }
+}
+```
+
+**Description**
+
+Use the `_source: []` to specify what fields would be retrieved and returned back to the user.
+
+By default, `_source` includes all the fields within a document.
+
+When you query the database, under `hits` is where you see the results. Each `hit` includes a `_source` key. `_source` contains the content of the retrieved document itself.
 
 ---
 
