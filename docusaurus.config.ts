@@ -96,7 +96,7 @@ const config: Config = {
     image: IMAGES.docusaurusSocialCard,
     tableOfContents: {
       minHeadingLevel: 2,
-      maxHeadingLevel: 3, // defaults to 3. It affects how much # can be in front of a heading.
+      maxHeadingLevel: 4, // defaults to 3. It affects how much # can be in front of a heading.
     },
     navbar: {
       hideOnScroll: false, // <--- defaults to false.

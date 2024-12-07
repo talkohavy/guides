@@ -263,6 +263,13 @@ This means that requests will count the total hit accurately up to 10,000 hits. 
 
 When `track_total_hits` is set to `true` the search response will always track the accurate number of hits that match the query.
 
+### -B. `from` & `size` (Pagination)
+
+The `size` parameter is the maximum number of hits to return. Defaults to 10.
+The `from` parameter defines the number of hits to skip. Defaults to 0.
+
+Combine these two together, these parameters define a page of results.
+
 ---
 
 ## **3. Practical Examples**
