@@ -251,7 +251,252 @@ We use the `bool.filter` to filter out results based on a "yes / no" questions. 
 
 ---
 
-## **2. Misc.**
+## **2. Aggregations.**
+
+**The aggregation form:**
+
+```json
+{
+  "size": 0,
+  "aggs": {
+    "name-your-agg-here": {
+      "specify agg type here": {
+        "field": "name of the field you want to aggregate upon",
+        "size": "state how many buckets you want returned",
+      }
+    }
+  }
+}
+```
+
+:::info
+Notice the `size: 0` mentioned above?
+
+When querying using the aggregation, our results would appear under a key called `aggregations`. However, there would still be a `hits` key, containing results of actual rows. Generally speaking, we could omit the `size: 0`, and the query would run just fine. It's just that by default, elastic search returns the top 10 results inside the `hits` array field. But when doing an `aggregation`, we're not interested in the `hits`, we're interested in the `aggregations` result. To hide those 10 results, prefer settings `size` to 0. This tells elasticsearch to forget about the top 10 results, because we're just not interested in them.
+:::
+
+### Aggregation Type 1: `terms`
+
+**The form:**
+
+```json
+{
+  "size": 0,
+  "aggs": {
+    "nameTheAgg": {
+      "terms": {
+        "field": "firstName.keyword",
+        "size": "100", // <--- optional! defaults to 10
+        "order": { "_count": "asc" } // <--- optional! default to `"order": { "_count": "desc" }`
+      }
+    }
+  }
+}
+```
+
+**Description**
+
+The `terms` aggregation creates a new `bucket` _for every unique term_ it encounters for the specified field.
+
+It is often used to find the most frequently found terms in a document.
+
+By default, it returns top 10 terms that are most frequently mentioned in a given dataset, which means it creates up to 10 buckets.
+
+We can override that default behavior and set a custom max bucket size, using the `size` field.
+
+A `terms` aggregation **already counts** for us how many documents fell under each bucket, and is naming the count field for each bucket as `doc_count`, giving it its count value.
+
+By default, the `terms` aggregation will sort the buckets by the doc*count values, \_in a descending order*. You could specify an ascending order if you'd like.
+
+:::info
+Note the `.keyword` addition on the _firstName_ above?
+
+When the field is of type `text`, if you don't add the `.keyword`, you'll get back an error!
+
+_"Text fields are not optimiszed for operations that require per-document field data like aggregations and sorting, so these operations are disabled by default. Please use a keyword field instead. Alternatively, set fielddata=true on [firstName] in order to load field data by uninverting the inverted index. Note that this can use significant memory."_
+:::
+
+<br/>
+<br/>
+
+### Aggregation Type 2: metric aggs `sum`, `avg`, `min`, `max`
+
+**The form:**
+
+```json
+{
+  "size": 0,
+  "aggs": {
+    "sum_unit_price_agg": {
+      "sum": {
+        "field": "unitPrice"
+      }
+    },
+    "max_unit_price_agg": {
+      "max": {
+        "field": "unitPrice"
+      }
+    },
+    "min_unit_price_agg": {
+      "min": {
+        "field": "unitPrice"
+      }
+    },
+    "avg_unit_price_agg": {
+      "avg": {
+        "field": "unitPrice"
+      }
+    }
+  }
+}
+```
+
+**Description**
+
+Notice how under each custom name there must be only 1 metric aggregation (either sum, max, min or avg). Having more then 1 would result in an error.
+
+**A Result Example**
+
+```json
+{
+  "took" : 39,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 1,
+    "successful" : 1,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 1002,
+      "relation" : "eq"
+    },
+    "max_score" : null,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "sum_unit_price_agg" : {
+      "value" : 1.89859304075E12
+    },
+    "max_unit_price_agg" : {
+      "value" : 6.413472E11
+    },
+    "min_unit_price_agg" : {
+      "value" : 3.091809E7
+    },
+    "avg_unit_price_agg" : {
+      "value" : 1.8948034338822355E9
+    }
+  }
+}
+```
+
+<br/>
+<br/>
+
+### Aggregation Type 3: `stats`
+
+**The form:**
+
+```json
+{
+  "size": 0,
+  "aggs": {
+    "unit_price_agg": {
+      "stats": {
+        "field": "unitPrice"
+      }
+    }
+  }
+}
+```
+
+**Description**
+
+Running all these metrics, `min`, `max`, `avg`, and `sum` can be quite tedious. That's why elasticsearch developed the action called `stats`, that calculates all these aggregation metrics in one go for us.
+
+**A Result Example**
+
+```json
+{
+  "aggregations": {
+    "all_stats_unit_price": {
+      "count": 426,
+      "min": 1.01,
+      "max": 498,
+      "avg": 4.39,
+      "sum": 1876200,
+    }
+  }
+}
+```
+
+Notice that the response form is a bit different than if you were to use each one separately.
+
+<br/>
+<br/>
+
+### Aggregation Type 4: `cardinality`
+
+**The form:**
+
+```json
+{
+  "size": 0,
+  "aggs": {
+    "some_agg_name": {
+      "cardinality": {
+        "field": "fieldName",
+        "precision_threshold": 100 // <--- optional! defaults to 3000
+      }
+    }
+  }
+}
+```
+
+**Description**
+
+A single-value metrics aggregation that calculates an approximate count of distinct values.
+
+This is best explained with an example. Consider you have a shopping table, and a certain column is the name of the product that was purchased. So you might see: `orange`, `orange`, `banana`, `orange`, `apple`, `apple`, `apple`. Using the `cardinality` agg, you'll get back the value 3.
+
+Note about the word **approximate**. For high numbers this `cardinality` agg isn't accurate. Use it when the distinct count is low.
+
+The default `threshold` value is 3000.  
+The maximum supported value is 40000, thresholds above this number will have the same effect as a threshold of 40000
+
+<br/>
+<br/>
+
+### Aggregation Type 5: bucket aggs `histogram` & `date_histogram`
+
+**The form:**
+
+```json
+{
+  "size": 0,
+  "aggs": {
+    "some_agg_name": {
+      "date_histogram": {
+        "field": "fieldName",
+        "fixed_interval": "specify the interval here, for example: 8h ", // <--- optional! defaults to...
+        "calendar_interval": "specify the interval here, for example: 1M " // <--- optional! defaults to...
+      }
+    }
+  }
+}
+```
+
+:::info
+NOTE!
+
+You can use either `fixed_interval`, or `calendar_interval`, but **NOT BOTH**!
+:::
+
+---
+
+## **3. Misc.**
 
 ### - A. `track_total_hits`
 
@@ -321,7 +566,7 @@ When you query the database, under `hits` is where you see the results. Each `hi
 
 ---
 
-## **3. Practical Examples**
+## **4. Practical Examples**
 
 ### - Action 1: Get a Document by id
 
