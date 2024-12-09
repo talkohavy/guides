@@ -43,23 +43,177 @@ Some examples of **compound query** arrays:
 - boosting
 - constant_score
 
-### A. Leaf Nodes
+### A. Leaf Queries
 
-#### - match
+#### - Command 1: `match`
 
-...write here...
+**The form:**
 
-#### - multi_match
+```json
+{
+  "query": {
+    "match": {
+      "fieldName": {
+        "query": "this is a test"
+      }
+    }
+  }
+}
+```
 
-...write here...
+The shortest `match` form is:
 
-#### - query_string
+```json
+{
+  "query": {
+    "match": {
+      "firstName": "Sianna"
+    }
+  }
+}
+```
 
-...write here...
+**Description**
 
-#### - term
+Returns documents that match a provided text, number, date or boolean value.  
+**The provided text is analyzed before matching.**  
+The match query is the standard query for performing a full-text search, including options for fuzzy matching.
 
-...write here...
+The match query analyzes any provided text before performing a search. This means the match query can search text fields for analyzed tokens rather than an exact term.
+
+##### Option 1: query
+
+(Required) `text`, `number`, `boolean` or `date` you wish to find in the provided _fieldName_.
+
+##### Option 2: operator
+
+(Optional, string) Boolean logic used to interpret text in the query value. Valid values are:
+
+- **OR (Default)**
+  For example, a `query` value of `capital of Hungary` is interpreted as `capital OR of OR Hungary`.
+- **AND**
+  For example, a `query` value of `capital of Hungary` is interpreted as `capital AND of AND Hungary`.
+
+##### Option 3: auto_generate_synonyms_phrase_query
+
+(Optional, Boolean) If true, match phrase queries are automatically created for multi-term synonyms. Defaults to true.
+
+##### Option 4: boost
+
+(Optional, float) Floating point number used to decrease or increase the relevance scores of the query. Defaults to 1.0.
+
+Boost values are relative to the default value of 1.0. A boost value between 0 and 1.0 decreases the relevance score. A value greater than 1.0 increases the relevance score.
+
+##### Option 5: fuzziness
+
+(Optional, string) Maximum edit distance allowed for matching. See Fuzziness for valid values and more information. See Fuzziness in the match query for an example.
+
+<br/>
+
+---
+
+#### - Command 2: `term`
+
+**The form:**
+
+```json
+GET /_search
+{
+  "query": {
+    "term": {
+      "fieldName": {
+        "value": "kimchy",
+        "case_insensitive": true // <--- defaults to false
+      }
+    }
+  }
+}
+```
+
+**Description**
+
+Returns documents that contain an **exact** term in a provided field.
+
+The `term` query **DOES NOT analyze** the search term. The `term` query only searches for the exact term you provide. To return a document, the term must exactly match the field value, including whitespace and capitalization.
+
+Most commonly used when wanting to find documents based on a precise value such as a price, a product ID, or a username.
+
+When `case_insensitive` is set to `true`, it will allow **case-insensitive** matching of the value with the indexed field values. Defaults to `false`.
+
+:::warning
+Avoid using the term query for `text` fields.
+
+By default, Elasticsearch changes the values of text fields as part of `analysis`. This can make finding exact matches for text field values difficult.
+
+To search `text` field values, use the `match` query instead.
+:::
+
+---
+
+#### - Command 3: `exists`
+
+**The form:**
+
+```json
+{
+  "query": {
+    "exists": {
+      "field": "user"
+    }
+  }
+}
+```
+
+**Description**
+
+Returns documents that contain an indexed value for a field.
+
+In elasticsearch non-existent can mean the following:
+
+- The field in the source JSON is `null` or `[]`
+- The field has `"index": false` and `"doc_values": false` set in the mapping
+- The length of the field value exceeded an `ignore_above` setting in the mapping
+- The field value was malformed and ignore_malformed was defined in the mapping
+
+<br/>
+
+---
+
+#### - Command 4: `range`
+
+**The form:**
+
+```json
+{
+  "query": {
+    "range": {
+      "age": {
+        "gte": 10,
+        "lte": 20,
+        "format": "yyyy-MM-dd"
+      }
+    }
+  }
+}
+```
+
+**Description**
+
+Returns documents that contain terms within a provided range.
+
+The `format` is an optional, string value, Date format, which is used to convert date values in the query.
+
+<br/>
+
+---
+
+Worth mentioning but rarely used:
+
+- `multi_match`
+- `query_string`
+- `simple_query_string`
+
+---
 
 ### B. Compound Queries
 
@@ -251,7 +405,7 @@ We use the `bool.filter` to filter out results based on a "yes / no" questions. 
 
 ---
 
-## **2. Aggregations.**
+## **2. Aggregation Queries**
 
 **The aggregation form:**
 
