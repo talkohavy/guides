@@ -38,11 +38,11 @@ Compound is in the sense that it helps combine a bunch of leaf queries together.
 
 Some examples of **compound query** arrays:
 
-- bool
-- dis_max
-- function_score
-- boosting
-- constant_score
+- `bool`
+- `dis_max`
+- `function_score`
+- `boosting`
+- `constant_score`
 
 ### A. Leaf Queries
 
