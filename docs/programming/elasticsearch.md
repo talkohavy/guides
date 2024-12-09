@@ -22,12 +22,13 @@ There are 2 types of queries under the "query" command:
 
 Some examples of **leaf query** nodes are:
 
-- match
-- multi_match
-- query_string
-- term
-- range
-- match_all
+- `match`
+- `term`
+- `exists`
+- `range`
+- `multi_match`
+- `query_string`
+- `match_all`
 
 After all those queries there cannot be any nested queries within.
 
