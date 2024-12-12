@@ -55,7 +55,11 @@ Some examples of **compound query** arrays:
   "query": {
     "match": {
       "fieldName": {
-        "query": "this is a test"
+        "query": "this is a test",
+        "operator": "OR", // <--- optional! defaults to "OR". Options: "AND" | "OR" (default)
+        "minimum_should_match": 3, // <--- optional! valid values: 3, -2, 75%
+        "boost": 1.0, // <--- optional!
+        "fuzziness": 1, // <--- optional! 0, 1, 2...
       }
     }
   }
@@ -236,6 +240,8 @@ Worth mentioning but rarely used:
 ```
 
 **Description:**
+
+Running the above command as-is would essentially match all documents and fetch all of them.
 
 The bool compound is useful when you want to combine a number of leaf queries by using a boolean operation like an `AND` or `OR` or `NOT`.
 
