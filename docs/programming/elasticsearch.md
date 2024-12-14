@@ -135,13 +135,80 @@ GET /_search
 }
 ```
 
+The shortest `term` form is:
+
+```json
+{
+  "query": {
+    "term": {
+      "fieldName": "kimchy"
+    }
+  }
+}
+```
+
+Using `term` + ".keyword" form:  
+(Notice that the ".keyword" in `query.term` appears on the fieldName)
+
+```json
+{
+  "query": {
+    "term": {
+      "fieldName.keyword": "kimchy"
+    }
+  }
+}
+```
+
 **Description**
 
-Returns documents that contain an **exact** term in a provided field.
+`term` behaves differently on different data-types.
+
+**When the `fieldName` is a `boolean` type:**
+
+1. Providing a value that isn't `boolean` (i.e. 1 or 0) throws an error.
+2. Providing a value of `false` does not mean that a document without the field would match, it won't.
+
+**When the `fieldName` is a `number` type:**
+
+1. Providing a value as a number (34) or as a string ("34") behaves the same.
+2. Providing a that isn't a number (i.e. "asd") throws an error.
+
+**When the `fieldName` is a `date` type:**
+
+1. Providing a unix timestamp value that is equal to an ISO string value would be considered as a match (i.e. 585111111111 would match "1988-07-17T02:51:51.110Z". "585111111111" works too). And vice-versa.
+2. Providing a value that can't be interpreted as `date` throws an error.
+
+**When the `fieldName` is a `keyword` type:**
+
+1. `term` query with `keyword` field **IS AN EXACT MATCH** query! The provided value must match the field value EXACTLY! Spaces, punctuation, and capitalization. Everything.
+2. Providing a value that's only one word out of the field's entire value doesn't count as a match!
+
+**When the `fieldName` is a `text` type:**
+
+1. Avoid using `term` on type `text` fields. Use `match` instead (elasticsearch themselves say that).
+1. Providing a value as a number (i.e. 1111) is allowed, and will match a document with value of "1111".
+1. Providing a value that has at least 1 capital letter WILL NEVER MATCH! This is because during the search, every fieldName's value is lowercased, whereas the provided value isn't, so zero-match is guaranteed.
+1. Providing a lowercased word would match if the document's fieldName value has that word inside of that value. For example. "love" would match "I LOVE YOU", and also "i-love-you", but it won't match "i loveee you".
+
+**When the `fieldName` is a `textAndKeyword` type:**
+
+By default, it behaves just like a `text` type.  
+To make it behave like a `keyword` type, you need to add ".keyword" to the end pf fieldName. Like so:
+
+```json
+{
+  "query": {
+    "term": {
+      "fieldName.keyword": "kimchy"
+    }
+  }
+}
+```
+
+**From elasticsearch docs:**
 
 The `term` query **DOES NOT analyze** the search term. The `term` query only searches for the exact term you provide. To return a document, the term must exactly match the field value, including whitespace and capitalization.
-
-Most commonly used when wanting to find documents based on a precise value such as a price, a product ID, or a username.
 
 When `case_insensitive` is set to `true`, it will allow **case-insensitive** matching of the value with the indexed field values. Defaults to `false`.
 
