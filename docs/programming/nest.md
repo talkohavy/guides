@@ -1,11 +1,37 @@
 # Guide For Nest JS
 
+## **0. Install Nest CLI**
+
+```bash
+p add -g @nestjs/cli
+```
+
 ## **1. Nest Objects**
 
-### - A. Providers
+### - A. Providers (Services)
 
-Providers in nest are actually services.
-Provider are really just a class, like everything else in nest, but they specifically have an @Injectable() decorator. That means that this provider is something that can be injected into any class that depends on it.
+**- Command's form:**
+
+```bash
+nest g service NAME
+```
+
+Creates a folder named `name`, with 2 files:
+
+- `name.service.spec.ts`
+- `name.service.ts`
+
+**- Description:**
+
+- Providers are a fundamental concept in Nest.
+- Many things in Nest are considered as providers: services, repositories, factories, helpers, and so on.
+- In 90% of cases, Providers in nest are actually **services**.
+- **The main idea of a provider is that it can be injected as a dependency**.
+- Тhe act of "wiring up" these objects is delegated to the Nest runtime system.
+- Implementation-wise, Providers are really just a class with the **@Injectable()** decorator.  
+  This means that this provider is something that can be injected into any class that depends on it.
+
+Here is a Service Provider implementation example:
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -25,9 +51,60 @@ export class UsersService {
 }
 ```
 
+And Here is how it can be consumed in a Controller:  
+(we'll learn about controller in the next section)
+
 ```ts
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
-import { GetUsersDto, LoginDto } from './dto/users.dto';
+import { Controller } from '@nestjs/common';
+import { UsersService } from './users.service';
+
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  // ...
+}
+```
+
+<br/>
+
+---
+
+### - B. Controllers
+
+**- Command's form:**
+
+```bash
+nest g resource NAME
+```
+
+**- Description:**
+
+- Controllers are responsible for handling incoming requests and returning responses to the client.
+- A controller's purpose is to receive specific requests for the application (not handle them! just receive them).
+- The routing mechanism controls which controller receives which requests. Frequently, each controller has more than one route, and different routes can perform different actions.
+- In Nest, a basic controller is a class with a decorator of **@Controller**, which has the required metadata that enables Nest to create a routing map, and tie requests to the corresponding controllers.
+- In Nest, often times a controller will have a Provider (a class with injectable) injected into it, which will carry the heavy-lifting of the task itself.
+
+```typescript
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import {
+  GetUsersDto,
+  LoginDto,
+  RegisterDto,
+  UpdateUserDto,
+} from './dto/users.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -41,22 +118,76 @@ export class UsersController {
     return response;
   }
 
-  @Post('login')
-  async login(@Body() body: LoginDto): Promise<string> {
-    const response = await this.usersService.login(body);
+  @Get(':id')
+  async getUserById(@Param('id') id: string): Promise<string> {
+    const response = await this.usersService.getUserById(id);
 
     return response;
+  }
+
+  @Put(':id')
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    console.log('updateUserDto is:', updateUserDto);
+    return `This action updates a user of id ${id}`;
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string) {
+    return `This action removes a user with an id of ${id}`;
   }
 }
 ```
 
-### - B. Services
+<br/>
+
+---
+
+### - C. Modules
+
+**- Command's form:**
 
 ```bash
-nest g service isAuthenticated
+nest g resource NAME
 ```
 
-### - C. Filters
+**- Description:**
+
+- A `module` is a class annotated with a **@Module()** decorator.
+- The **@Module()** decorator takes a single object whose properties describe the module:
+
+  - providers: the providers that will be instantiated by the Nest injector and that may be shared at least across this module
+  - controllers
+  - imports
+  - exports
+
+- The **@Module()** decorator provides metadata that Nest makes use of to organize the application structure.
+
+Example:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
+
+@Module({
+  controllers: [UsersController],
+  providers: [UsersService],
+  // exports: [UsersService], // <--- Every module is automatically a shared module. Once created it can be reused by any module. Let's imagine that we want to share an instance of the UsersService between several other modules. In order to do that, we first need to export the UsersService provider by adding it to the module's exports array, as shown here. Now any module that imports the UsersModule has access to the UsersService and will share the same instance with all other modules that import it as well.
+  imports: [],
+})
+
+export class UsersModule {}
+
+```
+
+<br/>
+
+---
+
+### - D. Filters
 
 HttpException
 
@@ -342,3 +473,15 @@ export class GatewayController {
 ```
 
 Note that once again, the '?' isn't telling swagger that this prop is optional, you need to specify that explicitly within the @ApiQuery decorator.
+
+### Nest config
+
+...to do ...
+
+### How to handle CORS
+
+...to do ...
+
+### How to attach a Logger
+
+...to do ...
