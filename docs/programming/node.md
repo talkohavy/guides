@@ -457,25 +457,27 @@ The two events we saw were "request" & "clientError". By default, "request" & "c
   The following diagram shows a simplified overview of the event loop's order of operations.
 
   ```bash
-  ┌───────────────────────────┐
-  ┌─>│ timers │
-  │ └─────────────┬─────────────┘
-  │ ┌─────────────┴─────────────┐
-  │ │ pending callbacks │
-  │ └─────────────┬─────────────┘
-  │ ┌─────────────┴─────────────┐
-  │ │ idle, prepare │
-  │ └─────────────┬─────────────┘ ┌───────────────┐
-  │ ┌─────────────┴─────────────┐ │ incoming: │
-  │ │ poll │<─────┤ connections, │
-  │ └─────────────┬─────────────┘ │ data, etc. │
-  │ ┌─────────────┴─────────────┐ └───────────────┘
-  │ │ check │
-  │ └─────────────┬─────────────┘
-  │ ┌─────────────┴─────────────┐
-  └──┤ close callbacks │
-  └───────────────────────────┘
+     ┌───────────────────────────┐
+  ┌─>│ timers                    │
+  │  └─────────────┬─────────────┘
+  │  ┌─────────────┴─────────────┐
+  │  │ pending callbacks         │
+  │  └─────────────┬─────────────┘
+  │  ┌─────────────┴─────────────┐
+  │  │ idle, prepare             │
+  │  └─────────────┬─────────────┘      ┌───────────────┐
+  │  ┌─────────────┴─────────────┐      │ incoming:     │
+  │  │ poll                      │<─────┤ connections,  │
+  │  └─────────────┬─────────────┘      │ data, etc.    │
+  │  ┌─────────────┴─────────────┐      └───────────────┘
+  │  │ check                     │
+  │  └─────────────┬─────────────┘
+  │  ┌─────────────┴─────────────┐
+  └──┤ close callbacks           │
+     └───────────────────────────┘
   ```
+
+````
 
   Each box will be referred to as a "phase" of the event loop.
   Each phase has a FIFO queue of callbacks to execute. While each phase is special in its own way, generally, when the event loop enters a given phase, it will perform any operations specific to that phase, then execute callbacks in that phase's queue until the queue has been exhausted or the maximum number of callbacks has executed. When the queue has been exhausted or the callback limit is reached, the event loop will move to the next phase, and so on.
@@ -539,7 +541,7 @@ blockFor500();
 console.log('Me first!');
 
 setImmediate(immediately);
-```
+````
 
 Up here we're saving 4 functions, and then gonna set a printHello function to run after 0 milliseconds (which I already have a feeling it won't run after 0 milliseconds), and I'm gonna set up a function useImportedTweets to run after a bunch of tweet data being imported, the whole file using readFile. I'm then gonna run blockFor500 ms function, which we're not gonna write the code of, but when it runs - it is not a timer! It is going to do some task in JS 5 million times that will end up taking 500ms in JavaScript, not in Node, but in JavaScript. Then, we're gonna run a console.log, and then we're gonna run a funny little thing called setImmediate - which is another Node feature that gives us control over putting stuff into another totally separate queue. We'll see. We're gonna see 3 of the queues today. There are 2 more which we're not gonna cover, I'll tell you what they are though.
 

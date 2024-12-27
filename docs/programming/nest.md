@@ -1,27 +1,8 @@
 # Guide For Nest JS
 
-## **0. Install Nest CLI**
-
-```bash
-p add -g @nestjs/cli
-```
-
 ## **1. Nest Objects**
 
 ### - A. Providers (Services)
-
-**- Command's form:**
-
-```bash
-nest g service NAME
-```
-
-Creates a folder named `name`, with 2 files:
-
-- `name.service.spec.ts`
-- `name.service.ts`
-
-**- Description:**
 
 - Providers are a fundamental concept in Nest.
 - Many things in Nest are considered as providers: services, repositories, factories, helpers, and so on.
@@ -71,12 +52,6 @@ export class UsersController {
 ---
 
 ### - B. Controllers
-
-**- Command's form:**
-
-```bash
-nest g resource NAME
-```
 
 **- Description:**
 
@@ -147,41 +122,45 @@ export class UsersController {
 
 ### - C. Modules
 
-**- Command's form:**
-
-```bash
-nest g resource NAME
-```
-
-**- Description:**
-
 - A `module` is a class annotated with a **@Module()** decorator.
 - The **@Module()** decorator takes a single object whose properties describe the module:
 
-  - providers: the providers that will be instantiated by the Nest injector and that may be shared at least across this module
-  - controllers
-  - imports
-  - exports
+  - `providers`: the providers that will be instantiated by the Nest injector and that may be shared at least across this module.
+  - `controllers`: the set of controllers defined in this module which have to be instantiated.
+  - `imports`: the list of imported modules that export the providers which are required in this module.
+  - `exports`: the subset of providers that are provided by this module and should be available in other modules which import this module. You can use either the provider itself or just its token (provide value).
 
 - The **@Module()** decorator provides metadata that Nest makes use of to organize the application structure.
 
-Example:
+The module encapsulates providers by default. This means that it's impossible to inject providers that are neither directly part of the current module nor exported from the imported modules. Thus, you may consider the exported providers from a module as the module's public interface, or API.
+
+In Nest, modules are singletons by default, and thus you can share the same instance of any provider between multiple modules effortlessly.
+
+Every module is automatically a shared module. Once created it can be reused by any module. Let's imagine that we want to share an instance of the CatsService between several other modules. In order to do that, we first need to export the CatsService provider by adding it to the module's exports array, as shown below:
 
 ```typescript
+
 import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { CatsController } from './cats.controller';
+import { CatsService } from './cats.service';
 
 @Module({
-  controllers: [UsersController],
-  providers: [UsersService],
-  // exports: [UsersService], // <--- Every module is automatically a shared module. Once created it can be reused by any module. Let's imagine that we want to share an instance of the UsersService between several other modules. In order to do that, we first need to export the UsersService provider by adding it to the module's exports array, as shown here. Now any module that imports the UsersModule has access to the UsersService and will share the same instance with all other modules that import it as well.
-  imports: [],
+  controllers: [CatsController],
+  providers: [CatsService],
+  exports: [CatsService]
 })
-
-export class UsersModule {}
-
+export class CatsModule {}
 ```
+
+Now any module that imports the `CatsModule` has access to the `CatsService` and will share the same instance with all other modules that import it as well.
+
+If we were to directly register the `CatsService` in every module that requires it, it would indeed work, but it would result in each module getting its own separate instance of the `CatsService`. This can lead to increased memory usage since multiple instances of the same service are created, and it could also cause unexpected behavior, such as state inconsistency if the service maintains any internal state.
+
+By encapsulating the `CatsService` inside a module, such as the `CatsModule`, and exporting it, we ensure that the same instance of `CatsService` is reused across all modules that import `CatsModule`. This not only reduces memory consumption but also leads to more predictable behavior, as all modules share the same instance, making it easier to manage shared states or resources. This is one of the key benefits of modularity and dependency injection in frameworks like NestJS—allowing services to be efficiently shared throughout the application.
+
+:::danger
+`module` classes themselves cannot be injected as providers due to circular dependency. Avoid listing a `module` inside the `providers` array.
+:::
 
 <br/>
 
@@ -485,3 +464,81 @@ Note that once again, the '?' isn't telling swagger that this prop is optional, 
 ### How to attach a Logger
 
 ...to do ...
+
+## **3. Nest CLI**
+
+### **Install Nest CLI**
+
+```bash
+p add -g @nestjs/cli
+```
+
+<br/>
+
+---
+
+### Command: resource
+
+**- Command's form:**
+
+```bash
+nest g resource NAME
+```
+
+**- Description:**
+
+Creates a folder named `name` with:
+
+```bash
+📂 name
+ ┣ 📂 dto
+ ┃ ┣ 📜 create-name.dto.ts
+ ┃ ┗ 📜 update-name.dto.ts
+ ┣ 📂 entities
+ ┃ ┗ 📜name.entity.ts
+ ┣ 📜 name.controller.spec.ts
+ ┣ 📜 name.controller.ts
+ ┣ 📜 name.module.ts
+ ┣ 📜 name.service.spec.ts
+ ┗ 📜 name.service.ts
+```
+
+<br/>
+
+---
+
+### Command: service
+
+**- Command's form:**
+
+```bash
+nest g service NAME
+```
+
+**- Description:**
+
+Creates a folder named `name`, with 2 files:
+
+```bash
+📂 name
+ ┣ 📜 name.service.spec.ts
+ ┗ 📜 name.service.ts
+```
+
+<br/>
+
+---
+
+### Command: module
+
+**- Command's form:**
+
+```bash
+nest g module NAME
+```
+
+**- Description:**
+
+<br/>
+
+---
