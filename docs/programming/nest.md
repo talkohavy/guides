@@ -556,7 +556,7 @@ Note that once again, the '?' isn't telling swagger that this prop is optional, 
 
 ## **3. Nest CLI**
 
-### **Install Nest CLI**
+### - A. **Install Nest CLI**
 
 ```bash
 p add -g @nestjs/cli
@@ -566,7 +566,7 @@ p add -g @nestjs/cli
 
 ---
 
-### Command: resource
+### - B. Command: resource
 
 **- Command's form:**
 
@@ -596,7 +596,7 @@ Creates a folder named `name` with:
 
 ---
 
-### Command: service
+### - C. Command: service
 
 **- Command's form:**
 
@@ -618,7 +618,7 @@ Creates a folder named `name`, with 2 files:
 
 ---
 
-### Command: module
+### - D. Command: module
 
 **- Command's form:**
 
