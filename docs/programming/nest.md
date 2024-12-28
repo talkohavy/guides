@@ -1,6 +1,63 @@
 # Guide For Nest JS
 
-## **1. Nest Objects**
+## **1. Getting Started - Create Your Server**
+
+### - Step 1: Create new project
+
+Run the command:
+
+```bash
+nest new project-name
+```
+
+Followed by:
+
+```bash
+cd project-name
+pnpm run start
+```
+
+You now have a running server on port 3000.
+
+### - Step 2: Eslint
+
+Nest is configured with the old eslint (v8), so you'll need to replace it with v9.
+
+You'll need to uninstall all of these:
+
+- `eslint`
+- `@typescript-eslint/eslint-plugin`
+- `@typescript-eslint/parser`
+- `eslint-config-prettier`
+- `eslint-plugin-prettier`
+
+and install these:
+
+- `eslint` (latest)
+- `@eslint/js`
+- `eslint-plugin-perfectionist`
+- `eslint-plugin-react-compiler`
+- `globals`
+- `typescript-eslint`
+
+### - Step 3: tsconfig.json
+
+Copy the tsconfig from `vs-vite-template` project, as it is more organized.
+
+You'll need to manually change these however:
+
+- `module`: set to `commonjs` instead of `ESNEXT`
+- `noEmit`: set to `false` instead of `true`.
+- `emitDecoratorMetadata`: set to `true` instead of `false`.
+- `experimentalDecorators`: set to `true` instead of `false`.
+- `outDir`: set to "./dist"
+- `removeComments`: set to `true` instead of `false`.
+- `moduleResolution`: set to `classic` instead of `bundler` (or simply unset it).
+- `declaration`: set to `true` instead of `false`.
+
+---
+
+## **2. Nest Objects**
 
 ### - A. Providers (Services)
 
@@ -412,7 +469,7 @@ export class IsAuthenticatedGuard implements CanActivate {
 }
 ```
 
-## **2. Nest Swagger**
+## **3. Nest Swagger**
 
 ### - A. Installation
 
@@ -554,7 +611,7 @@ Note that once again, the '?' isn't telling swagger that this prop is optional, 
 
 ...to do ...
 
-## **3. Nest CLI**
+## **4. Nest CLI**
 
 ### - A. **Install Nest CLI**
 
