@@ -229,7 +229,7 @@ If a variable is found in multiple files, the first one takes precedence.
 
 If you don't want to load the `.env` file, but instead would like to simply access environment variables from the runtime environment (as with OS shell exports like export DATABASE_USER=test), set the options object's `ignoreEnvFile` property to `true`.
 
-#### -D. Advanced Usage - Custom configuration files
+#### - D. Advanced Usage - Custom configuration files
 
 For more complex projects, you may utilize custom configuration files to return nested configuration objects.
 
@@ -311,6 +311,291 @@ export class UsersService {
   constructor(private configService: ConfigService) {}
   // ...
 }
+```
+
+#### - E. Enable CORS
+
+On the main file of `main.ts`, add this line:
+
+```ts title=main.ts
+import { handleCors } from './common/utils/handleCors';
+
+const nodeEnv = configService.get<EnvOptions>('nodeEnv');
+app.enableCors({ origin: handleCors(nodeEnv), credentials: true });
+```
+
+And create a file `src/common/utils/handleCors.ts`, with the contents of:
+
+```ts
+import { UnauthorizedException } from '@nestjs/common';
+import { EnvOptions } from '@src/config/types';
+
+const ALLOWED_DOMAINS = ['http://localhost:3000', 'https://luckylove.co.il'];
+const PROD_DOMAIN_REGEX = '.luckylove.co.il';
+
+export function handleCors(nodeEnv: EnvOptions) {
+  return (
+    origin: string,
+    callback: (err: Error | null, origin?: any) => void,
+  ) => {
+    const isAllowed =
+      origin === undefined ||
+      ALLOWED_DOMAINS.includes(origin) ||
+      (nodeEnv !== EnvOptions.Prod && origin.endsWith(PROD_DOMAIN_REGEX));
+
+    if (isAllowed) return void callback(null, true);
+
+    callback(new UnauthorizedException('CORS not allowed'), false);
+  };
+}
+```
+
+#### - F. Enable Cookie Parser
+
+To enable cookie parser, first install:
+
+```bash
+p add cookie-parser
+p add -D @types/cookie-parser
+```
+
+Once the installation is complete, apply the cookie-parser middleware as global middleware (for example, in your main.ts file).
+
+```ts
+import cookieParser from 'cookie-parser';
+
+// somewhere in your initialization file
+app.use(cookieParser());
+```
+
+### - Step 7: Add a Custom Logger
+
+#### - A. Introduction
+
+Nest comes with a built-in text-based logger which is used during application bootstrapping and several other circumstances such as displaying caught exceptions. This functionality is provided via the `Logger` class in the `@nestjs/common` package.
+
+You can also make use of the built-in logger, or create your own custom implementation, to log your own application-level events and messages.
+
+#### - B. Basic Customization
+
+To disable logging, set the `logger` property to `false` in the (optional) Nest application options object passed as the second argument to the `NestFactory.create()` method.
+
+```ts
+
+const app = await NestFactory.create(AppModule, {
+  logger: false,
+});
+await app.listen(process.env.PORT ?? 3000);
+```
+
+To enable specific logging levels, set the `logger` property to an array of strings specifying the log levels to display, as follows:
+
+```ts
+
+const app = await NestFactory.create(AppModule, {
+  logger: ['error', 'warn'],
+});
+await app.listen(process.env.PORT ?? 3000);
+```
+
+Values in the array can be any combination of `'log'`, `'fatal'`, `'error'`, `'warn'`, `'debug'`, and `'verbose'`.
+
+:::info
+To disable color in the default logger's messages, set the `NO_COLOR` environment variable to some non-empty string.
+:::
+
+#### - C. Custom Implementation
+
+There are several way in which you can attach a logger to Nest. But the two most recommended ones are:
+
+- Implementing the `LoggerService` interface
+- Extending the `ConsoleLogger` class
+
+Extending the `ConsoleLogger`:
+
+```ts
+import { ConsoleLogger } from '@nestjs/common';
+
+export class MyLogger extends ConsoleLogger {
+  error(message: any, stack?: string, context?: string) {
+    // add your tailored logic here
+    super.error(...arguments);
+  }
+}
+```
+
+Implementing the `LoggerService`:
+
+```ts
+import { Injectable, LoggerService } from '@nestjs/common';
+
+@Injectable()
+export class MyLogger implements LoggerService {
+  /**
+   * Write a 'log' level log.
+   */
+  log(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'fatal' level log.
+   */
+  fatal(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write an 'error' level log.
+   */
+  error(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'warn' level log.
+   */
+  warn(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'debug' level log.
+   */
+  debug?(message: any, ...optionalParams: any[]) {}
+
+  /**
+   * Write a 'verbose' level log.
+   */
+  verbose?(message: any, ...optionalParams: any[]) {}
+}
+```
+
+#### - D. Logger as a module
+
+For more advanced logging functionality, you'll want to take advantage of dependency injection. For example, you may want to inject a `ConfigService` into your logger to customize it, and in turn inject your custom logger into other controllers and/or providers. To enable dependency injection for your custom logger, create a class that implements `LoggerService` and register that class as a provider in some module.
+
+```ts
+import { Module } from '@nestjs/common';
+import { MyLoggerService } from './myLogger.service';
+
+@Module({
+  providers: [MyLoggerService],
+  exports: [MyLoggerService],
+})
+export class LoggerModule {}
+```
+
+With this construct, you are now providing your custom logger for use by any other module. Because your `MyLoggerService` class is part of a module, it can use dependency injection (for example, to inject a `ConfigService`).
+
+#### - E. Logger on Nest load
+
+There's one more technique needed to provide this custom logger for use by Nest for system logging (e.g., for bootstrapping and error handling).
+
+Because application instantiation (`NestFactory.create()`) happens outside the context of any module, it doesn't participate in the normal Dependency Injection phase of initialization. So we must ensure that at least one application module imports the `LoggerModule` to trigger Nest to instantiate a singleton instance of our `MyLoggerService` class.
+
+We can then instruct Nest to use the same singleton instance of `MyLoggerService` with the following construction:
+
+```ts
+const app = await NestFactory.create(AppModule, {
+  bufferLogs: true,
+});
+app.useLogger(app.get(MyLoggerService));
+await app.listen(process.env.PORT ?? 3000);
+```
+
+Here we use the `get()` method on the `NestApplication` instance to retrieve the singleton instance of the `MyLoggerService` object. This technique is essentially a way to "inject" an instance of a logger for use by Nest. The `app.get()` call retrieves the singleton instance of `MyLoggerService`, and depends on that instance being first injected in another module, as described above.
+
+When we supply a custom logger via `app.useLogger()`, it will actually be used by Nest internally. That means that our code remains implementation agnostic, while we can easily substitute the default logger for our custom one by calling `app.useLogger()`. That way calling to `this.logger.log()` from MyService would result in calls to method `log` from `MyLoggerService` instance.
+
+You can also inject this `MyLoggerService` provider in your feature classes, thus ensuring consistent logging behavior across both Nest system logging and application logging.
+
+:::info
+In the example above, we set the `bufferLogs` to `true` to make sure all logs will be buffered until a custom logger is attached (`MyLoggerService` in this case) and the application initialization process either completes or fails. If the initialization process fails, Nest will fallback to the original `ConsoleLogger` to print out any reported error messages.
+:::
+
+#### - F. Logger with context
+
+A good practice is to instantiate `Logger` class from `@nestjs/common` in each of our services. We can supply our **service name** as the `context` argument in the Logger constructor, like so:
+
+```ts
+import { Injectable, Logger } from '@nestjs/common';
+
+@Injectable()
+class MyService {
+  private readonly logger = new Logger(MyService.name);
+
+  doSomething() {
+    this.logger.log('Doing something...');
+  }
+}
+```
+
+In the default logger implementation, `context` is printed in the square brackets, like `NestFactory` in the example below:
+
+```
+[Nest] 19096   - 12/08/2019, 7:12:59 AM   [NestFactory] Starting Nest application...
+```
+
+Fortunately, Nest supplies the `scope` option as configuration metadata for the `ConsoleLogger` class, specifying a **transient** scope, to ensure that we'll have a unique instance of the `MyLoggerService` in each feature module. In this example, we do not extend the individual `ConsoleLogger` methods (like `log()`, `warn()`, etc.), though you may choose to do so.
+
+```ts
+import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
+
+@Injectable({ scope: Scope.TRANSIENT })
+export class MyLogger extends ConsoleLogger {
+  customLog() {
+    this.log('Please feed the cat!');
+  }
+}
+```
+
+Next, import the `LoggerModule` into your feature module. Since we extended default `Logger` we have the convenience of using `setContext` method. So we can start using the context-aware custom logger, like this:
+
+```ts
+
+import { Injectable } from '@nestjs/common';
+import { MyLogger } from './my-logger.service';
+
+@Injectable()
+export class CatsService {
+  private readonly cats: Cat[] = [];
+
+  constructor(private myLogger: MyLogger) {
+    // Due to transient scope, CatsService has its own unique instance of MyLogger,
+    // so setting context here will not affect other instances in other services
+    this.myLogger.setContext('CatsService');
+  }
+
+  findAll(): Cat[] {
+    // You can call all the default methods
+    this.myLogger.warn('About to return cats!');
+    // And your custom methods
+    this.myLogger.customLog();
+    return this.cats;
+  }
+}
+```
+
+Finally, instruct Nest to create a new instance of your logger:
+
+```ts
+const app = await NestFactory.create(AppModule, {
+  bufferLogs: true,
+});
+// diff-remove-start
+app.useLogger(app.get(MyLoggerService));
+// diff-remove-end
+// diff-add-start
+app.useLogger(new MyLogger());
+// diff-add-end
+await app.listen(process.env.PORT ?? 3000);
+```
+
+### - Step 8: add handlers for UncaughtException & UnhandledRejection
+
+At the main file of `main.ts`, under `await app.listen`, add these lines:
+
+```ts
+process.on('uncaughtException', () => {
+  console.error('AVOID SERVER CRASH - uncaughtException');
+});
+
+process.on('unhandledRejection', () => {
+  console.error('AVOID SERVER CRASH - unhandledRejection');
+});
 ```
 
 ---
