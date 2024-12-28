@@ -1,6 +1,6 @@
 # Guide For Nest JS
 
-## **1. Getting Started - Create Your Server**
+## **1. Getting Started - Create an Advanced Server**
 
 ### - Step 1: Create new project
 
@@ -17,9 +17,27 @@ cd project-name
 pnpm run start
 ```
 
-You now have a running server on port 3000.
+You now have a running server on port 3000.  
+You can change the port number over at `main.ts`.
 
-### - Step 2: Eslint
+You might wanna add the lines:
+
+```ts
+const PORT = process.env.PORT ?? 8000;
+await app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+```
+
+### - Step 2: add dev script
+
+In your package.json, add:
+
+```json
+{
+  "dev": "nest start --watch",
+}
+```
+
+### - Step 3: Eslint
 
 Nest is configured with the old eslint (v8), so you'll need to replace it with v9.
 
@@ -40,7 +58,7 @@ and install these:
 - `globals`
 - `typescript-eslint`
 
-### - Step 3: tsconfig.json
+### - Step 4: tsconfig.json
 
 Copy the tsconfig from `vs-vite-template` project, as it is more organized.
 
@@ -55,6 +73,246 @@ You'll need to manually change these however:
 - `moduleResolution`: set to `classic` instead of `bundler` (or simply unset it).
 - `declaration`: set to `true` instead of `false`.
 
+### - Step 5: use SWC
+
+SWC (Speedy Web Compiler) is an extensible Rust-based platform that can be used for both compilation and bundling. Using SWC with Nest CLI is a great and simple way to significantly speed up your development process.
+
+SWC is approximately x20 times faster than the default TypeScript compiler.
+
+Install these packages:
+
+```bash
+p add -D @swc/cli @swc/core
+```
+
+And modify the `nest-cli.json`:
+
+```json
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "builder": {
+      "type": "swc",
+      "options": {
+        "outDir": "dist",
+        "watch": false
+      }
+    },
+    "deleteOutDir": true,
+    "typeCheck": false // <--- in SWC, this defaults to false, and needs to be enabled manually.
+  }
+}
+```
+
+SWC does not perform any type checking itself (as opposed to the default TypeScript compiler), so to turn it on, you need to use the --type-check flag, or you can just set the `compilerOptions.typeCheck` property to true in your nest-cli.json.
+
+#### SWC + Jest
+
+To have support for jest in SWC, you first need to install:
+
+```bash
+p add -D jest @swc/core @swc/jest
+```
+
+Then update your `package.json`:
+
+```json
+{
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    // diff-add-start
+    "transform": {
+      "^.+\\.(t|j)s?$": [
+        "@swc/jest"
+      ]
+    },
+    "moduleNameMapper": {
+      "^@src/(.*)": "<rootDir>/$1"
+    },
+    // diff-add-end
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+```
+
+And add a `.swcrc` file at the root of your project, with the following contents:
+
+```json
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "sourceMaps": true,
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
+    "baseUrl": "./"
+  },
+  "minify": false
+}
+```
+
+### - Step 6: Configuration
+
+#### - A. Installation
+
+To be able to read `.env` files, install the following:
+
+```bash
+p add @nestjs/config
+```
+
+The @nestjs/config package internally uses `dotenv`.
+Since `@nestjs/config` relies on dotenv, it uses that package's rules for resolving conflicts in environment variable names. When a key exists both in the runtime environment as an environment variable (e.g., via OS shell exports like export DATABASE_USER=test) and in a .env file, the runtime environment variable takes precedence.
+
+#### - B. Basic Usage
+
+Once the installation process is complete, we can import the `ConfigModule` in the root `AppModule` and control its behavior using the **.forRoot()** static method:
+
+```ts title=app.module.ts
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [ConfigModule.forRoot()],
+})
+export class AppModule {
+  // ...
+}
+```
+
+What this does:
+
+- It looks for a file named `.env` at the root of your project, reads it, and adds its contents to `process.env`.
+- The **forRoot()** method registers the `ConfigService` provider, which provides a **get()** method for reading these parsed/merged configuration variables. For example:
+  ```ts
+  const nodeEnv = configService.get<EnvOptions>('nodeEnv');
+  console.log(nodeEnv);
+  ```
+
+You can also specify a different path/name for the `.env` files like so:
+
+```ts title=app.module.ts
+ConfigModule.forRoot({
+  envFilePath: '.env.development.local',
+});
+```
+
+You can also specify multiple paths for .env files like so:
+
+```ts title=app.module.ts
+ConfigModule.forRoot({
+  envFilePath: ['.env.development.local', '.env.development'],
+});
+```
+
+If a variable is found in multiple files, the first one takes precedence.
+
+#### - C. Disable env variables loading
+
+If you don't want to load the `.env` file, but instead would like to simply access environment variables from the runtime environment (as with OS shell exports like export DATABASE_USER=test), set the options object's `ignoreEnvFile` property to `true`.
+
+#### -D. Advanced Usage - Custom configuration files
+
+For more complex projects, you may utilize custom configuration files to return nested configuration objects.
+
+A custom configuration file exports a factory function that returns a configuration object. The configuration object can be any arbitrarily nested plain JavaScript object. The `process.env` object will contain the fully resolved environment variable key/value pairs (with .env file and externally defined variables resolved and merged as described above). Since you control the returned configuration object, you can add any required logic to cast values to an appropriate type, set default values, etc. For example:
+
+```ts title=src/config/getConfiguration.ts
+export default function getConfiguration() {
+  return {
+    port: parseInt(process.env.PORT, 10) || 3000,
+    database: {
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
+    },
+  };
+}
+```
+
+You can even add a validation schema to your configuration:
+
+```ts title=src/config/validationSchema.ts
+import joi from 'joi';
+
+export const envVariablesSchema = joi.object({
+  PORT: joi.number().port(),
+  IS_DEV: joi.string(),
+});
+```
+
+then...
+
+```ts title=app.module.ts
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env', // <--- defaults to '.env'
+      isGlobal: true, // <--- defaults to false
+      cache: true, // <--- defaults to false
+      load: [getConfiguration],
+      validationSchema: envVariablesSchema,
+    }),
+  ],
+})
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+  }
+}
+```
+
+```ts
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { getConfiguration } from './config';
+import { envVariablesSchema } from './config/validationSchema';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env', // <--- defaults to '.env'
+      ignoreEnvFile: false, // <--- defaults to false.
+      isGlobal: true, // <--- defaults to false
+      cache: true, // <--- defaults to false
+      load: [getConfiguration],
+      validationSchema: envVariablesSchema,
+    }),
+  ],
+})
+export class AppModule {
+  // ...
+}
+```
+
+Then we can inject it using standard constructor injection:
+
+```ts
+import { ConfigService } from '@nestjs/config';
+
+@Injectable()
+export class UsersService {
+  constructor(private configService: ConfigService) {}
+  // ...
+}
+```
+
 ---
 
 ## **2. Nest Objects**
@@ -66,7 +324,7 @@ You'll need to manually change these however:
 - In 90% of cases, Providers in nest are actually **services**.
 - **The main idea of a provider is that it can be injected as a dependency**.
 - Тhe act of "wiring up" these objects is delegated to the Nest runtime system.
-- Implementation-wise, Providers are really just a class with the **@Injectable()** decorator.  
+- Implementation-wise, Providers are really just a class with the **@Injectable()** decorator.
   This means that this provider is something that can be injected into any class that depends on it.
 
 Here is a Service Provider implementation example:
