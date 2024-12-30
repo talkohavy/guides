@@ -73,7 +73,17 @@ You'll need to manually change these however:
 - `moduleResolution`: set to `classic` instead of `bundler` (or simply unset it).
 - `declaration`: set to `true` instead of `false`.
 
-### - Step 5: use SWC
+### - Step 5: package.json type:commonjs
+
+I'm 99% sure that nest can't work in esm. I tried to put "type": "module", and the dev server threw an esm related error. Therefore, make sure your package.json is set to:
+
+```json
+{
+  "type": "commonjs"
+}
+```
+
+### - Step 6: use SWC
 
 SWC (Speedy Web Compiler) is an extensible Rust-based platform that can be used for both compilation and bundling. Using SWC with Nest CLI is a great and simple way to significantly speed up your development process.
 
@@ -169,7 +179,7 @@ And add a `.swcrc` file at the root of your project, with the following contents
 }
 ```
 
-### - Step 6: Configuration
+### - Step 7: Configuration
 
 #### - A. Installation
 
@@ -368,7 +378,7 @@ import cookieParser from 'cookie-parser';
 app.use(cookieParser());
 ```
 
-### - Step 7: Add a Custom Logger
+### - Step 8: Add a Custom Logger
 
 #### - A. Introduction
 
@@ -584,7 +594,7 @@ app.useLogger(new MyLogger());
 await app.listen(process.env.PORT ?? 3000);
 ```
 
-### - Step 8: add handlers for UncaughtException & UnhandledRejection
+### - Step 9: add handlers for UncaughtException & UnhandledRejection
 
 At the main file of `main.ts`, under `await app.listen`, add these lines:
 
@@ -597,6 +607,18 @@ process.on('unhandledRejection', () => {
   console.error('AVOID SERVER CRASH - unhandledRejection');
 });
 ```
+
+### - Step 10: add your first Controller
+
+Let's use the CLI to generate the controller, and everything around it.
+
+Run the following command:
+
+```bash
+nest g resource NAME
+```
+
+Move the newly created folder into `./src/modules/`
 
 ---
 
@@ -1156,7 +1178,7 @@ Note that once again, the '?' isn't telling swagger that this prop is optional, 
 
 ## **4. Nest CLI**
 
-### - A. **Install Nest CLI**
+### **Install Nest CLI**
 
 ```bash
 p add -g @nestjs/cli
@@ -1166,7 +1188,7 @@ p add -g @nestjs/cli
 
 ---
 
-### - B. Command: resource
+### - A. Command: resource
 
 **- Command's form:**
 
@@ -1176,7 +1198,15 @@ nest g resource NAME
 
 **- Description:**
 
-Creates a folder named `name` with:
+Creates a `module`, with a `controller`, that uses a `service`, and creates matching test files for the controller, and the service. Also creates a `dto` folder, for both the **create** & **update** routes.
+
+It will also update your main `app.module.ts` file to use the newly created `name` module.
+
+After running the command, move the generated folder into your `src/modules` folder.
+
+For 99% of times, this is the only command you'll be using.
+
+Running the command creates the following folder structure:
 
 ```bash
 📂 name
@@ -1196,7 +1226,7 @@ Creates a folder named `name` with:
 
 ---
 
-### - C. Command: service
+### - B. Command: service
 
 **- Command's form:**
 
