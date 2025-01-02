@@ -1,7 +1,7 @@
-import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import { translate } from '@docusaurus/Translate';
 import Heading from '@theme/Heading';
+import clsx from 'clsx';
 import styles from './index.module.css';
 
 // import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
