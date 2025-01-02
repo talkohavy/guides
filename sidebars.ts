@@ -78,6 +78,24 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
+          type: 'category',
+          label: '- Javascript',
+          link: {
+            type: 'generated-index',
+            title: 'JavaScript Guides',
+            description: 'Advanced concepts of JavaScript',
+            slug: '/js',
+            keywords: ['javascript'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/javascript/iterator',
+              label: '- Iterator',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: 'programming/aws-kubernetes',
           label: '- AWS Kubernetes',
