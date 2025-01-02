@@ -79,6 +79,25 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: '- Web',
+          link: {
+            type: 'generated-index',
+            title: 'Web Guides',
+            description: 'Advanced concepts of the web',
+            slug: '/web',
+            keywords: ['web'],
+            image: '/img/heart.svg',
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/web/fetch-api',
+              label: '- Fetch API',
+            },
+          ],
+        },
+        {
+          type: 'category',
           label: '- Javascript',
           link: {
             type: 'generated-index',

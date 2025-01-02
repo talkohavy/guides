@@ -1,0 +1,10 @@
+{
+  "link": {
+    "type": "generated-index",
+    "slug": "web",
+    "title": "Web - overview",
+    "description": "Everything about the WEB."
+  },
+  "collapsed": true,
+  "collapsible": true
+}
