@@ -90,8 +90,18 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'programming/javascript/call-apply-bind',
+              label: '- Call, Apply & Bind',
+            },
+            {
+              type: 'doc',
               id: 'programming/javascript/iterator',
               label: '- Iterator',
+            },
+            {
+              type: 'doc',
+              id: 'programming/javascript/strict-mode',
+              label: '- Strict Mode',
             },
           ],
         },

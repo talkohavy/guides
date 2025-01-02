@@ -1,17 +1,17 @@
-# ITERATOR
+# Iterator
 
 An iterator in JavaScript is an object that allows you to traverse through a collection (like an array, string, or custom data structure) one element at a time. It follows a specific protocol called the iterator protocol.
 
-## Iterator Protocol
+## 1. Iterator Protocol
 
 An object is an iterator if it implements a `next()` method, which returns an object with two properties:
 
 - value: The next value in the iteration sequence.
 - done: A boolean that indicates whether the iteration is complete (true if there are no more values to iterate over, false otherwise).
 
-## How Iterators Work
+## 2. How Iterators Work
 
-Here’s a basic example of an iterator:
+Here's a basic example of an iterator:
 
 ```js
 function createIterator(array) {
@@ -36,7 +36,7 @@ console.log(iterator.next()); // { value: 'c', done: false }
 console.log(iterator.next()); // { value: undefined, done: true }
 ```
 
-## Built-In Iterators
+## 3. Built-In Iterators
 
 JavaScript provides built-in iterators for iterable objects like:
 
@@ -57,17 +57,17 @@ console.log(iterator.next()); // { value: 3, done: false }
 console.log(iterator.next()); // { value: undefined, done: true }
 ```
 
-## Iterating with for...of
+## 4. Iterating with for...of
 
 Iterators are typically used implicitly in JavaScript with the for...of loop:
 
 ```js
 for (const value of ['x', 'y', 'z']) {
-  console.log(value); // Logs: x, y, z
+  console.log(value); // output: x, y, z
 }
 ```
 
-## Custom Iterable Objects
+## 5. Custom Iterable Objects
 
 You can make your own objects iterable by implementing the iterator protocol using the Symbol.iterator property:
 
@@ -89,6 +89,6 @@ const iterableObject = {
 };
 
 for (const value of iterableObject) {
-  console.log(value); // Logs: hello, world
+  console.log(value); // output: hello, world
 }
 ```
