@@ -48,6 +48,7 @@ Now you should get back the error from above.
 You can confirm if strict mode is active by trying the following code snippet:
 
 ```js
+/* eslint-disable */
 function checkStrictMode() {
     const isStrictMode = (function () {
         return !this;
