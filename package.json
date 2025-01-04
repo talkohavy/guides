@@ -2,7 +2,6 @@
   "name": "docusaurus-guides",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules",
     "lint": "eslint",
