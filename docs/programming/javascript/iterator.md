@@ -78,11 +78,13 @@ const iterableObject = {
     let index = 0;
     return {
       next: () => {
-        if (index < this.data.length) {
-          return { value: this.data[index++], done: false };
-        } else {
-          return { value: undefined, done: true };
-        }
+        if (index < this.data.length)
+          return {
+            value: this.data[index++],
+            done: false,
+          };
+
+        return { value: undefined, done: true };
       },
     };
   },
