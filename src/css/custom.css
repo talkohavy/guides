@@ -88,7 +88,7 @@ aside.theme-doc-sidebar-container {
 .theme-doc-sidebar-container button[title='Collapse sidebar'] {
   position: absolute;
   top: 75vh;
-  right: -14px;
+  right: -10px;
   width: 28px;
   height: 28px;
   padding: 0;
@@ -196,12 +196,12 @@ a:hover {
 .custom-code-block-diff-add > span:first-child:not([class^="codeLineNumber"])::before,
 /* If line has numbers, grab the before of 'codeLineContent': */
 .custom-code-block-diff-add > span[class^="codeLineContent"]::before {
-  content: "+ ";
+  content: '+ ';
 }
 
 /* If line doesn't have numbers, grab the before of the first span child: */
 .custom-code-block-diff-remove > span:first-child:not([class^="codeLineNumber"])::before,
 /* If line has numbers, grab the before of 'codeLineContent': */
 .custom-code-block-diff-remove > span[class^="codeLineContent"]::before {
-  content: "- ";
+  content: '- ';
 }
