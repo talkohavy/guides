@@ -122,6 +122,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/javascript/strict-mode',
               label: '- Strict Mode',
             },
+            {
+              type: 'doc',
+              id: 'programming/javascript/prototype',
+              label: '- Prototype',
+            },
           ],
         },
         {
