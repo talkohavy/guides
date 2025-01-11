@@ -127,6 +127,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/javascript/prototype',
               label: '- Prototype',
             },
+            {
+              type: 'doc',
+              id: 'programming/javascript/valueOf',
+              label: '- valueOf',
+            },
           ],
         },
         {
