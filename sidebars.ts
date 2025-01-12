@@ -132,6 +132,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/javascript/valueOf',
               label: '- valueOf',
             },
+            {
+              type: 'doc',
+              id: 'programming/javascript/finalization-registry',
+              label: '- FinalizationRegistry',
+            },
           ],
         },
         {
