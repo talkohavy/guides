@@ -140,6 +140,24 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
+          type: 'category',
+          label: '- Html',
+          link: {
+            type: 'generated-index',
+            title: 'Html Guides',
+            description: 'Advanced concepts of Html',
+            slug: '/html',
+            keywords: ['html'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/html/inert',
+              label: '- Inert',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: 'programming/aws-kubernetes',
           label: '- AWS Kubernetes',
