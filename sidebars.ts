@@ -119,6 +119,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/javascript/getters-and-setters',
+              label: '- Getters & Setters',
+            },
+            {
+              type: 'doc',
               id: 'programming/javascript/strict-mode',
               label: '- Strict Mode',
             },
