@@ -2,7 +2,17 @@
 
 ## 1. Description
 
-A **getter** is a function associated with a property that gets the value of a specific property. A **setter** is a function associated with a property that sets the value of a specific property. Together, they can indirectly represent the value of a property.
+Getters and setters provide more control, flexibility, and encapsulation compared to direct property access. They are particularly useful in cases where you want to:
+
+- Validate or transform input/output.
+- Encapsulate implementation details.
+- Dynamically compute values.
+- Add side effects, such as logging or debugging.
+
+For straightforward properties, however, direct access is still a valid and simpler choice.
+
+A **getter** is a function associated with a property that gets the value of a specific property.  
+A **setter** is a function associated with a property that sets the value of a specific property. Together, they can indirectly represent the value of a property.
 
 Within object initializers, getters and setters are defined like regular methods, but prefixed with the keywords `get` or `set`.
 
