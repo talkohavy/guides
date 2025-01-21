@@ -163,6 +163,24 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
+          type: 'category',
+          label: '- Databases',
+          link: {
+            type: 'generated-index',
+            title: 'Databases Guides',
+            description: 'All about databases',
+            slug: '/db',
+            keywords: ['database'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/databases/elasticsearch',
+              label: '- ElasticSearch',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: 'programming/aws-kubernetes',
           label: '- AWS Kubernetes',
@@ -186,11 +204,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'programming/docker',
           label: '- Docker',
-        },
-        {
-          type: 'doc',
-          id: 'programming/elasticsearch',
-          label: '- ElasticSearch',
         },
         {
           type: 'doc',
