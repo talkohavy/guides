@@ -94,6 +94,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/web/fetch-api',
               label: '- Fetch API',
             },
+            {
+              type: 'doc',
+              id: 'programming/web/headers',
+              label: '- Headers',
+            },
           ],
         },
         {
