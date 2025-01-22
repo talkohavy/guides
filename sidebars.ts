@@ -183,6 +183,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/databases/elasticsearch',
               label: '- ElasticSearch',
             },
+            {
+              type: 'doc',
+              id: 'programming/databases/mongodb',
+              label: '- MongoDB',
+            },
           ],
         },
         {
