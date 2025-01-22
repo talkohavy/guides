@@ -14,6 +14,12 @@ In the "How to use this image" section, you'll see the following command:
 docker run --name mongo -d -p 27017:27017 mongo:6
 ```
 
+Or with a password:
+
+```bash
+docker run --name mongo -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo
+```
+
 where "my-local-mongo" is the name to your container, and 6 is the tag.
 
 You now should have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
@@ -70,6 +76,22 @@ In your terminal, run the following command:
 mongosh "mongodb://localhost:27017"
 ```
 
+Or if you have a password:
+
+```bash
+mongosh --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
+```
+
+All of the below work:
+
+```bash
+mongosh localhost:27017
+mongosh mongodb://localhost:27017
+mongosh --host localhost --port 27017
+mongosh --host localhost:27017
+mongosh --host 127.0.0.1 --port 27017
+```
+
 You should see the following output:
 
 ```bash
@@ -98,7 +120,11 @@ You should now be able to run mongodb commands.
 
 ---
 
-## 2. Most Used Commands
+## 2. MongoDB Configuration
+
+---
+
+## 3. Most Used Commands
 
 ### - Way Number 1: Using MQL
 
