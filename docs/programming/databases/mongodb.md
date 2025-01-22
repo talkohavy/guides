@@ -24,13 +24,13 @@ db.users.find({ myField: { $exists : true } })
 db.users.find({ myArray : { $elemMatch : { $exists : true } } })
 ```
 
-#### - Command 4: **COUNT HOW MANY** records are there that answer <query>
+#### - Command 4: **COUNT HOW MANY** records are there that answer QUERY
 
 ```bash
 db.users.find({<query>}).count()
 ```
 
-#### - Command 5: return documents which <field> IS NOT EQUAL TO some value
+#### - Command 5: return documents which FIELD IS NOT EQUAL TO some value
 
 ```bash
 db.users.find({ userID: { $ne: 1 }})
