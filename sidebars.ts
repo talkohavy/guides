@@ -160,6 +160,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/html/inert',
               label: '- Inert',
             },
+            {
+              type: 'doc',
+              id: 'programming/html/iframe',
+              label: '- Iframe',
+            },
           ],
         },
         {
