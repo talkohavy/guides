@@ -1,6 +1,104 @@
 # MongoDB
 
-## 1. Useful Commands
+## 1. Installing mongoDB
+
+### - A. Run a mongoDB server using docker
+
+Go to the Official Image of mongo:
+
+[https://hub.docker.com/\_/mongo](https://hub.docker.com/_/mongo)
+
+In the "How to use this image" section, you'll see the following command:
+
+```bash
+docker run --name mongo -d -p 27017:27017 mongo:6
+```
+
+where "my-local-mongo" is the name to your container, and 6 is the tag.
+
+You now should have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
+
+You can check its logs using:
+
+```bash
+docker logs mongo
+```
+
+Or you can ssh into it using:
+
+```bash
+docker exec -it mongo bash
+```
+
+:::info
+You can also be using **MongoDB Atlas**, which gives you your own personal remote mongoDB server for free.
+:::
+
+---
+
+### - B. Install mongo CLI
+
+You first need to install your **mongo cli** tool.
+
+**- MacOS:**
+
+Use `homebrew` to install (the official recommended way):
+
+```bash
+brew install mongocli
+```
+
+You now have access to the global command `mongosh`.
+
+**- Windows:**
+
+Go to: [https://www.mongodb.com/docs/mongocli/current/](https://www.mongodb.com/docs/mongocli/current/)
+
+And hit **Install MongoDB CLI**, then hit the **Download** button.
+
+---
+
+### - C. Connect to your remote server
+
+To connect to your remote database, you can type one of two commands; One which includes your password, and one that isn't.
+
+#### 1. Using CLI `mongosh`
+
+In your terminal, run the following command:
+
+```bash
+mongosh "mongodb://localhost:27017"
+```
+
+You should see the following output:
+
+```bash
+Current Mongosh Log ID:	67909697207e4a089faba1d2
+Connecting to:		mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.3
+(node:56199) ExperimentalWarning: CommonJS module /opt/homebrew/Cellar/mongosh/2.3.3/libexec/lib/node_modules/@mongosh/cli-repl/node_modules/@mongodb-js/devtools-proxy-support/dist/fetch.js is loading ES Module /opt/homebrew/Cellar/mongosh/2.3.3/libexec/lib/node_modules/@mongosh/cli-repl/node_modules/node-fetch/src/index.js using require().
+Support for loading ES Module in require() is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Using MongoDB:		6.0.20
+Using Mongosh:		2.3.3
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-01-22T06:56:17.488+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2025-01-22T06:56:18.084+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2025-01-22T06:56:18.084+00:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never' in this binary version
+   2025-01-22T06:56:18.084+00:00: vm.max_map_count is too low
+------
+
+test>
+```
+
+You should now be able to run mongodb commands.
+
+---
+
+## 2. Most Used Commands
 
 ### - Way Number 1: Using MQL
 
@@ -215,3 +313,30 @@ arrayFilters: [{
 Notice how many more notes need to be added to get the same result!
 
 4. **AND** relation for the same key - duplicate key appearance
+
+We saw that the filter in its default mode obscures an AND operation behind it, and that the filter has an object-like structure. Since the filter object is an object, a key **CANNOT** appear twice! It's not an error if it does, it's just that the last appearance of a key would override its predecessors.
+
+Let's see an example:
+
+```bash
+arrayFilters: [{
+  'i.userID': 306,
+  'i.userID': 304,
+  'i.userID':{ $lt: 2 }
+}]
+```
+
+In the example above, only the third one would be taken into account.
+
+5. **OR** relation between **_all_** fields
+
+To get the effect of an OR relation, you must use the explicit way, like so:
+
+```bash
+To get the effect of an OR relation, you must use the explicit way, like so:
+arrayFilters: [{
+  $or: [
+    { 'i.userID': 306 },
+    { 'i. lastUpdated':{ $lt: 555 }}
+}]
+```
