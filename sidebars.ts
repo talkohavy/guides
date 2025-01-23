@@ -207,6 +207,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'programming/certificates',
+          label: '- Certificates',
+        },
+        {
+          type: 'doc',
           id: 'programming/css',
           label: '- CSS',
         },
