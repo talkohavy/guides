@@ -86,6 +86,14 @@ The match query is the standard query for performing a full-text search, includi
 
 The match query analyzes any provided text before performing a search. This means the match query can search text fields for analyzed tokens rather than an exact term.
 
+:::info
+**Using `minimum_should_match`**
+
+You can use the `minimum_should_match` parameter to specify the number or percentage of `should` clauses returned documents _must_ match.
+
+If the `bool` query includes at least one `should` clause and no `must` or `filter` clauses, the default value is `1`. Otherwise, the default value is 0.
+:::
+
 ##### Option 1: query
 
 (Required) `text`, `number`, `boolean` or `date` you wish to find in the provided _fieldName_.
