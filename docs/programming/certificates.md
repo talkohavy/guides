@@ -11,15 +11,20 @@ OpenSSL is an open-source command-line tool that allows users to perform various
 First, we'll create a private key. A private key helps to enable encryption, and is the most important component of our certificate. Let's create a password-protected, 4096-bit RSA private key (domain.key) with the openssl command:
 
 ```bash
-openssl genrsa -des3 -out private.key 4096
+openssl genrsa -des3 -passout -out private.key 4096
 ```
 
-We'll enter a password when prompted. If we want our private key unencrypted, we can simply remove the -des3 option from the command.
+Here are all the encryption options:  
+-aes128, -aes192, -aes256, -aria128, -aria192, -aria256, -camellia128, -camellia192, -camellia256, -des, -des3, -idea
+
+These options encrypt the private key with specified cipher before outputting it. If none of these options is specified no encryption is used. If encryption is used a pass phrase is prompted for if it is not supplied via the `-passout` argument.
+
+We used `-des3` and asked openssl to not prompt us about a password. If you want your private key unencrypted, you can simply remove the `-des3` option from the command.
 
 ## 3. Creating a Certificate Signing Request
 
 **If we want our certificate signed, we need a certificate signing request (CSR)**. The CSR includes the public key and some additional information (such as organization and country).  
-Let's create a CSR (domain.csr) from our existing private key:
+Let's create a CSR (request.csr) from our existing private key:
 
 ```bash
 openssl req -key private.key -new -out request.csr
