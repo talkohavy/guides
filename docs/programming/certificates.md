@@ -8,10 +8,10 @@ OpenSSL is an open-source command-line tool that allows users to perform various
 
 ## 2. Creating a Private Key
 
-First, we'll create a private key. A private key helps to enable encryption, and is the most important component of our certificate. Let's create a password-protected, 2048-bit RSA private key (domain.key) with the openssl command:
+First, we'll create a private key. A private key helps to enable encryption, and is the most important component of our certificate. Let's create a password-protected, 4096-bit RSA private key (domain.key) with the openssl command:
 
 ```bash
-openssl genrsa -des3 -out private.key 2048
+openssl genrsa -des3 -out private.key 4096
 ```
 
 We'll enter a password when prompted. If we want our private key unencrypted, we can simply remove the -des3 option from the command.
