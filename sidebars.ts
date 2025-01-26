@@ -252,11 +252,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'programming/mongodb',
-          label: '- MongoDB',
-        },
-        {
-          type: 'doc',
           id: 'programming/nest',
           label: '- NestJS',
         },
