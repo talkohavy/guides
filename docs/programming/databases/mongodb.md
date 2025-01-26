@@ -20,7 +20,19 @@ Or with a password:
 docker run --name mongo -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo
 ```
 
-where "my-local-mongo" is the name to your container, and 6 is the tag.
+And, if you wanna add extra security, use a certificate:
+
+```bash
+docker run --name mongo -d \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
+  -e MONGO_INITDB_ROOT_PASSWORD=secret \
+  -v ~/Desktop/certificates:/certs:ro \
+  mongo \
+  --tlsMode requireTLS \
+  --tlsCertificateKeyFile /certs/server.pem \
+  --tlsCAFile /certs/rootCA.crt
+```
 
 You now should have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
 
@@ -82,7 +94,13 @@ Or if you have a password:
 mongosh --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
 ```
 
-All of the below work:
+Or if you have a certificate:
+
+```bash
+mongosh --tls --tlsCAFile rootCA.crt --tlsCertificateKeyFile client.pem --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
+```
+
+All of the commands below work as well:
 
 ```bash
 mongosh localhost:27017
