@@ -49,11 +49,11 @@ Company-name: luckylove
 ### - Step 4: Create a Server Certificate
 
 ```bash
-openssl x509 -CA rootCA.crt -CAkey rootCA.key -in server.csr -req -days 365 -subj "/CN=mongo-server" -out server.crt
+openssl x509 -CA rootCA.crt -CAkey rootCA.key -in server.csr -req -days 365 -subj "/CN=localhost" -out server.crt
 ```
 
 The `-days` option specifies the number of days that the certificate will be valid.  
-The `-subj` option is optional, but is recommended, since some tools will give a warning notice for an empty subject, like `mongosh`.
+The `-subj` option is optional, but is recommended, since some tools will give a warning notice for an empty subject, like `mongosh`. Its value **MUST** match the domain name of the server. For example, if we're talking about a mongodb server, to which the client connects with `mongosh --host localhost:27017`, the `CN` value needs to be `localhost`.
 
 ### - Step 4.5: Check out its contents
 
@@ -338,13 +338,13 @@ openssl x509 -CA rootCA.crt -CAkey rootCA.key -in client.csr -req -days 365 -out
 And:
 
 ```bash
-openssl x509 -CA rootCA.crt -CAkey rootCA.key -in server.csr -req -days 365 -subj "/CN=mongo-server" -out server.crt
+openssl x509 -CA rootCA.crt -CAkey rootCA.key -in server.csr -req -days 365 -subj "/CN=localhost" -out server.crt
 ```
 
 ### More Info:
 
 The `-days` option specifies the number of days that the certificate will be valid.  
-The `-subj` option is optional, but is recommended, since some tools will give a warning notice for an empty subject, like `mongosh`.
+The `-subj` option is optional, but is recommended, since some tools will give a warning notice for an empty subject, like `mongosh`. Its value **MUST** match the domain name of the server. For example, if we're talking about a mongodb server, to which the client connects with `mongosh --host localhost:27017`, the `CN` value needs to be `localhost`.
 
 ---
 
