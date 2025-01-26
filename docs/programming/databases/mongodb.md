@@ -34,6 +34,10 @@ docker run --name mongo -d \
   --tlsCAFile /certs/rootCA.crt
 ```
 
+:::info
+See how to create a certificate over at the [certificates guide](/docs/programming/certificates#--step-1-create-2-private-keys---1-for-the-ca--1-for-the-server).
+:::
+
 You now should have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
 
 You can check its logs using:
