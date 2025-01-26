@@ -46,13 +46,19 @@ A-challenge-password: w1234
 Company-name: luckylove
 ```
 
-### - Step 4: Create a Self-Signed Certificate
+### - Step 4: Create a Server Certificate
 
 ```bash
 openssl x509 -CA rootCA.crt -CAkey rootCA.key -in server.csr -req -days 365 -out server.crt
 ```
 
 The `-days` option specifies the number of days that the certificate will be valid.
+
+### - Step 4.5: Check out its contents
+
+```bash
+openssl x509 -in server.crt -text -noout
+```
 
 ### - Step 5: Create PEM file
 
