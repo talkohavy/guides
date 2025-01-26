@@ -40,7 +40,9 @@ See how to create a certificate over at the [certificates guide](/docs/programmi
 
 You now should have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
 
-You can check its logs using:
+**In the next section we'll be testing the connection** to our server, stay tunned.
+
+Meanwhile, you can check the mongo server's logs using:
 
 ```bash
 docker logs mongo
