@@ -2,7 +2,7 @@
 
 ## 1. Installing mongoDB
 
-### - A. Run a mongoDB server using docker
+### - Run a mongoDB server using docker
 
 Go to the Official Image of mongo:
 
@@ -42,7 +42,11 @@ You now should have a container running a **MongoDB server** listening on the st
 
 **In the next section we'll be testing the connection** to our server, stay tunned.
 
-Meanwhile, you can check the mongo server's logs using:
+---
+
+## 2. Test Server Connectivity
+
+Before using the CLI tool, check to see that the mongo server's logs are ok:
 
 ```bash
 docker logs mongo
@@ -54,15 +58,19 @@ Or you can ssh into it using:
 docker exec -it mongo bash
 ```
 
-:::info
-You can also be using **MongoDB Atlas**, which gives you your own personal remote mongoDB server for free.
-:::
+Second, make sure you have mongo CLI tool installed.
 
----
+```bash
+mongocli
+```
 
-### - B. Install mongo CLI
+Or...
 
-You first need to install your **mongo cli** tool.
+```bash
+mongosh
+```
+
+If not, install it:
 
 **- MacOS:**
 
@@ -80,27 +88,19 @@ Go to: [https://www.mongodb.com/docs/mongocli/current/](https://www.mongodb.com/
 
 And hit **Install MongoDB CLI**, then hit the **Download** button.
 
----
-
-### - C. Connect to your remote server
-
-To connect to your remote database, you can type one of two commands; One which includes your password, and one that isn't.
-
-#### 1. Using CLI `mongosh`
-
-In your terminal, run the following command:
+Once installed, run the following command in your terminal:
 
 ```bash
 mongosh "mongodb://localhost:27017"
 ```
 
-Or if you have a password:
+Or, if you have a password:
 
 ```bash
 mongosh --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
 ```
 
-Or if you have a certificate:
+Or, if you have a certificate:
 
 ```bash
 mongosh --tls --tlsCAFile rootCA.crt --tlsCertificateKeyFile client.pem --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
@@ -144,11 +144,125 @@ You should now be able to run mongodb commands.
 
 ---
 
-## 2. MongoDB Configuration
+## 3. Run Basic MongoDB commands
+
+### - command 1: adminCommand
+
+#### The command's form
+
+```bash
+db.adminCommand({ getCmdLineOpts: 1 })
+```
+
+#### Description
+
+Check to see all running configuration.
+
+### - command 2: show all existing databases
+
+#### The command's form
+
+```bash
+show dbs
+```
+
+#### Description
+
+Shows a list of all the databases that are in the cluster.  
+Note! Do not touch the "admin" and the "local" databases.  
+The `admin` database stores all the user/s with admin privileges, that are able to connect to the cluster.
+
+### - command 3: use
+
+#### The command's form
+
+```bash
+use dbName
+```
+
+#### Description
+
+Selects a specific database.
+
+Note: If you use some `dbName` that doesn't exist, You'll still get a message saying "switched to
+db dbName". But if you do "show dbs", you won't see it on the list. What this means is that mongoDB wanted to be so flexible as to say "Yeah, we're ready to create that db for you if you desire, but technically? right now? It doesn't exist".
+
+### - command 4: show collections
+
+#### The command's form
+
+```bash
+show collections
+```
+
+#### Description
+
+Shows all the collections in that specific database.
+
+### -command 5: find
+
+#### The command's form
+
+```bash
+db.collectionName.find(query);
+```
+
+#### Description
+
+This is your way of showing documents that answer to your query's specifications. How to query? The `find` function you saw above requires a query.
+The query is actually a json object like so:
+
+```json
+{
+  "country": "israel",
+  "city": "ramat gan"
+}
+```
+
+:::info
+If there are more than 20 documents in the collection that match the query, know that only the first 20 will be shown as the result. To view the next 20 results type `it`, which is short for _iterate_, and press `Enter`.
+:::
+
+### -command 6: findOne
+
+#### The command's form
+
+```bash
+db.collectionName.findOne(query);
+```
+
+#### Description
+
+This is your way to find just one document that matches the query.  
+If no query is inserted (empty query), a random document would get pulled.
+
+### -command 7: count
+
+#### The command's form
+
+```bash
+db.collectionName.find(query).count();
+```
+
+#### Description
+
+This is your way to answer the question "How many are there?".
+
+### -command 8: pretty
+
+#### The command's form
+
+```bash
+db.collectionName.find(query).pretty();
+```
+
+#### Description
+
+This is your way to present results in a more human-readable way.
 
 ---
 
-## 3. Most Used Commands
+## 4. Most Used Commands
 
 ### - Way Number 1: Using MQL
 
