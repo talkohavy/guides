@@ -11,7 +11,86 @@
 
 ---
 
-## **1. How to Query in ElasticSearch**
+## 1. Install ElasticSearch
+
+### - Step 1: Install ElasticSearch
+
+Run **elasticsearch** server and expose it to the host:
+
+For a single-node server:
+
+```bash
+docker run --name es01 -p 9200:9200 -e ELASTIC_PASSWORD="your_password_here" -it -m 1GB docker.elastic.co/elasticsearch/elasticsearch:8.16.1
+```
+
+For a multi-node server, or a server with kibana, you'll need a network:
+
+```bash
+docker network create elastic
+```
+
+```bash
+docker run --name es01 --net elastic -p 9200:9200 -d -e ELASTIC_PASSWORD="your_password_here" -it -m 1GB docker.elastic.co/elasticsearch/elasticsearch:8.16.1
+```
+
+A little bit about the flags:
+
+- We're giving our container the name "es01".
+- The -m flag is here to set a limit for the memory of the container.
+- Notice that the version of the elasticsearch image is 8.16.1, which could be out-of-date at the time you're watching this (it is currently the latest).
+
+### - Step 2: store password in an environment variable called `ELASTIC_PASSWORD`
+
+In **MacOS**, put the following line:
+
+```bash
+export ELASTIC_PASSWORD="your_password_here"
+```
+
+in either one of `.bashrc` or `.zshrc`.
+
+In **Windows**, create an environment variable named `ELASTIC_PASSWORD` and give it the password as value.
+
+### - Step 3: Test Connectivity
+
+Before trying out the tool, let's test the connectivity with raw `curl`:
+
+```bash
+curl --insecure -u elastic:$ELASTIC_PASSWORD https://localhost:9200
+```
+
+The important parts to note here are:
+
+- I'm using version `8.16.1` of elasticsearch. Different image versions would require different flags & protocols.
+- It is required to use the `--insecure` flag.
+- It is required to use the `https` protocol.
+- It is required to use basic authentication. I had the password stored in an ENV variable called `ELASTIC_PASSWORD`, though you can put it directly in the command, it's just not recommended.
+
+A good response would look like:
+
+```json
+{
+  "name" : "d37acd14f568",
+  "cluster_name" : "docker-cluster",
+  "cluster_uuid" : "ORl7COC4TxadsLCODBuA3A",
+  "version" : {
+    "number" : "8.16.1",
+    "build_flavor" : "default",
+    "build_type" : "docker",
+    "build_hash" : "ffe992aa682c1968b5df375b5095b3a21f122bf3",
+    "build_date" : "2024-11-19T16:00:31.793213192Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.12.0",
+    "minimum_wire_compatibility_version" : "7.17.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
+
+---
+
+## 2. How to Query in ElasticSearch
 
 There are 2 main ways to search in elasticsearch: `queries` & `aggregations`. Queries are used to retrieve documents that meet certain criteria.
 
@@ -487,7 +566,7 @@ We use the `bool.filter` to filter out results based on a "yes / no" questions. 
 
 ---
 
-## **2. Aggregation Queries**
+## 3. Aggregation Queries
 
 **The aggregation form:**
 
@@ -732,7 +811,7 @@ You can use either `fixed_interval`, or `calendar_interval`, but **NOT BOTH**!
 
 ---
 
-## **3. Misc.**
+## 4. Misc.
 
 ### - A. `track_total_hits`
 
@@ -802,7 +881,7 @@ When you query the database, under `hits` is where you see the results. Each `hi
 
 ---
 
-## **4. Practical Examples**
+## 5. General Examples
 
 ### - Action 1: Get a Document by id
 
@@ -1057,6 +1136,230 @@ GET /logs/_search
   }
 }
 ```
+
+---
+
+## 6. Practical Session
+
+### A. Setup Data
+
+Mock data we're gonna use:
+
+```json
+{"index": {}}
+{"name": "Apple", "colors": ["Red", "Green", "Yellow"], "isVegetable": false, "isFruit": true, "size": "Medium", "weight": 150, "description": "A crisp, sweet fruit with a variety of flavors and colors, often enjoyed fresh or in desserts", "lastUpdated": "1988-07-17T02:51:51.111Z"}
+{"index": {}}
+{"name": "Banana","colors": ["Yellow"],"isVegetable": false,"isFruit": true,"size": "Medium","weight": 120,"description": "","lastUpdated": "1988-07-17T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Carrot", "colors": ["Orange"], "isVegetable": true, "isFruit": false, "size": "Medium", "weight": 80, "description": "A crunchy, orange root vegetable packed with nutrients, often eaten raw or cooked", "lastUpdated": "1988-07-18T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Grapes", "colors": ["Green", "Purple", "Red"], "isVegetable": false, "isFruit": true, "size": "Small", "weight": 200, "description": "Small, juicy fruits that come in clusters, available in red, green, or purple varieties", "lastUpdated": "1988-07-18T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Potato", "colors": ["Brown", "Yellow"], "isVegetable": true, "isFruit": false, "size": "Medium", "weight": 300, "description": "A versatile starchy vegetable, commonly used in dishes like fries, mashed potatoes, and soups", "lastUpdated": "1988-07-19T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Strawberry", "colors": ["Red"], "isVegetable": false, "isFruit": true, "size": "Small", "weight": 15, "description": "A vibrant red berry with a sweet, slightly tangy flavor, loved for desserts and snacks", "lastUpdated": "1988-07-19T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Tomato", "colors": ["Red", "Yellow", "Green"], "isVegetable": false, "isFruit": true, "size": "Medium", "weight": 180, "description": "A juicy, red fruit often treated as a vegetable, used in salads, sauces, and cooking", "lastUpdated": "1988-07-19T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Broccoli", "colors": ["Green"], "isVegetable": true, "isFruit": false, "size": "Medium", "weight": 250, "description": "A green vegetable with a tree-like structure, valued for its rich nutrients and versatility", "lastUpdated": "1988-07-20T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Orange", "colors": ["Orange"], "isVegetable": false, "isFruit": true, "size": "Medium", "weight": 220, "description": "A citrus fruit with a bright peel and juicy segments, known for its refreshing, tangy flavor", "lastUpdated": "1988-07-20T02:51:51.111Z"}
+{"index": {}}
+{ "name": "Cucumber", "colors": ["Green"], "isVegetable": true, "isFruit": false, "size": "Medium", "weight": 400, "description": "A cool, crisp vegetable with a mild flavor, often used in salads and as a refreshing snack", "lastUpdated": "1988-07-21T02:51:51.111Z", "textOnly": "hello king george"}
+
+```
+
+The `vegetables` mapping:
+
+```json
+{
+  "properties": {
+    "isFruit": {
+      "type": "boolean"
+    },
+    "isVegetable": {
+      "type": "boolean"
+    },
+    "size": {
+      "type": "keyword"
+    },
+    "weight": {
+      "type": "long"
+    },
+    "lastUpdated": {
+      "type": "date"
+    },
+    "description": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "textOnly": {
+      "type": "text"
+    },
+  }
+}
+```
+
+#### - Step 1: Create the first index
+
+Create the index:
+
+```bash
+sq create-index
+```
+
+And provide the name `vegetables`.
+
+#### - Step 2: Update the index's mapping
+
+Set the index's mapping:
+
+```bash
+sq update-mapping --index vegetables
+```
+
+#### - Step 3: Insert the data
+
+```bash
+sq import --file data.json --index vegetables
+```
+
+### B. Example Queries
+
+#### - Query 1: Get all rows
+
+```bash
+sq get --index vegetables
+```
+
+```json
+{
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
+:::info
+This is exactly what `sq get all --index vegetables` command is doing behind the scenes.
+:::
+
+#### - Query 2: Get index's mapping
+
+```bash
+sq get-mapping --index vegetables
+```
+
+#### - Query 3: Get index's mapping
+
+```bash
+sq get-mapping --index vegetables
+```
+
+#### - Query 4: Get all the vegetables only
+
+```bash
+sq get --index vegetables
+```
+
+Using a leaf query:
+
+```json
+{
+  "query": {
+    "term": {
+      "isVegetable": true
+    }
+  }
+}
+```
+
+Using a compound query:
+
+```json
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "isVegetable": true
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+#### - Query 5: Get all vegetables/fruits that include the color green
+
+```bash
+sq get --index vegetables
+```
+
+Using a leaf query:
+
+```json
+{
+  "query": {
+    "term": {
+      "colors.keyword": "Green"
+    }
+  }
+}
+```
+
+Using a compound query:
+
+```json
+{
+  "query": {
+    "bool": {
+      "filter": [{ "term": { "colors.keyword": "Green" } }]
+    }
+  }
+}
+```
+
+#### - Query 6: Get documents where the field `textOnly` exists
+
+Using a leaf query:
+
+```json
+{
+  "query": {
+    "exists": {
+      "field": "textOnly"
+    }
+  }
+}
+```
+
+Using a compound query:
+
+```json
+{
+  "query": {
+    "bool": {
+      "filter":[
+        {
+          "exists": {
+            "field": "textOnly"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+---
 
 ## 7. Learn about the Operations
 
