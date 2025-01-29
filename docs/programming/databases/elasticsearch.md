@@ -1245,8 +1245,15 @@ sq get --index vegetables
 }
 ```
 
+Or...
+
+```json
+{}
+```
+
 :::info
-This is exactly what `sq get all --index vegetables` command is doing behind the scenes.
+This is exactly what `sq get all --index vegetables` command is doing behind the scenes.  
+It uses the `match_all` command.
 :::
 
 #### - Query 2: Get index's mapping
@@ -1338,6 +1345,41 @@ Using a leaf query:
       "field": "textOnly"
     }
   }
+}
+```
+
+Using a compound query:
+
+```json
+{
+  "query": {
+    "bool": {
+      "filter":[
+        {
+          "exists": {
+            "field": "textOnly"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+#### - Query 7: Get the vegetable/fruit that weight to most
+
+Using a leaf query:
+
+```json
+{
+  "size": 1,
+  "sort": [
+    {
+      "weight": {
+        "order": "desc"
+      }
+    }
+  ]
 }
 ```
 
