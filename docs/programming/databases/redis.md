@@ -46,6 +46,14 @@ brew install redis
 
 which bundles together both `redis-server` (used to run the redis server itself), and `redis-cli`. You just don't run the redis server using the `redis-server` tool, and only use `redis-cli` to connect to our dockerized redis server.
 
+Immediately after installing `redis`, I saw that it ran the server automatically. But we want the docker one, so we'll need to stop the `redis-server`:
+
+```bash
+brew services stop redis
+```
+
+Now that the redis server on our localhost stopped, and the redis server on our docker runs, let's connect to it:
+
 ```bash
 redis-cli
 ```
