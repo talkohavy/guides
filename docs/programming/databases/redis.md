@@ -302,7 +302,7 @@ Note: Since the SET command options can replace `SETNX`, `SETEX`, `PSETEX`, `GET
 #### Syntax
 
 ```bash
-EXISTS key1 [key2,key3,...]
+EXISTS key [key ...]
 ```
 
 #### Description
@@ -364,4 +364,52 @@ redis> GETEX mykey EX 60
 redis> TTL mykey
 (integer) 60
 redis>
+```
+
+<br/>
+
+### - Command 8: TTL
+
+#### Syntax
+
+```bash
+TTL key
+```
+
+#### Description
+
+Returns the remaining time to live of a key that has a timeout. This introspection capability allows a Redis client to check how many seconds a given key will continue to be part of the dataset.
+
+In Redis 2.6 or older the command returns `-1` if the key does not exist or if the key exists but has no associated expire.
+
+Starting with Redis 2.8 the return value in case of error changed:
+
+- The command returns `-2` if the key does not exist.
+- The command returns `-1` if the key exists but has no associated expire.
+
+You also have the `PTTL` command that **returns the same information only in milliseconds** resolution (Only available in Redis 2.6 or greater).
+
+### - Command 9: DEL
+
+#### Syntax
+
+```bash
+DEL key [key ...]
+```
+
+#### Description
+
+Removes the specified keys. A key is ignored if it does not exist.
+
+Examples:
+
+```bash
+DEL no-exist-key
+(integer) 0
+> SET key1 "Hello"
+"OK"
+> SET key2 "World"
+"OK"
+> DEL key1 key2 key3
+(integer) 2
 ```
