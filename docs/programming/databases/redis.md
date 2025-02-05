@@ -185,8 +185,183 @@ In NO. 1, we get back the **cursor return value** to use as input in order to ge
 
 Since in the second call the returned cursor is 0, the server signaled to the caller that the iteration finished, and the **collection was completely explored**.
 
-#### Example response:
+#### SCAN with a COUNT option
+
+SCAN also comes with a COUNT option, which can be used like so:
 
 ```bash
-PONG
+SCAN COUNT 20
+```
+
+This is used to specify a count to override the default COUNT which is set to 10 result per iteration. COUNT can be changed from one iteration to the next.
+
+So continuing the example from before, if I now do:
+
+```bash
+SCAN 0 COUNT 3
+```
+
+And an example output is:
+
+```
+1) "4"
+2) 1) "key11"
+    2) "key10"
+    3) "key9"
+```
+
+#### SCAN with a MATCH option
+
+SCAN also has a MATCH option. This will iterate elements that match a specific pattern.
+
+So in this example here:
+
+```bash
+SCAN 0 MATCH something
+```
+
+We're saying "match the word `something`".
+We don't have to be specific, and can also use expressions like this:
+
+```bash
+SCAN 0 MATCH k*
+```
+
+Gets everything that starts with the letter k.
+
+#### SCAN with other DATA TYPES
+
+SCAN is also available with other data-types.
+The full list of SCANs available to use is:
+
+- `SSCAN` - Used with sets. Returns list of set members.
+- `HSCAN` - Used with hashes. Returns array of elements with a field and value.
+- `ZSCAN` - Used with sorted sets. Returns array of elements with associated score.
+
+<br/>
+
+### - Command 4: KEYS
+
+#### Syntax
+
+```bash
+KEYS som*Pattern
+```
+
+`KEYS` will return all keys & values that match a specific pattern.
+
+:::danger
+Note that it **SHOULD BE AVOIDED IN PRODUCTION ENVIRONMENTS!!!** Because it returns everything at once, and it can be very taxing on the system. It should only be used in development.
+:::
+
+<br/>
+
+### - Command 5: SET
+
+#### Syntax
+
+```bash
+SET foo-key 42
+```
+
+#### Description
+
+Set key to hold a string value. If key already holds a value, it is overwritten, regardless of its type. Any previous time to live associated with the key is discarded on successful SET operation.
+
+Upon successful set, returns:
+
+```
+"OK"
+```
+
+The `SET` command supports a set of options that modify its behavior:
+
+- `EX` seconds -- Set the specified expire time, in seconds (a positive integer). An error is returned when seconds is invalid.
+- `PX` milliseconds -- Set the specified expire time, in milliseconds (a positive integer).
+- `EXAT` timestamp-seconds -- Set the specified Unix time at which the key will expire, in seconds (a positive integer).
+- `PXAT` timestamp-milliseconds -- Set the specified Unix time at which the key will expire, in milliseconds (a positive integer).
+- `NX` -- Only set the key if it does not already exist.
+- `XX` -- Only set the key if it already exists.
+- `KEEPTTL` -- Retain the time to live associated with the key.
+- `GET` -- Return the old string stored at key, or nil if key did not exist. An error is returned and SET aborted if the value stored at key is not a string.
+
+Complex example:
+
+```bash
+SET some-key "this value will expire in a minute" EX 60
+```
+
+:::warning
+Note: Since the SET command options can replace `SETNX`, `SETEX`, `PSETEX`, `GETSET`, it is possible that in future versions of Redis these commands will be deprecated and finally removed.
+:::
+
+<br/>
+
+### - Command 6: EXISTS
+
+#### Syntax
+
+```bash
+EXISTS key1 [key2,key3,...]
+```
+
+#### Description
+
+Returns 1 if a key (keys) exists. Returns 0 if does not exist.  
+Can be used on multiple keys at once.
+When querying multiple keys, the return integer specifies the number of keys that exist from those specified as arguments.
+
+<br/>
+
+### - Command 7: GET
+
+#### Syntax
+
+```bash
+GET key
+```
+
+#### Description
+
+Get the value of key. If the key does not exist the special value `nil` is returned.
+
+An **error is returned if the value** stored at key **is not a string**, because `GET` **only handles string values**.
+
+<br/>
+
+### - Command 7: GETEX
+
+#### Syntax
+
+```bash
+GETEX key [EX seconds | PX milliseconds | EXAT unix-time-seconds |
+  PXAT unix-time-milliseconds | PERSIST]
+```
+
+#### Description
+
+Get the value of key and optionally set its expiration. GETEX is similar to GET, but is a write command with additional options.
+
+The `GETEX` command supports a set of options that modify its behavior:
+
+- `EX` _seconds_ -- Set the specified expire time, in seconds.
+- `PX` _milliseconds_ -- Set the specified expire time, in milliseconds.
+- `EXAT` _timestamp-seconds_ -- Set the specified Unix time at which the key will expire, in seconds.
+- `PXAT` _timestamp-milliseconds_ -- Set the specified Unix time at which the key will expire, in milliseconds.
+- `PERSIST` -- Remove the time to live associated with the key.
+
+Examples:
+
+```bash
+redis> SET mykey "Hello"
+"OK"
+redis> GETEX mykey
+"Hello"
+redis> TTL mykey
+(integer) -1
+redis> GETEX mykey EX 60
+"Hello"
+redis> TTL mykey
+(integer) 60
+redis>
 ```
