@@ -193,6 +193,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/databases/mongodb',
               label: '- MongoDB',
             },
+            {
+              type: 'doc',
+              id: 'programming/databases/redis',
+              label: '- Redis',
+            },
           ],
         },
         {
