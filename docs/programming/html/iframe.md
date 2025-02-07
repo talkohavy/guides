@@ -18,7 +18,7 @@ By default, a document opened from a **browser context group** is opened in the 
 
 Each embedded browsing context has its own `document` and allows URL navigations. The navigations of each embedded browsing context are linearized into the **session history** of the _topmost_ browsing context. The browsing context that embeds the others is called the **parent browsing context**. The _topmost_ browsing context — the one with no parent — is usually the browser window, represented by the Window object.
 
-:::warn
+:::warning
 **Warning**: Because each browsing context is a complete document environment, every `<iframe>` in a page requires increased memory and other computing resources. While theoretically you can use as many `<iframe>`s as you like, check for performance problems.
 :::
 
