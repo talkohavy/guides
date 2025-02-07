@@ -167,6 +167,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/html/history',
+              label: '- History',
+            },
+            {
+              type: 'doc',
               id: 'programming/html/iframe',
               label: '- Iframe',
             },
