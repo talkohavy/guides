@@ -29,3 +29,7 @@ ps
 ```bash
 echo '{ "a": true, "name": "tal kohavy", "age": 28, "hobbies": ["computers", "sports"], "agent": null }' | jq
 ```
+
+```bash
+netstat -nav
+```
