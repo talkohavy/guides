@@ -173,7 +173,7 @@
   // ----------------------------
   "css.lint.unknownProperties": "ignore",
   "css.lint.unknownAtRules": "ignore",
-  "cSpell.words": ["finalizers"]
+  "cSpell.words": ["finalizers", "sessionless"]
   // "[css]": {
   //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
   // },

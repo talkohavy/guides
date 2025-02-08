@@ -151,6 +151,24 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: '- Http',
+          link: {
+            type: 'generated-index',
+            title: 'Http Guides',
+            description: 'Advanced concepts of Http',
+            slug: '/http',
+            keywords: ['http'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/http/overview',
+              label: '- Http Overview',
+            },
+          ],
+        },
+        {
+          type: 'category',
           label: '- Html',
           link: {
             type: 'generated-index',
