@@ -9,6 +9,8 @@
 - HTTP is generally designed to be simple and human-readable.
 - HTTP is stateless, but not sessionless. However, while the core of HTTP itself is stateless, HTTP cookies allow the use of stateful sessions.
 - HTTP requires the underlying transport protocol to be reliable, (not lose messages, or at least present an error in such cases). Among the two most common transport protocols on the Internet, **TCP** is reliable and **UDP** isn't. HTTP therefore relies on the TCP standard, which is connection-based.
+- Before a client and server can exchange an HTTP request/response pair, they must establish a TCP connection, a process which requires several round-trips.
+- The default behavior of HTTP/1.0 is to open a separate TCP connection for each HTTP request/response pair. This is less efficient than sharing a single TCP connection when multiple requests are sent in close succession.
 
 # Description
 
@@ -74,3 +76,91 @@ HTTP is stateless: there is no link between two requests being successively carr
 ### HTTP connections
 
 A connection is controlled at the transport layer, and therefore is fundamentally out of scope for HTTP. HTTP doesn't require the underlying transport protocol to be connection-based; it only requires it to be reliable, or not lose messages (at minimum, presenting an error in such cases). Among the two most common transport protocols on the Internet, TCP is reliable and UDP isn't. HTTP therefore relies on the TCP standard, which is connection-based.
+
+Before a client and server can exchange an HTTP request/response pair, they must establish a TCP connection, a process which requires several round-trips. The default behavior of HTTP/1.0 is to open a separate TCP connection for each HTTP request/response pair. This is less efficient than sharing a single TCP connection when multiple requests are sent in close succession.
+
+In order to mitigate this flaw, HTTP/1.1 introduced pipelining (which proved difficult to implement) and persistent connections: the underlying TCP connection can be partially controlled using the Connection header. HTTP/2 went a step further by multiplexing messages over a single connection, helping keep the connection warm and more efficient.
+
+## What can be controlled by HTTP
+
+Here is a list of common features controllable with HTTP:
+
+- **Caching**: How documents are cached can be controlled by HTTP. The server can instruct proxies and clients about what to cache and for how long. The client can instruct intermediate cache proxies to ignore the stored document.
+
+- **Relaxing the origin constraint**: To prevent snooping and other privacy invasions, Web browsers enforce strict separation between websites. Only pages from the **same origin** can access all the information of a Web page. Though such a constraint is a burden to the server, HTTP headers can relax this strict separation on the server side, Web servers can override this policy using HTTP headers like `Access-Control-Allow-Origin`, which allows specified external domains to access resources.  
+  Key Takeaways:
+
+  - Browsers enforce the Same-Origin Policy to prevent unauthorized access across domains.
+  - HTTP headers (e.g., CORS headers) allow servers to relax this policy when needed.
+  - Cross-origin access can be useful for integrating external data sources securely.
+  - Security measures are still necessary when allowing cross-origin access to avoid vulnerabilities.
+
+- **Authentication**: Some pages may be protected so that only specific users can access them. Basic authentication may be provided by HTTP, either using the `WWW-Authenticate` and similar headers, or by setting a specific session using `HTTP cookies`.
+
+## HTTP flow
+
+When a client wants to communicate with a server, either the final server or an intermediate proxy, it performs the following steps:
+
+1. Open a TCP connection: The TCP connection is used to send a request, or several requests, and receive an answer. The client may open a new connection, reuse an existing connection, or open several TCP connections to the servers.
+
+2. Send an HTTP message: HTTP messages (before HTTP/2) are human-readable. With HTTP/2, these simple messages are encapsulated in **frames**, making them impossible to read directly, but the principle remains the same. For example:
+
+   ```
+   GET / HTTP/1.1
+   Host: luckylove.co.il
+   Accept-Language: fr
+   ```
+
+3. Read the response sent by the server, such as:
+
+   ```
+   HTTP/1.1 200 OK
+   Date: Sat, 09 Oct 2010 14:28:02 GMT
+   Server: Apache
+   Last-Modified: Tue, 01 Dec 2009 20:18:22 GMT
+   ETag: "51142bc1-7449-479b075b2891b"
+   Accept-Ranges: bytes
+   Content-Length: 29769
+   Content-Type: text/html
+    <!doctype html>… (here come the 29769 bytes of the requested web page)
+   ```
+
+4. Close or reuse the connection for further requests.
+
+## HTTP Messages
+
+HTTP messages, as defined in HTTP/1.1 and earlier, are human-readable. In HTTP/2, these messages are embedded into a binary structure, a frame`, allowing optimizations like compression of headers and multiplexing.
+
+There are two types of HTTP messages, **requests** and **responses**, each with its own format.
+
+### Requests
+
+An example HTTP request:
+
+![http overview](/img/request.svg)
+
+Requests consist of the following elements:
+
+- **An HTTP method**, usually a verb like `GET`, `POST`, or a noun like `OPTIONS` or `HEAD` that defines the operation the client wants to perform. Typically, a client wants to fetch a resource (using `GET`) or post the value of an HTML form (using `POST`), though more operations may be needed in other cases.
+
+- **The path of the resource to fetch**; the URL of the resource stripped from elements that are obvious from the context, for example without the protocol (`http://`), the domain (here, `luckylove.co.il`), or the TCP port (here, `80`).
+
+- **The version of the HTTP protocol**.
+
+- **Optional headers** that convey additional information for the servers.
+
+- **A body**, for some methods like `POST`, similar to those in responses, which contain the resource sent.
+
+### Responses
+
+An example response:
+
+![http overview](/img/http-response.svg)
+
+Responses consist of the following elements:
+
+- **The version of the HTTP protocol** they follow.
+- A status code, indicating if the request was successful or not, and why.
+- A status message, a non-authoritative short description of the status code.
+- HTTP headers, like those for requests.
+- Optionally, a body containing the fetched resource.
