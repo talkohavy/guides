@@ -12,27 +12,39 @@ Before talking about crypto, we need to discuss 7 cryptography concepts.
 
 ### - Concept 1: HASH
 
-A hash is simply applying a function on a certain content, and receiving back a mumbled string that looks like garbage, but if we apply the same hash function on the same content, we'd get the same mumbled string back.
+#### A. Description
 
-How can we use hash in node?
+A **hash** is simply applying a function on a certain content, and receiving back a mumbled string that looks like garbage. The important part is that - if we apply the same **hash function** on the same input, we'd get the same output.
 
+A unique feature of a hash is that it's **one way**. In contrast to encryption, one cannot decipher a hashed content, since the **output isn't unique**. Two _different_ inputs can generate the _same output_.
+
+A common usage for hashes is storing passwords in a database. In such case, even if the database has been breached, the passwords can never be recovered.
+
+#### B. Hash in Nodejs
+
+##### - Step 1: createHash
+
+How can we use hash in node?  
 We start off by importing the `createHash` function from the crypto package:
 
-```javascript
+```js
 const { createHash } = require('crypto');
 ```
 
 Next, we generate a custom function, which we'd name as "myHash":
 
-```javascript
+```js
 // This is an incomplete code!
 function myHash(input){
   return createHash();
 }
 ```
 
-The function above returns a hash string as the output.  
-The first step, is to define the hashing algorithm you want to use:
+The function above returns a hash string as the output.
+
+##### - Step 2: choose a hashing algorithm
+
+The next step is to define the hashing algorithm you want to use.
 
 ```javascript
 // This is an incomplete code!
@@ -41,17 +53,31 @@ function hash(input){
 }
 ```
 
-The algorithm is dependent on the available algorithms supported by the version of OpenSSL on the platform. Examples are 'sha256', 'sha512', etc. On recent releases of OpenSSL, `openssl list -digest-algorithms` will display the available digest algorithms.
+The algorithm is dependent on the available algorithms supported by the version of `openssl` on the platform.
 
-Famous algorithm options:
+You can run:
 
-- sha256
-- sha512
-- md5
-- argon2 (not built-in to node's crypto)
+```bash
+openssl list --digest-algorithms
+```
 
-In the example above, I'm using "sha256", which stands for "Security Hash Algorithm". This algorithm returns a hash value, which is also called a "digest", with 256 bits. The algorithm you choose is important! One of the algorithms to choose from is "md5". As computers have become faster, and the internet more vast, the md5 algorithm has become obsolete. Remember, cryptography is always evolving. "sha256" is a good option, but there are even better solutions like "argon2", although it's not built-in to node's crypto.  
+to display available algorithms.
+
+Famous algorithm options are:
+
+- `sha256`
+- `sha512`
+- `md5`
+- `argon2` (not built-in to node's crypto)
+
+In the example code above, I'm using "sha256", which stands for "**Secure Hash Algorithm**". This algorithm returns a **hash value**, which is also called a **digest**, with 256 bits.
+
+The algorithm you choose is important! OFor example, one of the algorithms to choose from is `md5`. As computers have become faster, and the internet more vast, the `md5` algorithm has become obsolete. Remember, cryptography is always evolving. `sha256` is a good option, but there are even better solutions like `argon2`, although it's not built-in to node's crypto.  
 Once we have our hashing algo, we can call `update` and pass in input value:
+
+##### - Step 3: call `update(input)`
+
+The `update` method accepts an input, the input we want to be hashed:
 
 ```javascript
 // This is an incomplete code!
@@ -60,7 +86,9 @@ function hash(value){
 }
 ```
 
-And then return an output with a call to `digest` along with the format we want to return:
+##### - Step 4: call `digest(encoding)`
+
+We return an output by invoking the `digest` method, along with the **encoding** we want to return:
 
 ```javascript
 function hash(value){
@@ -68,29 +96,29 @@ function hash(value){
 }
 ```
 
+Key things to notice here:
+
+- We invoke `createHash` every time on every new input. We do not call `createHash` just once, and use it on multiple inputs. If we did that, we would get an error! `Error [ERR_CRYPTO_HASH_FINALIZED]: Digest already called`.
+- We have two separate methods: `update` & `digest`. The `update(data)` method allows you to incrementally add chunks of data to the hash function. This is useful for steaming support which grants performance optimization.
+- The digest(encoding) method finalizes the hash computation and produces the final output (typically in 'hex', 'base64', or a raw Buffer). Once digest() is called **the hash computation is finalized**. You can no longer call `update()` on that hash instance (you'd need to create a new one to hash more data).
+
 As the name suggests, the `digest` function digests (calculates) all of the data passed, which you want to be hashed. If an encoding is provided, a _string_ will be returned; otherwise a _Buffer_ is returned.
 
 Here is the list of all encoding options that digest accepts:
 
-- hex (what we will use)
-- base64 (an option you'll commonly see)
-- utf8 (utf-8 is an alias)
-- utf16le (utf-16le is an alias)
-- latin1
+- `hex` (what we will use)
+- `base64` (what you'll commonly see)
+- `utf8` (utf-8 is an alias)
+- `utf16le` (utf-16le is an alias)
+- `latin1`
 
-In this tutorial, we'll be using hexadecimal format `hex`, but another option you'll most commonly see is `base64`.
 Now that you have this function, you can pass in an input, like a password:
 
 ```javascript
 const password = 'hi-mom!';
 const hash1 = hash(password);
-```
 
-and if you'll console log it, you'll get a long string similar to this:
-
-```javascript
-console.log(hash1);
-// would print: 7a5d84e61a2234b450185fde58c237bb13e93d93d90f669b114d
+console.log(hash1); // output: 7a5d84e61a2234b450185fde58c237bb13e93d93d90f669b114d
 ```
 
 So you'll get this long string of numbers and letters, that hide its original meaning. Now, if we create another hash, and compare the two, we'll know that the original value is the same, if the two hashes match-up:
@@ -108,21 +136,30 @@ That's super useful, but a hash by itself isn't actually sufficient for storing 
 
 ### - Concept 2: SALT
 
-As I mentioned above, a hash is super useful, but by itself, a hash isn't actually sufficient for storing a password in a database. We need salt!  
-The fact that a hashing function always returns the same value is also a problem when it comes to passwords. Especially when you let stupid humans come up with them (i.e. password123).
+#### A. Description
 
-@@@@@@
-Hash Image Here
-@@@@@@
+As mentioned above, a hash is super useful, but by itself, a hash isn't sufficient enough for storing passwords in a database. We need `salt`!
 
-If a hacker obtains the database, and the passwords are hashed, they can often just go to something like a "rainbow table", that has a bunch of pre-computed hashes and find a bunch of commonly used passwords.  
-A "salt" is just a random value that's added to the password before it's hashed, and therefore making it much harder to guess.
+The fact that a hashing function always returns the same value is also a problem when it comes to passwords. Especially when you let stupid humans come up with them, like "password123".
 
-@@@@@@
-Salt Image Here
-@@@@@@
+If a hacker obtains the database, and the passwords are hashed, they can often just go to something like a **rainbow table**, that has a bunch of pre-computed hashes and find a bunch of commonly used passwords.  
+A `salt` is just a random value that's added to the password before it's hashed, and therefore making it much harder to guess.
 
-In node, we can hash a password with salt by importing `scryptSync` & the `randomBytes` function from within crypto:
+#### B. Implementation in nodejs
+
+In nodejs, we have a function called `scryptSync` (prefer using `scrypt` instead to prevent blocking the main thread).
+
+`scryptSync` is a built-in function in Node.js inside the `crypto` module that derives a cryptographic key from a password. It is mainly used for securely hashing passwords and generating encryption keys. `scryptSync` is a hashing function, but it's specifically **a key derivation function (KDF)** rather than just a simple hash function like SHA-256.
+
+How is it different from `createHash`?
+
+- `createHash(algorithm)` (e.g., SHA-256) is a simple hashing function that produces a fixed-length hash. It is fast but **not ideal for password storage** because it's vulnerable to brute-force attacks.
+
+- `scryptSync(password, salt, keyLength, options?)` **is slow by design** and includes a "salt" to prevent precomputed attacks (rainbow tables). It is better suited for **password hashing** because it is computationally expensive, making brute-force attacks harder.
+
+#### C. Usage Example in node
+
+In node, we can hash a password with salt by importing `scryptSync` & `randomBytes` functions from `crypto`:
 
 ```javascript
 const { scryptSync, randomBytes } = require('crypto');
@@ -139,7 +176,7 @@ function login(email,password){}
 ```
 
 They both take an email and a password as their arguments.  
-When a user signs up, we'll generate a "salt", using the `randomBytes` function, which will basically just create a random set of characters for us:
+When a user signs up, we'll generate a `salt`, which is just a random set of characters, using the `randomBytes` function:
 
 ```javascript
 const { scryptSync, randomBytes } = require('crypto');
@@ -164,7 +201,12 @@ function signUp(email,password){
 function login(email,password){}
 ```
 
-We provide `scryptSync` with the _original password and salt_, and provide a _key length_ which is _recommended to be 64_.  
+We provide `scryptSync` with 3 things:
+
+1.  the original password
+2.  the salt
+3.  a _key length_ (which is \_recommended to be 64)
+
 Without getting into more details, `scryptSync` makes it more **computational intensive to crack using brute force**, and it's actually been used as **proof of work algorithms used in cryptocurrency mining**.  
 So now that we have a hashed password, we also need to store the salt with it, and we can do that by just pre-pending it to the existing string, separated by a semi-colon:
 
@@ -204,20 +246,20 @@ function login(email,password){
 }
 ```
 
-We have two ways of performing a user login.
+A standard user login flow:
 
-**- Way number 1:**
+1. The client supplies an email & a password.
+2. We use ONLY the email to get the user record from the database
+3. Split the "password" column to both the salt & the hashed password
+4. Use the salt and _provided_ password to regenerate the hashed password.
+5. Compare between the stored hashedPassword, and the regeneratedHashedPassword - `hashedPassword === regeneratedHashedPassword`
+6. If true, login was successful! Else, throw 401 unauthorized error.
 
-The client supplies an email & a password, right? So we would use ONLY the email to get the user from the database, split the "password" column to both the salt & the hashed password, use the salt and provided password to regenerate the hashed password. Compare between the two, and decide.
+As an extra added security precaution, we will replace step 5, which is just a simple compare action, with a better one. We will use the `timingSafeEqual` function.
 
-**- Way number 2:**
-We will use way number 2. As an extra added security attachment, I'm going to import the timingSafeEqual function from node crypto, which prevents timing attacks...
+A **timing attack** is where a hacker measures the amount of time it takes to perform an operation, to obtain information about the value. This function helps prevents that type of attack. How?
 
-@@@@@@
-Time Attack Picture
-@@@@@@
-
-...where a hacker measures the amount of time it takes to perform an operation, to obtain information about the value. This function helps prevents that type of attack:
+The `timingSafeEqual` function compares the bytes that represent the 2 given inputs **using a constant-time algorithm**.
 
 ```javascript
 const { scryptSync, randomBytes, timingSafeEqual } = require('crypto');
@@ -232,26 +274,67 @@ function login(email,password){
 
   const hashedPasswordBuffer = Buffer.from(hashedPassword, 'hex');
   const match = timingSafeEqual(rawHashedPasswordBuffer, hashedPasswordBuffer);
-  if(match){
-    return 'login success!';
-  }else{
-    return 'login failed...';
-  }
+  if(match) return 'login success!';
+
+  return 'login failed...';
 }
 ```
 
-The crypto.timingSafeEqual() function is used to determine whether two variables are equal without exposing timing information that may allow an attacker to guess one of the values. A constant-time algorithm underpins it. That's how basic email-password authentication works on the web, but a related topic you might come across is Hashed-based Message Authentication Code (**HMAC**).
+The `crypto.timingSafeEqual()` function is used to determine whether two variables are equal without exposing timing information that may allow an attacker to guess one of the values. A constant-time algorithm underpins it. That's how basic email-password authentication works on the web, but a related topic you might come across is Hashed-based Message Authentication Code (**HMAC**).
 
 ### - Concept 3: HMAC
 
-The quick definition to HMAC is that it's a hash that also requires a password…
+#### A. Description
 
-@@@@@@
-Hmac Picture here
-@@@@@@
+What is **HMAC**?
 
-…so that the only person that can create the same hash signature must also have the corresponding password or key. An example is a Json Web Token (JWT), used for authentication on the web. When a user logs in on a trusted server, the server generates a token using a special key chosen by the developer. Then, the client and server can pass that token back and forth, and the server can trust it because it knows that only someone with the exact same secret key could have generated that hash signature.  
-In node, we can import that "createHmac" function:
+1. It Stands for: **Hashed Based Message Authentication Code**
+2. It's a hash that also requires a password/key.
+3. It's used for signing a message, preventing against tampering & forged messages (as its name suggest - **Message Authentication**).
+
+An example is a Json Web Token (JWT), used for authentication on the web. When a user logs in on a trusted server, the server generates a token using a special key chosen by the developer. Then, the client and server can pass that token back and forth, and the server can trust it because it knows that only someone with the exact same secret key could have generated that hash signature.
+
+#### B. Is `scryptSync` an `HMAC`?
+
+No, `scryptSync` is not an `HMAC`.
+
+At a high level, both `HMAC` and `scryptSync` involve a secret input and a hashing function, **but they serve different cryptographic purposes**. Let's break it down further.
+
+One might say that other other than the fact that one is fast (`HMAC`) and the other is slow by design (`scryptSync`), they both seem very much alike. That it's basically like using a permanent fixed salt.
+
+It's true that the _secret key_ can resemble a _fixed salt_ in some ways:
+
+- Both modify the hashing process to introduce uniqueness.
+- Both prevent certain attacks (e.g., precomputed attacks like rainbow tables).
+- Both take an additional input (`HMAC`: a key, `scryptSync`: a salt).
+
+However, there are critical differences that make this analogy imperfect:
+
+| Feature                | `scryptSync` (**KDF**)              | `HMAC` (Message Authentication)        |
+| ---------------------- | ----------------------------------- | -------------------------------------- |
+| **Purpose**            | Key derivation (password hashing)   | Message integrity & authenticity       |
+| **What It Produces**   | A derived cryptographic key         | A message authentication code (MAC)    |
+| **Input Components**   | Password + Salt + Work Factor       | Secret Key + Message                   |
+| **Salt/Key Behavior**  | Salt must be random per user        | Secret key is fixed per system         |
+| **Prevention Against** | Brute-force & Rainbow Table attacks | Tampering & Forged Messages            |
+| **Processing Time**    | Slow (designed to be expensive)     | Fast (designed for quick verification) |
+
+✅ Why not use a fixed salt for `scrypt`?
+
+**A fixed salt** is just like hashing a password without one — it offers no real protection against precomputed attacks.
+
+✅ Why not use a random salt for `HMAC`?
+
+Each `HMAC` computation should be deterministic, meaning that the same input should always yield the same result, otherwise it can't be verified.
+
+✅ What Happens If You Swap Them?
+
+- If you use **`HMAC` for password hashing**, it's too fast and vulnerable to brute-force.
+- If you use **`scryptSync` for message authentication**, it’s too slow and inefficient.
+
+#### C. Example usage in nodejs
+
+In node, we can import the `createHmac` function:
 
 ```javascript
 const { createHmac } = require('crypto');
@@ -262,11 +345,11 @@ Then we'll define a secret key, along with the message that we want to hash:
 ```javascript
 const { createHmac } = require('crypto');
 
-const key = 'super-secret!'; // Store it some-place safe! Like an env file
+const key = 'super-secret!'; // Store it some-place safe! Like a .env file
 const message = 'boo!';
 ```
 
-Now we use the `hmac` function to create a hash, similar to as we did before:
+Now we use the `hmac` function to create a hash, similar to as we did with the `hash` function before:
 
 ```javascript
 const { createHmac } = require('crypto');
@@ -274,28 +357,91 @@ const { createHmac } = require('crypto');
 const key = 'super-secret!';
 const message = 'boo !';
 
-const hmac = createHmac('sha256', key).update(message).digest('hex');
+const hash1 = createHmac('sha256', key).update(message).digest('hex');
+const hash2 = createHmac('sha256', key).update(message).digest('hex');
+
+console.log(hash1);
+console.log(hash2);
+console.log(hash1 === hash2); // true
 ```
 
-The only difference we notice here is that we also provide this "key" param to createHmac. The important thing to notice here, is that we would only get the same hash, if the same message AND key/password combination is used. If we had the same message, but with a different key, we would get a different hash as a result. That's pretty cool!  
-But what happens when you want to share a secret with someone, and also allow them to read the original message? That's where encryption comes in!
+The only difference we notice here is that we also provide this `key` param to `createHmac`. The important thing to notice here, is that we would only get the same hash, if the same message **AND** key/password combination is used. If we had the same message, but with a different key, we would get a different hash as a result.
 
-### - Concept 4: SYMETRIC ENCRYPTION
+Here is a simple implementation of jwt-like, using `hmac`:
+
+```js
+import { createHmac } from 'node:crypto';
+
+function base64UrlEncode(buffer) {
+  return buffer.toString('base64url'); // Base64url encoding (removes padding and special chars)
+}
+
+function base64UrlDecode(base64url) {
+  return Buffer.from(base64url, 'base64url').toString();
+}
+
+function sign(payload, secret) {
+  const header = { alg: 'HS256', typ: 'JWT' };
+
+  // Convert header and payload to base64url
+  const encodedHeader = base64UrlEncode(Buffer.from(JSON.stringify(header)));
+  const encodedPayload = base64UrlEncode(Buffer.from(JSON.stringify(payload)));
+
+  // Create signature using HMAC-SHA256
+  const signature = createHmac('sha256', secret)
+    .update(`${encodedHeader}.${encodedPayload}`)
+    .digest('base64url');
+
+  // Return the full JWT-like token
+  return `${encodedHeader}.${encodedPayload}.${signature}`;
+}
+
+function verify(token, secret) {
+  const [encodedHeader, encodedPayload, receivedSignature] = token.split('.');
+
+  // Recompute the signature
+  const expectedSignature = createHmac('sha256', secret)
+    .update(`${encodedHeader}.${encodedPayload}`)
+    .digest('base64url');
+
+  // Compare signatures
+  if (receivedSignature === expectedSignature) {
+    return JSON.parse(base64UrlDecode(encodedPayload)); // Valid token, return decoded payload
+  } else {
+    throw new Error('Invalid signature');
+  }
+}
+
+// Example usage
+const secret = 'super-secret-key';
+const payload = { userId: 123, role: 'admin' };
+
+// Signing a token
+const token = sign(payload, secret);
+console.log('Token:', token);
+
+// Verifying a token
+try {
+  const decoded = verify(token, secret);
+  console.log('Decoded:', decoded);
+} catch (err) {
+  console.error(err.message);
+}
+```
+
+That's pretty cool!  
+But what happens when you want to completely scramble the text, and not just base64 it, and be able to talk to the other party secretly? You both need to share a secret key, to be able to read the original hidden message. That's where **encryption** comes in.
+
+### - Concept 4: SYMMETRIC ENCRYPTION
+
+#### A. Description
 
 What is encryption exactly?  
-With encryption, we take a message, scramble up the bytes to make it unreadable, that's called the **Cyphertext** - an encrypted text transformed from plaintext using an encryption algorithm.
-
-@@@@@@
-Cipher text image
-@@@@@@
-
-Then we provide a key/password allowing somebody else to decrypt it:
-
-@@@@@@
-cipher image 2
-@@@@@@
+With encryption, we take a message, scramble up the bytes to make it unreadable, that's called the **Cyphertext** - an encrypted text transformed from plaintext using an encryption algorithm. Then we provide a key/password allowing somebody else to decrypt it.
 
 It's also typically randomized, so that each time you encrypt, you'd get an entirely different encrypted output, even if the key and message are the same. The first encryption example we'll look at is the Symmetric one, which means that there's a shared password between the two parties. Both the sender and the receiver of the message need to have the exact same key.
+
+#### B. Example usage in nodejs
 
 To implement this in node, we're going to import:
 
@@ -391,16 +537,8 @@ And that's how you encrypt and decrypt a message in node.
 
 There's a big limitation to symmetric encryption, and that's the fact that both the sender and receiver of the message, need to share a password. It's just not practical for two different parties to agree upon a shared password.
 
-@@@@@@
-shared key pair image
-@@@@@@
-
 Once again, math comes to the rescue, and this time in the form of a public-key crypto-system. Instead of one key, it uses two keys that are mathematically linked.
 A **public key**, and a **private key**.
-
-@@@@@@
-private key & public key
-@@@@@@
 
 key can be shared with other people. In node, we can generate a private & public key pair using the `generateKeyPair` function.
 
@@ -451,10 +589,6 @@ You could also add a passphrase to your private key for added security (the ciph
 
 And that brings us to asymmetric encryption!  
 You use asymmetric encryption any time you go to a website using an https. The browser will automatically find a public key of an SSL certificate installed on the website.
-
-@@@@@@
-asymmetric encryption image
-@@@@@@
 
 In git, when pushing to a git repository, your private key and the other party's public key are used to encrypt the data which you send over. That prevents hackers from gaining anything useful from it in transit.
 
