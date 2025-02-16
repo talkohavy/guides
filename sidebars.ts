@@ -165,6 +165,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/http/overview',
               label: '- Http Overview',
             },
+            {
+              type: 'doc',
+              id: 'programming/http/http-messages',
+              label: '- Http Messages',
+            },
           ],
         },
         {
