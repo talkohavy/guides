@@ -170,6 +170,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/http/http-messages',
               label: '- Http Messages',
             },
+            {
+              type: 'doc',
+              id: 'programming/http/http1-limitations-and-http2',
+              label: '- Http/1 Limitations & Http/2',
+            },
           ],
         },
         {
