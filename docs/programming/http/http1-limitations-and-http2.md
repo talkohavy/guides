@@ -8,12 +8,12 @@ HTTP/1.x also has a problem called head-of-line (HOL) blocking, where a client h
 
 In HTTP/1.1 if you want to make two requests in parallel, you have to open two connections:
 
-![http overview](/img/http-1-connection.svg)
+![http overview](/img/http-1-connection.png)
 
 This means that browsers are limited in the number of resources that they can download and render at the same time, which has typically been limited to 6 parallel connections.
 HTTP/2 allows you to use a single TCP connection for multiple requests and responses at the same time. This is done by wrapping messages into a binary frame and sending the requests and responses in a numbered stream on a connection. Data and header frames are handled separately, which allows headers to be compressed via an algorithm called HPACK. Using the same TCP connection to handle multiple requests at the same time is called multiplexing.
 
-![http overview](/img/http-2-connection.svg)
+![http overview](/img/http-2-connection.png)
 
 Requests are not necessarily sequential: stream 9 doesn't have to wait for stream 7 to finish, for instance. The data from multiple streams are usually interleaved on the connection, so stream 9 and 7 can be received by the client at the same time. There's a mechanism for the protocol to set a priority for each stream or resource. Low-priority resources take up less bandwidth than higher-priority resources when they're being sent over different streams, or they could effectively be sent sequentially on the same connection if there are critical resources that should be handled first.
 
