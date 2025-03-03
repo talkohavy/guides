@@ -175,6 +175,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/http/http1-limitations-and-http2',
               label: '- Http/1 Limitations & Http/2',
             },
+            {
+              type: 'doc',
+              id: 'programming/http/mime-type',
+              label: '- MIME types',
+            },
           ],
         },
         {
