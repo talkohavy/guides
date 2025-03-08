@@ -364,6 +364,11 @@ const sidebars: SidebarsConfig = {
           id: 'video-editing/ffmpeg',
           label: '- FFmpeg',
         },
+        {
+          type: 'doc',
+          id: 'video-editing/subtitles-encoding',
+          label: '- Subs Encoding',
+        },
       ],
     },
     {
