@@ -1,10 +1,79 @@
 # Guide For Micro-Frontends
 
-## A. Vite Module Federation using @module-federation/vite (modern way)
+## Module Federation
 
-### Quick Guide
+### Shared
 
-install `@module-federation/vite`
+The `shared` configuration is used to share common dependencies between consumers and producers, reducing the runtime download volume and thus improving performance. `shared` allows you to configure rules for reusing dependency versions.
+
+- Type: `PluginSharedOptions`
+- Required: No
+- Default: `undefined`
+
+The `PluginSharedOptions` type is as follows:
+
+```ts
+type PluginSharedOptions = string[] | SharedObject;
+
+interface SharedObject {
+  [sharedName: string]: SharedConfig;
+}
+
+interface SharedConfig {
+  singleton?: boolean;
+  requiredVersion?: string;
+  eager?: boolean;
+  shareScope?: string;
+}
+```
+
+- Example
+
+```ts
+new ModuleFederationPlugin({
+  name: '@demo/host',
+  shared: {
+    react: {
+      singleton: true,
+    },
+    'react-dom': {
+      singleton: true,
+    },
+  },
+  //...
+});
+```
+
+### Singleton
+
+- Type: `boolean`
+- Required: No
+- Default: `false`
+
+Whether to allow only one version of the shared module within the shared scope (singleton mode).
+
+- If singleton mode is enabled, the shared dependencies between the remote application components and the host application will only be loaded once, and **a higher version will be loaded if the versions are inconsistent**. A warning will be given for the party with the lower version.
+- If singleton mode is not enabled, and the shared dependencies between the **remote application and the host application have different versions, each will load their own dependencies**.
+
+### RequiredVersion
+
+- Type: `string`
+- Required: No
+- Default: `require('project/package.json')[devDeps | dep]['depName']`
+
+The required version, which can be a version range. The default value is the current application's dependency version.
+
+- When using shared dependencies, it will check whether the **dependency version listed in the `package.json` is greater than or equal to `requiredVersion`**.
+- If it is, it will be used normally. **If it is less than `requiredVersion`, a warning will be given in the console, and the smallest version available in the shared dependencies will be used**.
+- When one party sets `requiredVersion` and the other sets singleton, the dependency with `requiredVersion` will be loaded, and the singleton party will directly use the dependency with `requiredVersion`, regardless of the version.
+
+---
+
+### Implementation with Vite
+
+Vite Module Federation using @module-federation/vite (modern way)
+
+Install `@module-federation/vite`:
 
 ```bash
 pnpm add @module-federation/vite
