@@ -212,6 +212,24 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: '- Tests',
+          link: {
+            type: 'generated-index',
+            title: 'Testing Frameworks',
+            description: 'Testing Frameworks Tutorials',
+            slug: '/tests',
+            keywords: ['tests'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/tests/jest',
+              label: '- Jest',
+            },
+          ],
+        },
+        {
+          type: 'category',
           label: '- Databases',
           link: {
             type: 'generated-index',
