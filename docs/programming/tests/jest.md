@@ -683,7 +683,115 @@ test('should fetch users', async () => {
 
 <br/>
 
-## Scenario 3
+## Scenario 3: Mocking Modules Partially
+
+You wanna test function A. Function A **uses** another function B. Functions A and B both live on the same file.
+
+Steps to achieve this goal:
+
+- We will again use `jest.mock`
+- We will pass it a **mock implementation** of the module as the seconds argument
+- Inside the mock implementation:
+  - We will use `jest.requireActual('path')`, which is a special jest function that allows us to import the real module.
+  - We will return an object, where inside it:
+    - We will spread `jest.requireActual('path')`. Those will be all the parts of the module we want as unmocked.
+    - Below the spread, we will override the parts we want to mock.
+- If you need to import the module as **default**, the return object of the mock implementation MUST contain the special key of `__esModule: true,`.
+
+### Example 1: a named export
+
+We have this file:
+
+```ts
+export const namedExportVariable = 'named export variable';
+export function namedExportFunction() {
+  return 'named export function';
+};
+
+export default () => 'export default function';
+```
+
+If we only want to mock `namedExportFunction`, then our test file should be:
+
+```ts
+import { namedExportFunction, namedExportVariable } from './foo-bar-baz';
+
+jest.mock('./foo-bar-baz', () => {
+  const originalModule = jest.requireActual('./foo-bar-baz');
+
+  return {
+    ...originalModule,
+    namedExportFunction: jest.fn(() => 'mocked named export function'),
+  };
+});
+
+test('should do a partial mock', () => {
+  // The mocked parts:
+  const namedExportFunctionResult = namedExportFunction();
+  expect(namedExportFunction).toHaveBeenCalled();
+  expect(namedExportFunctionResult).toBe('mocked named export function');
+
+  // The unmocked parts:
+  expect(namedExportVariable).toBe('named export variable');
+});
+```
+
+### Example 2: a default export
+
+If you need to either **mock a default export** object, or **import a default export** object, you'll need to use the special keyword of `__esModule: true,`.
+
+For example, here's the test file when mocking the `export default` object:
+
+```ts
+import defaultExportFunction, { namedExportVariable } from './foo-bar-baz';
+
+jest.mock('./foo-bar-baz', () => {
+  const originalModule = jest.requireActual('./foo-bar-baz');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: jest.fn(() => 'mocked export default function'),
+  };
+});
+
+test('should do a partial mock', () => {
+  // The mocked parts:
+  const defaultExportFunctionResult = defaultExportFunction();
+  expect(defaultExportFunction).toHaveBeenCalled();
+  expect(defaultExportFunctionResult).toBe('mocked export default function');
+
+  // The unmocked parts:
+  expect(namedExportVariable).toBe('named export variable');
+});
+```
+
+And here's the test file when only using the `export default` object, and mocking another named part of the module:
+
+```ts
+import defaultExportFunction, { namedExportVariable } from './foo-bar-baz';
+
+jest.mock('./foo-bar-baz', () => {
+  const originalModule = jest.requireActual('./foo-bar-baz');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    namedExportVariable: 'mocked named export variable',
+  };
+});
+
+test('should do a partial mock', () => {
+  // The mocked parts:
+  expect(namedExportVariable).toBe('mocked named export variable');
+
+  // The unmocked parts:
+  const defaultExportFunctionResult = defaultExportFunction();
+  expect(defaultExportFunctionResult).toBe('export default function');
+});
+```
+
+In both cases, omitting the `__esModule: true` would cause the tests to fail.
 
 <br/>
 
