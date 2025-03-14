@@ -173,7 +173,8 @@
   // ----------------------------
   "css.lint.unknownProperties": "ignore",
   "css.lint.unknownAtRules": "ignore",
-  "cSpell.words": ["finalizers", "sessionless"]
+  "cSpell.words": ["finalizers", "sessionless"],
+  "typescript.tsdk": "node_modules/typescript/lib"
   // "[css]": {
   //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
   // },

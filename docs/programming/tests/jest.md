@@ -295,3 +295,396 @@ Prevent tests from printing messages through the console.
 ### `--verbose`
 
 Display individual test results with the test suite hierarchy.
+
+---
+
+## 3. Catch a thrown Error
+
+If you want to test whether a particular function throws an error when it's called, use `toThrow`.
+
+```ts
+function compileAndroidCode() {
+  throw new Error('you are using the wrong JDK!');
+}
+
+test('compiling android goes as expected', () => {
+  expect(() => compileAndroidCode()).toThrow();
+  expect(() => compileAndroidCode()).toThrow(Error);
+
+  // You can also use a string that must be contained in the error message or a regexp
+  expect(() => compileAndroidCode()).toThrow('you are using the wrong JDK');
+  expect(() => compileAndroidCode()).toThrow(/JDK/);
+
+  // Or you can match an exact error message using a regexp like below
+  expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK$/); // Test fails
+  expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK!$/); // Test pass
+});
+```
+
+---
+
+## 4. Testing Asynchronous Code
+
+Jest needs to know when the code it is testing has completed before it can move on to another test. Jest has several ways to handle this.
+
+- **Promises**: Return a promise from your test, and Jest will wait for that promise to resolve. If the promise is rejected, the test will fail.
+- **Async/Await**: Make your test `async` and use the `await` keyword inside.
+
+These two tests are equal:
+
+```ts
+test('the data is peanut butter', async () => {
+  const data = await fetchData();
+  expect(data).toBe('peanut butter');
+});
+```
+
+```ts
+test('the data is peanut butter', () => {
+  return fetchData().then(data => {
+    expect(data).toBe('peanut butter');
+  });
+});
+```
+
+### `resolves` & `rejects`
+
+You can combine async and await with `.resolves` or `.rejects`.
+For that to work **you need to pass a promise** to the `expect`, and add an await keyword before the `expect`. Jest will wait for that promise to either resolve or reject (depending)and if the promise is rejected when it should be resolved, or vice versa, the test will fail.
+
+```ts
+test('the data is peanut butter', async () => {
+  await expect(fetchData()).resolves.toBe('peanut butter');
+});
+
+test('the fetch fails with an error', async () => {
+  await expect(fetchData()).rejects.toMatch('error');
+});
+```
+
+:::danger
+Be sure to return (or `await`) the promise - if you omit the `return`/`await` statement, your test will complete before the promise returned from `fetchData` resolves or rejects.
+
+For example,
+
+```ts
+async function fetchData() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(1);
+    }, 1000);
+  });
+}
+
+test('1 equals 2', () => {
+  fetchData().then((data) => {
+    expect(data).toBe(2);
+  });
+});
+```
+
+The above test will PASS, but **it should NOT PASS**!
+:::
+
+## 5. Mock Functions
+
+Here are all the possible scenarios you might have:
+
+1. You wanna test function A. Function A **accepts** callback function as one of its parameters.
+2. You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file.
+3. You wanna test function A. Function A **uses** another function B. Functions A and B both live on the same file.
+4. You wanna test function A. Function A **uses** another function B. You need to mock the returned value.
+
+### Scenario 1: Mock callback fn as argument using `jest.fn()`
+
+You wanna test function A. Function A **accepts** callback function as one of its parameters.
+
+Below we will see a function called `forEach` that we want to test.  
+`forEach` accepts `callback` as a parameter, ad calls it inside for each item under the items array.
+
+Let's say that our goal is to write a test that:
+
+- checks how many times `mockCallback` has been called.
+- checks the first argument of the first and second calls were as expected.
+
+What are the steps to achieve this goal?
+
+1. We will use `jest.fn()` to create a `mockCallback` const.
+2. We will pass `mockCallback` as the argument to our tested function (forEach).
+3. We will inspect the `mock` property of `mockCallback` (more specifically the `mockCallback.mock.calls` sub-property).
+4. Use plain matchers such as `toBe` or `toHaveLength`.
+
+```ts
+export function forEach(items, callback) {
+  for (const item of items) {
+    callback(item);
+  }
+}
+```
+
+We will write the test as such:
+
+```ts
+import { forEach } from './forEach';
+
+const mockCallback = jest.fn();
+
+test('forEach mock function', () => {
+  const items = [0, 1];
+  forEach(items, mockCallback);
+
+  // The mock function was called al least once
+  expect(mockCallback.mock.calls.length).toBeGreaterThan(0);
+
+  // The mock function was called exactly twice
+  expect(mockCallback.mock.calls).toHaveLength(2);
+
+  // The first argument of the first call to the function was 0
+  expect(mockCallback.mock.calls[0][0]).toBe(0);
+
+  // The first argument of the second call to the function was 1
+  expect(mockCallback.mock.calls[1][0]).toBe(1);
+});
+```
+
+Instead of using the `.mock` property directly, jest had created a syntactic sugar around it for every operation and check we might need. So we will not be writing test as above.
+
+A better way to write it is:
+
+```ts
+import { forEach } from './forEach';
+
+const mockCallback = jest.fn();
+
+test('forEach mock function', () => {
+  const items = [0, 1];
+  forEach(items, mockCallback);
+
+  // The mock function was called al least once
+  // diff-remove-next-line
+  expect(mockCallback.mock.calls.length).toBeGreaterThan(0);
+  // diff-add-next-line
+  expect(mockCallback).toHaveBeenCalled();
+
+  // The mock function was called exactly twice
+  // diff-remove-next-line
+  expect(mockCallback.mock.calls).toHaveLength(2);
+  // diff-add-next-line
+  expect(mockCallback).toHaveBeenCalledTimes(2);
+
+  // The first argument of the first call to the function was 0
+  // diff-remove-next-line
+  expect(mockCallback.mock.calls[0][0]).toBe(0);
+  // diff-add-next-line
+  expect(mockCallback).toHaveBeenNthCalledWith(1, 0);
+
+  // The first argument of the second call to the function was 1
+  // diff-remove-next-line
+  expect(mockCallback.mock.calls[1][0]).toBe(1);
+  // diff-add-next-line
+  expect(mockCallback).toHaveBeenNthCalledWith(2, 1);
+});
+```
+
+<br/>
+
+## Scenario 2: Mocking Modules with `jest.mock(...)`
+
+You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file.
+
+Below we will see a class called `Users` with a method called `findMany` which we want to test.  
+`Users` calls `axios`, an imported module, under the hood to send all of its async api requests. The `findMany` method specifically calls `axios.get`.
+
+Let's say that our goal is to write a test that:
+
+- checks that `axios.get` had been called at least once.
+- checks that the headers (a property under the second argument) were created as expected.
+- mock the response value so that the test won't crash
+
+What are the steps to achieve this goal?
+
+1. We will use `jest.mock()` to tell just which module to mock.
+2. Import the real module into our test. This will give us 100% control (we'll see what it means soon).
+3. We will mock wanted methods on axios (i.e. `get`).
+4. We would use matchers like `.haveBeenCalledOnce` and such on those mocked methods.
+
+Here is the `Users` class, which we want to test:
+
+```ts
+import axios from 'axios';
+
+type Filters = {
+  nameStartsWith: string;
+  ageGreaterThan: number;
+};
+
+export class Users {
+  static async findMany(filters?: Filters) {
+    const updatedFilters: Filters = {
+      ageGreaterThan: filters?.ageGreaterThan ?? 0,
+      nameStartsWith: filters?.nameStartsWith ?? 't',
+    };
+
+    const response = await axios.get('/users.json', {
+      headers: {
+        'x-filter-name': updatedFilters.nameStartsWith,
+        'x-filter-age': updatedFilters.ageGreaterThan,
+      },
+    });
+
+    const { data } = response;
+
+    return data;
+  }
+}
+```
+
+### Why we need so many things?
+
+First, let's explain why we need so many things. Like, why we need to write `jest.mock`, but also import the actual module to be mocked.
+
+Here's a test template:
+
+```ts
+import Users from './users';
+
+test('should fetch users', async () => {
+  const data = await Users.findMany();
+
+  // ???
+});
+```
+
+We are calling `Users.findMany()`, which under the hood calls `axios`.  
+`axios` needs to be mocked.
+
+We start by adding `jest.mock`:
+
+```ts
+import Users from './users';
+
+jest.mock('axios');
+
+// ...
+```
+
+What this will do is **it will mock any import of the axios module**, and wrap it around some `jest` function.
+
+The problem with the code above is the return value. `Users.findMany()` calls `axios.get()`, and expects it to return some data. If it won't return the same data structure, **the code will crash**. We now need a way to alter the return value of `axios.get()`.
+
+What we can do is this (_not recommended_):
+
+```ts
+import { Users } from './users';
+
+jest.mock('axios', () => {
+  return {
+    get: jest.fn(() => ({ data: { age: 5 } })),
+  };
+});
+
+test('should fetch users', async () => {
+  const data = await Users.findMany();
+
+  expect(data.age).toBe(5);
+});
+```
+
+While this works, we are still missing something.  
+What we wanna do is be able to ask questions like:
+
+- How many times it has `get` been called?
+- What were the arguments `get` was called with?
+
+We don't have access to the `get` function (yet!). To get it, we need to import axios **INSIDE** our test!
+
+```ts showLineNumbers
+import axios from 'axios';
+import { Users } from './users';
+
+console.log('axios is:', axios);
+
+jest.mock('axios', () => {
+  return {
+    get: jest.fn(() => ({ data: { age: 5 } })),
+  };
+});
+```
+
+In the above code, if we were to put breakpoints in lines 4 and 6, line 6 would be hit first! `jest.mock()` is hoisted all the way to the top! Before any of the imports occur. This guarantees that the import of `axios` inside our test will be of the **mocked axios**, and not the **real axios**. This now gives us the ability to ask questions about `axios.get` inside of tests:
+
+With adding the import `axios` statement, the test file will look like this:
+
+```ts
+import axios from 'axios';
+import { Users } from './users';
+
+jest.mock('axios', () => {
+  return {
+    get: jest.fn(() => ({ data: { age: 5 } })),
+  };
+});
+
+test('should fetch users', async () => {
+  const data = await Users.findMany();
+
+  expect(axios.get).toHaveBeenCalled();
+  expect(axios.get).toHaveBeenCalledWith('/users.json', {
+    headers: { 'x-filter-name': 't', 'x-filter-age': 0 },
+  });
+  expect(data.age).toBe(5);
+});
+```
+
+The above code is great, but there's one thing to note about it - the implementation mock that is provided as the second argument to `jest.mock` will **stay the same for every test in that file**. Well, but what if we want to have flexibility over different test?
+
+What we can do is to not provide a mock implementation as the second argument, and have each test define it on the fly for its own use.
+
+Like so:
+
+```ts
+import axios from 'axios';
+import { Users } from './users';
+
+jest.mock('axios');
+
+test('should fetch users', async () => {
+  const data = await Users.findMany();
+
+  expect(axios.get).toHaveBeenCalled();
+  expect(axios.get).toHaveBeenCalledWith('/users.json', {
+    headers: { 'x-filter-name': 't', 'x-filter-age': 0 },
+  });
+  expect(data.age).toBe(5);
+});
+```
+
+You're probably seeing that **typescript error** under `mockResolvedValue`. Your IDE thinks it's the real `axios`, and that `axios.get` has no property of `mockResolvedValue` on it. We need to tell it that `axios.get` is a `jest.fn` type:
+
+```ts
+import axios from 'axios';
+import { Users } from './users';
+
+jest.mock('axios');
+
+test('should fetch users', async () => {
+  (axios.get as jest.Mock).mockResolvedValue({ data: { age: 5 } });
+  // Would also work: (axios.get as jest.Mock).mockReturnValue({ data: { age: 5 } });
+
+  const data = await Users.findMany();
+
+  expect(axios.get).toHaveBeenCalled();
+  expect(axios.get).toHaveBeenCalledWith('/users.json', {
+    headers: { 'x-filter-name': 't', 'x-filter-age': 0 },
+  });
+  expect(data.age).toBe(5);
+});
+```
+
+<br/>
+
+## Scenario 3
+
+<br/>
+
+## Scenario 4: Mock Return Values
