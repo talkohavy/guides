@@ -393,7 +393,7 @@ Here are all the possible scenarios you might have:
 1. You wanna test function A. Function A **accepts** callback function as one of its parameters.
 2. You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file.
 3. You wanna test function A. Function A **uses** another function B. Functions A and B both live on the same file.
-4. You wanna test function A. Function A **uses** another function B. You need to mock the returned value.
+4. You wanna test function A. Function A **uses** another function B. You need to mock the returned value with different values at each time.
 
 ### Scenario 1: Mock callback fn as argument using `jest.fn()`
 
@@ -795,4 +795,68 @@ In both cases, omitting the `__esModule: true` would cause the tests to fail.
 
 <br/>
 
-## Scenario 4: Mock Return Values
+## Scenario 4: Mock Return Values Multiple Times
+
+You wanna test function A. Function A **uses** another function B. You need to mock the returned value with different values at each time.
+
+When you need to recreate a complex behavior of a mock function such that multiple function calls produce different results, use the `mockImplementationOnce` method. When the mocked function runs out of implementations defined with `mockImplementationOnce`, it will execute the default implementation set with:
+
+- `mockImplementation` - first priority! (if defined)
+- `jest.fn` - second priority (if defined)
+
+Look at the following example:
+
+```ts
+test('should do a partial mock', () => {
+  const myMockFn = jest
+    .fn(() => 1)
+    .mockImplementation(() => 3);
+    .mockImplementationOnce(() => 10)
+    .mockImplementationOnce(() => 42)
+
+  console.log(myMockFn()); // 10
+  console.log(myMockFn()); // 42
+  console.log(myMockFn()); // 3
+  console.log(myMockFn()); // 3
+  console.log(myMockFn()); // 3
+
+  expect(1).toBe(1);
+});
+```
+
+The output would be:
+
+```
+10
+42
+3
+3
+3
+```
+
+Notice how `1` is never printed.
+
+It's worth noting that the order of appearance of `mockImplementationOnce` matters, but when `mockImplementation` appears doesn't matter.  
+For example:
+
+```ts
+// This:
+const myMockFn = jest
+  .fn()
+  .mockImplementation(() => 3);
+  .mockImplementationOnce(() => 10)
+  .mockImplementationOnce(() => 42)
+
+// is exactly the same as this:
+const myMockFn = jest
+  .fn()
+  .mockImplementationOnce(() => 10)
+  .mockImplementationOnce(() => 42)
+  .mockImplementation(() => 3);
+
+// and also the same as this:
+const myMockFn = jest
+  .fn(() => 3)
+  .mockImplementationOnce(() => 10)
+  .mockImplementationOnce(() => 42);
+```
