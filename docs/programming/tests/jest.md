@@ -702,7 +702,22 @@ test('should fetch users', async () => {
 
 ### Scenario 3: Mocking Modules Partially
 
+#### A. Goal Explanation
+
 You wanna test function A. Function A **uses** another function B. Functions A and B both live on the same file.
+
+#### B. Example code to test
+
+```ts
+export const namedExportVariable = 'named export variable';
+export function namedExportFunction() {
+  return 'named export function';
+};
+
+export default () => 'export default function';
+```
+
+#### C. Case Description
 
 Steps to achieve this goal:
 
@@ -715,18 +730,9 @@ Steps to achieve this goal:
     - Below the spread, we will override the parts we want to mock.
 - If you need to import the module as **default**, the return object of the mock implementation MUST contain the special key of `__esModule: true,`.
 
-#### Example 1: a named export
+#### D. How to test
 
-We have this file:
-
-```ts
-export const namedExportVariable = 'named export variable';
-export function namedExportFunction() {
-  return 'named export function';
-};
-
-export default () => 'export default function';
-```
+##### Example 1: a named export
 
 If we only want to mock `namedExportFunction`, then our test file should be:
 
@@ -753,7 +759,7 @@ test('should do a partial mock', () => {
 });
 ```
 
-#### Example 2: a default export
+##### Example 2: a default export
 
 If you need to either **mock a default export** object, or **import a default export** object, you'll need to use the special keyword of `__esModule: true,`.
 
@@ -814,14 +820,19 @@ In both cases, omitting the `__esModule: true` would cause the tests to fail.
 
 ### Scenario 4: Mock Return Values Multiple Times
 
+#### A. Goal Explanation
+
 You wanna test function A. Function A **uses** another function B. You need to mock the returned value with different values at each time.
 
-When you need to recreate a complex behavior of a mock function such that multiple function calls produce different results, use the `mockImplementationOnce` method. When the mocked function runs out of implementations defined with `mockImplementationOnce`, it will execute the default implementation set with:
+#### B. Example code to test
 
-- `mockImplementation` - first priority! (if defined)
-- `jest.fn` - second priority (if defined)
+None. This is just about the test itself.
 
-Look at the following example:
+#### C. Case Description
+
+We can control the **implementation** of the mock function depending of the amount of calls made to it so far (index-based).
+
+#### D. How to test
 
 ```ts
 test('should do a partial mock', () => {
@@ -841,7 +852,12 @@ test('should do a partial mock', () => {
 });
 ```
 
-The output would be:
+When you need to recreate a complex behavior of a mock function such that multiple function calls produce different results, use the `mockImplementationOnce` method. When the mocked function runs out of implementations defined with `mockImplementationOnce`, it will execute the default implementation set with:
+
+- `mockImplementation` - first priority! (if defined)
+- `jest.fn` - second priority (if defined)
+
+The output of the code above would be:
 
 ```
 10
@@ -959,7 +975,7 @@ jest.mock('./MyClass', () => {
 
 describe('init function', () => {
   it('should create an instance of MyClass and use real methods except logCreated', async () => {
-    const instance = await init({ name: 'Alice', age: 30 });
+    const instance = init({ name: 'Alice', age: 30 });
 
     // Ensure that the object is an instance of MyClass
     expect(instance).toBeInstanceOf(MyClass);
@@ -972,3 +988,358 @@ describe('init function', () => {
   });
 });
 ```
+
+## 6. Prefer using `spyOn` over `mock`
+
+When possible, always prefer using `spyOn` instead of `mock`.
+
+### Scenario 1: callback function passed as argument
+
+The example code:
+
+```ts
+export function forEach(items, callback) {
+  for (const item of items) {
+    callback(item);
+  }
+}
+```
+
+The test we wrote:
+
+```ts
+import { forEach } from './forEach';
+
+const mockCallback = jest.fn();
+
+test('forEach mock function', () => {
+  const items = [0, 1];
+  forEach(items, mockCallback);
+
+  expect(mockCallback).toHaveBeenCalled();
+  expect(mockCallback).toHaveBeenCalledTimes(2);
+  expect(mockCallback).toHaveBeenNthCalledWith(1, 0);
+  expect(mockCallback).toHaveBeenNthCalledWith(2, 1);
+});
+```
+
+The conclusion:
+
+We had used `jest.fn()` to create a function that does not exist (and named it `mockCallback`). We use `spyOn` on functions that do exist, and because `mockCallback` did not exists, it's not right to use `spyOn` in this case.
+
+<br/>
+
+### Scenario 2: mocking `axios.get`
+
+The example code:
+
+```ts
+import axios from 'axios';
+
+type Filters = {
+  nameStartsWith: string;
+  ageGreaterThan: number;
+};
+
+export class Users {
+  static async findMany(filters?: Filters) {
+    const updatedFilters: Filters = {
+      ageGreaterThan: filters?.ageGreaterThan ?? 0,
+      nameStartsWith: filters?.nameStartsWith ?? 't',
+    };
+
+    const response = await axios.get('/users.json', {
+      headers: {
+        'x-filter-name': updatedFilters.nameStartsWith,
+        'x-filter-age': updatedFilters.ageGreaterThan,
+      },
+    });
+
+    const { data } = response;
+
+    return data;
+  }
+}
+```
+
+The test we wrote:
+
+```ts
+import axios from 'axios';
+import { Users } from './users';
+
+jest.mock('axios');
+
+test('should fetch users', async () => {
+  (axios.get as jest.Mock).mockResolvedValue({ data: { age: 5 } });
+  // Would also work: (axios.get as jest.Mock).mockReturnValue({ data: { age: 5 } });
+
+  const data = await Users.findMany();
+
+  expect(axios.get).toHaveBeenCalled();
+  expect(axios.get).toHaveBeenCalledWith('/users.json', {
+    headers: { 'x-filter-name': 't', 'x-filter-age': 0 },
+  });
+  expect(data.age).toBe(5);
+});
+```
+
+The conclusion:
+
+This is a perfect example of when to prefer using `jest.spyOn`.  
+We see above tht we're mocking the entire `axios` module, when in fact all we want to do is mock the `get` method.
+
+A better approach is:
+
+```ts
+import axios from 'axios';
+import { Users } from './users';
+
+// diff-remove-next-line
+jest.mock('axios');
+
+test('should fetch users', async () => {
+  // diff-remove-next-line
+  (axios.get as jest.Mock).mockResolvedValue({ data: { age: 5 } });
+  // diff-add-next-line
+  const axiosGetSpy = jest.spyOn(axios, 'get').mockResolvedValue({ data: { age: 5 } });
+
+  const data = await Users.findMany();
+
+  expect(axiosGetSpy).toHaveBeenCalled();
+  expect(axiosGetSpy).toHaveBeenCalledWith('/users.json', {
+    headers: { 'x-filter-name': 't', 'x-filter-age': 0 },
+  });
+
+  expect(data.age).toBe(5);
+});
+```
+
+While the difference may seem mild, it is quite large:
+
+1. We no longer need the type coercion.
+2. We no longer mock the _entire_ module.
+3. The `axios` instance is different (mocked v.s. real).
+4. We no longer **affect non-related parts** (for example, `axios.post`).
+
+<br/>
+
+### Scenario 3: mock only 1 function/constant from a file.
+
+The example code:
+
+```ts
+export const namedExportVariable = 'named export variable';
+export function namedExportFunction() {
+  return 'named export function';
+};
+
+export default () => 'export default function';
+```
+
+The test we wrote:
+
+```ts
+import { namedExportFunction, namedExportVariable } from './foo-bar-baz';
+
+jest.mock('./foo-bar-baz', () => {
+  const originalModule = jest.requireActual('./foo-bar-baz');
+
+  return {
+    ...originalModule,
+    namedExportFunction: jest.fn(() => 'mocked named export function'),
+  };
+});
+
+test('should do a partial mock', () => {
+  // The mocked parts:
+  const namedExportFunctionResult = namedExportFunction();
+  expect(namedExportFunction).toHaveBeenCalled();
+  expect(namedExportFunctionResult).toBe('mocked named export function');
+
+  // The unmocked parts:
+  expect(namedExportVariable).toBe('named export variable');
+});
+```
+
+The conclusion:
+
+Another great example of using `spyOn`.  
+All this boilerplate of `jest.mock` could be spared, by just using `spyOn`:
+
+```ts
+import { namedExportFunction, namedExportVariable } from './foo-bar-baz';
+
+test('should do a partial mock', () => {
+  const namedExportFunctionSpy = jest
+    .spyOn(require('./foo-bar-baz'), 'namedExportFunction')
+    .mockReturnValue('mocked named export function');
+
+  const namedExportFunctionResult = namedExportFunction();
+
+  expect(namedExportFunctionSpy).toHaveBeenCalled();
+  expect(namedExportFunctionResult).toBe('mocked named export function');
+  expect(namedExportVariable).toBe('named export variable');
+});
+```
+
+See how much cleaner this is? ✅
+
+We didn't need to mock the entire module, and just mocked the parts we needed.  
+Also, `spy` functions are similar to `jest.fn` functions in the sense that their implementation can be mocked, so it's not _just_ spying.
+
+<br/>
+
+### Scenario 4: Multiple return values using `mockImplementationOnce`
+
+Scenario 4 talked about `mockImplementationOnce`, so there's nothing here to actually compare with `spyOn`.
+
+```ts
+const myMockFn = jest
+  .fn()
+  .mockImplementation(() => 3);
+  .mockImplementationOnce(() => 10)
+  .mockImplementationOnce(() => 42)
+```
+
+We will say though that `jest.spyOn` also supports `mockImplementationOnce`, since it is similar to `jest.fn`
+
+<br/>
+
+### Scenario 5: mock 1 method on 1 exported object from a file
+
+The example code:
+
+```ts
+export class MyClass {
+  private name: string = '';
+  private age: number = 0;
+
+  setName(name?: string): this {
+    if (typeof name === 'string') this.name = name;
+
+    return this;
+  }
+
+  setAge(age?: number) {
+    if (typeof age === 'number') this.age = age;
+
+    return this;
+  }
+
+  logCreated() {
+    fetch('http://localhost:8000').then((response) => {
+      console.log('data is:', response);
+    });
+
+    return this;
+  }
+
+  toJSON(): { name: string; age: number } {
+    return { name: this.name, age: this.age };
+  }
+}
+
+type InitProps = { name?: string; age?: number; };
+
+export function init(props?: InitProps) {
+  const { name, age } = props ?? {};
+
+  const instance = new MyClass().setName(name).setAge(age).logCreated();
+
+  return instance;
+}
+```
+
+The test we wrote:
+
+```ts
+import { MyClass, init } from './MyClass';
+
+jest.mock('./MyClass', () => {
+  const actualModule = jest.requireActual('./MyClass');
+  actualModule.MyClass.prototype.logCreated = jest.fn().mockReturnThis();
+  return actualModule;
+});
+
+describe('init function', () => {
+  it('should create an instance of MyClass and use real methods except logCreated', async () => {
+    const instance = init({ name: 'Alice', age: 30 });
+
+    expect(instance).toBeInstanceOf(MyClass);
+    expect(instance.toJSON()).toEqual({ name: 'Alice', age: 30 });
+    expect(MyClass.prototype.logCreated).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+The conclusion:
+
+Another great example of when to prefer `spyOn`.
+
+Look at the following test:
+
+```ts
+import { MyClass, init } from './MyClass';
+
+describe('init function', () => {
+  it('should create an instance of MyClass and use real methods except logCreated', async () => {
+    const logCreatedSpy = jest.spyOn(MyClass.prototype, 'logCreated').mockReturnThis();
+
+    const instance = init({ name: 'Alice', age: 30 });
+
+    expect(instance).toBeInstanceOf(MyClass);
+    expect(instance.toJSON()).toEqual({ name: 'Alice', age: 30 });
+    expect(logCreatedSpy).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+We removed all the boilerplate of `jest.mock`, and only added the spy on what we wanted, which is the `logCreated` method.
+
+<br/>
+
+### Scenario 6: Just pure spying
+
+This is a new scenario only possible with `spyOn`.
+
+What if we just want to spy on a function? We don't want to affect the function's implementation. We simply want to run assertions on it, such as: `toHaveBeenCalled` or `toHaveBeenCalledWith`. For that purpose, `spyOn` is our **ONLY** option.
+
+```ts title=makeFood.ts
+export function makeFood(){
+  return 'dinner'
+}
+```
+
+```ts title=makeFood.test.ts
+import { makeFood } from './makeFood';
+
+test('makeFood', () => {
+  const makeFoodModule = require('./makeFood');
+  const makeFoodSpy = jest.spyOn(makeFoodModule, 'makeFood');
+
+  const food = makeFood();
+
+  expect(food).toBe('dinner');
+  expect(makeFoodSpy).toHaveBeenCalled();
+});
+```
+
+<br/>
+
+### Summary
+
+#### `jest.mock()`
+
+- Automatically **mocks an entire module**.
+- Used to replace all exports of a module with mock functions.
+- If no implementation is provided, all the mocked functions return undefined by default.
+
+#### `jest.spyOn()`
+
+- **Spies on an existing method** of an object.
+- A **required module** can be considered as an object.
+- Allows you to track calls **while still calling the original implementation**, unless overridden.
+- **Less code is required** in order to spy 1 function inside a module with multiple exports.
+
+---
