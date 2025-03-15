@@ -1341,5 +1341,85 @@ test('makeFood', () => {
 - A **required module** can be considered as an object.
 - Allows you to track calls **while still calling the original implementation**, unless overridden.
 - **Less code is required** in order to spy 1 function inside a module with multiple exports.
+- THE `global` object can also be considered as an object. i.e.: `jest.spyOn(global, 'setTimeout');`. But don't mock `setTimeout`, since you have `jest.useFakeTimers()` already built-in.
 
 ---
+
+## 7. Timer Mocks
+
+### A. Introduction
+
+The native timer functions, `setTimeout()`, `setInterval()`, `clearTimeout()`, and `clearInterval()` have a **NEGATIVE** effect on a testing since they rely on real time to elapse, making tests slow and unreliable.
+
+As a solution, jest has 2 functions: `jest.useFakeTimers()` & `jest.useRealTimers()`. The `useFakeTimers` is replacing the original implementation of `setTimeout()` and other timer functions, and `useRealTimers` restores them to their normal behavior.
+
+jest also has the very useful functions:
+
+- `jest.runAllTimers()`
+- `jest.runOnlyPendingTimers()`
+
+### B. Example code to test
+
+```ts title="timerGame.ts"
+export function timerGame(callback) {
+  console.log('Ready....go!');
+
+  setTimeout(() => {
+    console.log("Time's up -- stop!");
+    callback && callback();
+  }, 1000);
+}
+```
+
+### C. How to test
+
+```ts title="timerGame.test.ts"
+jest.useFakeTimers();
+test('calls the callback after 1 second', () => {
+  const timerGame = require('../timerGame');
+  const callback = jest.fn();
+
+  timerGame(callback);
+
+  // At this point in time, the callback should not have been called yet
+  expect(callback).not.toHaveBeenCalled();
+
+  // Fast-forward until all timers have been executed
+  jest.runAllTimers();
+
+  // Now our callback should have been called!
+  expect(callback).toHaveBeenCalled();
+  expect(callback).toHaveBeenCalledTimes(1);
+});
+```
+
+### D. Run Pending Timers
+
+There are also scenarios where you might have a recursive timer – that is a timer that sets a new timer in its own callback. For these, running all the timers would be an endless loop, throwing the following error: "Aborting after running 100000 timers, assuming an infinite loop!"
+
+If that is your case, using jest.runOnlyPendingTimers() will solve the problem.
+
+```ts
+export function infiniteTimerGame(callback) {
+  console.log('Ready....go!');
+
+  setTimeout(() => {
+    console.log("Time's up! 10 seconds before the next game starts...");
+    callback && callback();
+
+    // Schedule the next game in 10 seconds
+    setTimeout(() => {
+      infiniteTimerGame(callback);
+    }, 10000);
+  }, 1000);
+}
+```
+
+:::info
+For debugging or any other reason you can change the limit of timers (which is by default 100000 as we said) that will be run before throwing an error:
+
+```ts
+jest.useFakeTimers({timerLimit: 100});
+```
+
+:::
