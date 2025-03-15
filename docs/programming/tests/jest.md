@@ -240,6 +240,8 @@ Other ways are:
 - Parcel
 - TypeScript (through `ts-jest`)
 
+---
+
 ## 2. Important to know CLI options
 
 ### `--listTests`
@@ -386,33 +388,25 @@ test('1 equals 2', () => {
 The above test will PASS, but **it should NOT PASS**!
 :::
 
+---
+
 ## 5. Mock Functions
 
 Here are all the possible scenarios you might have:
 
 1. You wanna test function A. Function A **accepts** callback function as one of its parameters.
-2. You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file.
+2. You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file/module.
 3. You wanna test function A. Function A **uses** another function B. Functions A and B both live on the same file.
 4. You wanna test function A. Function A **uses** another function B. You need to mock the returned value with different values at each time.
+5. You wanna test Class A. Class A **has** method B which returns `this`.
 
 ### Scenario 1: Mock callback fn as argument using `jest.fn()`
 
+#### A. Goal Explanation
+
 You wanna test function A. Function A **accepts** callback function as one of its parameters.
 
-Below we will see a function called `forEach` that we want to test.  
-`forEach` accepts `callback` as a parameter, ad calls it inside for each item under the items array.
-
-Let's say that our goal is to write a test that:
-
-- checks how many times `mockCallback` has been called.
-- checks the first argument of the first and second calls were as expected.
-
-What are the steps to achieve this goal?
-
-1. We will use `jest.fn()` to create a `mockCallback` const.
-2. We will pass `mockCallback` as the argument to our tested function (forEach).
-3. We will inspect the `mock` property of `mockCallback` (more specifically the `mockCallback.mock.calls` sub-property).
-4. Use plain matchers such as `toBe` or `toHaveLength`.
+#### B. Example code to test
 
 ```ts
 export function forEach(items, callback) {
@@ -421,6 +415,24 @@ export function forEach(items, callback) {
   }
 }
 ```
+
+#### C. Case Description
+
+Above we have a function called `forEach` that we want to test. `forEach` accepts `callback` as a parameter, ad calls it inside for each item under the items array.
+
+Our goal is to write a test that:
+
+- checks how many times `mockCallback` has been called.
+- checks the first argument of the first and second calls were as expected.
+
+#### D. How to test
+
+What are the steps to achieve this goal?
+
+1. We will use `jest.fn()` to create a `mockCallback` const.
+2. We will pass `mockCallback` as the argument to our tested function (forEach).
+3. We will inspect the `mock` property of `mockCallback` (more specifically the `mockCallback.mock.calls` sub-property).
+4. Use plain matchers such as `toBe` or `toHaveLength`.
 
 We will write the test as such:
 
@@ -488,27 +500,13 @@ test('forEach mock function', () => {
 
 <br/>
 
-## Scenario 2: Mocking Modules with `jest.mock(...)`
+### Scenario 2: Mocking Modules with `jest.mock(...)`
 
-You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file.
+#### A. Goal Explanation
 
-Below we will see a class called `Users` with a method called `findMany` which we want to test.  
-`Users` calls `axios`, an imported module, under the hood to send all of its async api requests. The `findMany` method specifically calls `axios.get`.
+You wanna test function A. Function A **uses** another function B. Function A **imports** function B from a different file/module.
 
-Let's say that our goal is to write a test that:
-
-- checks that `axios.get` had been called at least once.
-- checks that the headers (a property under the second argument) were created as expected.
-- mock the response value so that the test won't crash
-
-What are the steps to achieve this goal?
-
-1. We will use `jest.mock()` to tell just which module to mock.
-2. Import the real module into our test. This will give us 100% control (we'll see what it means soon).
-3. We will mock wanted methods on axios (i.e. `get`).
-4. We would use matchers like `.haveBeenCalledOnce` and such on those mocked methods.
-
-Here is the `Users` class, which we want to test:
+#### B. Example code to test
 
 ```ts
 import axios from 'axios';
@@ -539,7 +537,26 @@ export class Users {
 }
 ```
 
-### Why we need so many things?
+#### C. Case Description
+
+Above we have a class called `Users` with a method called `findMany` which we want to test. `Users` calls `axios`, an imported **module**, under the hood to send all of its async api requests. The `findMany` method specifically calls `axios.get`.
+
+Let's say that our goal is to write a test that:
+
+- checks that `axios.get` had been called at least once.
+- checks that the headers (a property under the second argument) were created as expected.
+- mock the response value so that the test won't crash
+
+#### D. How to test
+
+What are the steps to achieve this goal?
+
+1. We will use `jest.mock('module-name')` to specify just which module to mock.
+2. Import the module into our test. This will give us 100% control (we'll see what it means soon).
+3. We will mock wanted methods on axios (i.e. `get`).
+4. We would use matchers like `.haveBeenCalledOnce` and such on those mocked methods.
+
+**• Why we need so many things?**
 
 First, let's explain why we need so many things. Like, why we need to write `jest.mock`, but also import the actual module to be mocked.
 
@@ -683,7 +700,7 @@ test('should fetch users', async () => {
 
 <br/>
 
-## Scenario 3: Mocking Modules Partially
+### Scenario 3: Mocking Modules Partially
 
 You wanna test function A. Function A **uses** another function B. Functions A and B both live on the same file.
 
@@ -698,7 +715,7 @@ Steps to achieve this goal:
     - Below the spread, we will override the parts we want to mock.
 - If you need to import the module as **default**, the return object of the mock implementation MUST contain the special key of `__esModule: true,`.
 
-### Example 1: a named export
+#### Example 1: a named export
 
 We have this file:
 
@@ -736,7 +753,7 @@ test('should do a partial mock', () => {
 });
 ```
 
-### Example 2: a default export
+#### Example 2: a default export
 
 If you need to either **mock a default export** object, or **import a default export** object, you'll need to use the special keyword of `__esModule: true,`.
 
@@ -795,7 +812,7 @@ In both cases, omitting the `__esModule: true` would cause the tests to fail.
 
 <br/>
 
-## Scenario 4: Mock Return Values Multiple Times
+### Scenario 4: Mock Return Values Multiple Times
 
 You wanna test function A. Function A **uses** another function B. You need to mock the returned value with different values at each time.
 
