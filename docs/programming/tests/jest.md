@@ -242,7 +242,7 @@ Other ways are:
 
 ---
 
-## 2. Important to know CLI options
+## 2. Important CLI options to know
 
 ### `--listTests`
 
