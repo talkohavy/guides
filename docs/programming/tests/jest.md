@@ -877,3 +877,98 @@ const myMockFn = jest
   .mockImplementationOnce(() => 10)
   .mockImplementationOnce(() => 42);
 ```
+
+<br/>
+
+### Scenario 5: Mock a return `this` method
+
+#### A. Goal Explanation
+
+You wanna test Class A. Class A **has** method B which returns `this`.
+
+#### B. Example code to test
+
+```ts
+export class MyClass {
+  private name: string = '';
+  private age: number = 0;
+
+  setName(name?: string): this {
+    if (typeof name === 'string') this.name = name;
+
+    return this;
+  }
+
+  setAge(age?: number) {
+    if (typeof age === 'number') this.age = age;
+
+    return this;
+  }
+
+  logCreated() {
+    fetch('http://localhost:8000').then((response) => {
+      console.log('data is:', response);
+    });
+
+    return this;
+  }
+
+  toJSON(): { name: string; age: number } {
+    return { name: this.name, age: this.age };
+  }
+}
+
+type InitProps = {
+  name?: string;
+  age?: number;
+};
+
+export function init(props?: InitProps) {
+  const { name, age } = props ?? {};
+
+  const instance = new MyClass().setName(name).setAge(age).logCreated();
+
+  return instance;
+}
+```
+
+#### C. Case Description
+
+Above we have a function called `init` that we want to test. `init` creates an instance of `MyClass`, and calls a few of its methods. The problem is that one of the methods (`logCreated` in this case) is making an API request, which we want to avoid.
+
+Our goal is:
+
+- to write a test that tests the `init` function.
+- avoid the request call (do not send an API request).
+
+#### D. How to test
+
+We start off by mocking the module of `MyClass` using `jest.mock`.  
+We only want to mock `MyClass.prototype.logCreated`, and for the rest of the stuff from the module to remain as the actual implementation, so we'll use `jest.requireActual()`. Then, we'll mock just the `logCreated` method, and since we need it to return a pointer to `this`, we'll use jest's `mockReturnThis`. We will import `MyClass`, which will be the mocked version (since we used `jest.mock`), and we'll ask questions about `MyClass.prototype.logCreated`.
+
+```ts
+import { MyClass, init } from './MyClass';
+
+jest.mock('./MyClass', () => {
+  const actualModule = jest.requireActual('./MyClass');
+
+  actualModule.MyClass.prototype.logCreated = jest.fn().mockReturnThis();
+
+  return actualModule;
+});
+
+describe('init function', () => {
+  it('should create an instance of MyClass and use real methods except logCreated', async () => {
+    const instance = await init({ name: 'Alice', age: 30 });
+
+    // Ensure that the object is an instance of MyClass
+    expect(instance).toBeInstanceOf(MyClass);
+
+    // Check that the real setName and setAge methods worked
+    expect(instance.toJSON()).toEqual({ name: 'Alice', age: 30 });
+
+    // Ensure that logCreated was called
+    expect(MyClass.prototype.logCreated).toHaveBeenCalledTimes(1);
+  });
+});
+```
