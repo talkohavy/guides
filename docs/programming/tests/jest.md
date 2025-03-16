@@ -230,6 +230,12 @@ const config = {
 export default config;
 ```
 
+Create a `setup.tsx` file:
+
+```ts title=src/tests/setup.tsx
+// --- Write here any Code you need as a setup! ---
+```
+
 There are many ways to configure jest, **we are using `ts-jest`**.
 
 Other ways are:
