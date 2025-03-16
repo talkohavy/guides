@@ -226,6 +226,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/tests/jest',
               label: '- Jest',
             },
+            {
+              type: 'doc',
+              id: 'programming/tests/react-testing-library',
+              label: '- React Testing Library',
+            },
           ],
         },
         {
