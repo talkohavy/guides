@@ -15,7 +15,7 @@ Add a script:
 Install these:
 
 ```bash
-pnpm add -D @testing-library/dom @testing-library/jest-dom @testing-library/react jest jest-environment-jsdom ts-jest
+pnpm add -D jest jest-environment-jsdom ts-jest json-easy-strip @types/jest @testing-library/dom @testing-library/jest-dom @testing-library/react @testing-library/user-event
 ```
 
 Create a `jest.config.js` file:  

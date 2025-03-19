@@ -48,7 +48,7 @@ And you're ready to write **Component tests**! ✅
 
 ## 999. Tips & Tricks
 
-### - Tip 1: Wrapping things in act unnecessarily
+### - Tip 1: Wrapping things in `act` unnecessarily
 
 ```ts
 // ❌
