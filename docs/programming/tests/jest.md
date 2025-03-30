@@ -236,6 +236,46 @@ Create a `setup.tsx` file:
 // --- Write here any Code you need as a setup! ---
 ```
 
+### Import css/scss modules
+
+Running a **Component Test** on a component that imports a css/scss module file **would fail**.  
+You'll see an error like so:
+
+```ts
+● Test suite failed to run
+
+    Jest encountered an unexpected token
+    Jest failed to parse a file. This happens ...
+
+  1 | import clsx from 'clsx';
+> 2 | import styles from './Textarea.module.scss';
+    | ^
+```
+
+To solve that, you'll need to configure the `moduleNameMapper` option in your `jest.config.js` file.
+
+```ts
+const config = {
+// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
+  moduleNameMapper: {
+    ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+      prefix: '<rootDir>/',
+    }),
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
+}
+```
+
+> `identity-obj-proxy` - If you are using CSS Modules then it's better to mock a proxy to enable className lookups.
+
+You of course need to install it as a devDependency:
+
+```bash
+pnpm add -D identity-obj-proxy
+```
+
+### Extra
+
 There are many ways to configure jest, **we are using `ts-jest`**.
 
 Other ways are:
