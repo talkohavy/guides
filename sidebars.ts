@@ -256,6 +256,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/databases/postgres-sql',
+              label: '- Postgres',
+            },
+            {
+              type: 'doc',
               id: 'programming/databases/redis',
               label: '- Redis',
             },
@@ -330,11 +335,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'programming/npm',
           label: '- npm publish a package',
-        },
-        {
-          type: 'doc',
-          id: 'programming/postgres-sql',
-          label: '- postgressql',
         },
         {
           type: 'doc',
