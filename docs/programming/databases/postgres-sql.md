@@ -373,7 +373,14 @@ You can also write `all` to match any IP address, `samehost` to match any of the
 
 #### - `auth-method`
 
-Options are: `trust` | `reject` | `md5` | `scram-sha-256` | `ldap` | `cert`
+Options are: `trust` | `reject` | `md5` | `scram-sha-256` | `password` | `ldap` | `cert`
+
+- `trust`: Allow the connection unconditionally. This method **allows anyone** that can connect, **to connect without the need for a password or any other authentication**.
+- `reject`: Reject the connection unconditionally.
+- `scram-sha-256`: Perform SCRAM-SHA-256 authentication to verify the user's password.
+- `md5`: Perform SCRAM-SHA-256 or MD5 authentication to verify the user's password.
+- `password`: Require the client to supply an unencrypted password for authentication.
+- `cert`: Authenticate using SSL client certificates.
 
 #### - `auth-options`
 
