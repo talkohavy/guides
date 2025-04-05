@@ -206,7 +206,7 @@ The session history is saved for the next time you use `psql`.
 
 ## 3. CLI Commands
 
-### - Command 1: `psql` - connect to database
+### - Command 1: Connect to database
 
 **The command:**
 
@@ -240,7 +240,7 @@ Mentioned above are the defaults ☝🏼
 
 <br/>
 
-### - Command 2: `psql --list` - list all databases
+### - Command 2: List all databases
 
 **The command:**
 
