@@ -881,7 +881,7 @@ export class AppModule {}
 
 HttpException
 
-### - D. Pipes
+### - E. Pipes
 
 You can think of pipes in nest as kind of "middleware".
 
