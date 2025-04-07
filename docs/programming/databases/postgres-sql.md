@@ -814,13 +814,29 @@ And:
 
 **Description:**
 
-This command can **get or set options affecting the output** of query result tables.
-
 - Calling `\pset` without any arguments **displays the current status of all printing options**.
 - Calling `\pset option` on:
   - boolean options, causes the option to be toggled or unset.
   - non-boolean options, get the value currently set fot that option.
 - Calling `\pset option value`, assigned _value_ to _option_. The semantics of _value_ vary depending on the selected _option_.
+
+:::info
+This command can **get or set options affecting the output** of query result tables.
+
+When you run `\pset option value` inside a `psql` session, the setting is stored **only in memory for that interactive session** — once you exit `psql`, it's gone!
+
+**You can persist settings** by adding them to your `~/.psqlrc` file.
+
+Add your desired `\pset` options, for example:
+
+```bash
+\pset border 2
+\pset linestyle unicode
+```
+
+:::
+
+List of interesting options you can get/set:
 
 #### - Option 1: border
 
