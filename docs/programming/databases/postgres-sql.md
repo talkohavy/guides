@@ -719,6 +719,12 @@ Add the `S` option to have **system objects** be shown as well.
 \d table_name
 ```
 
+Or...
+
+```bash
+\d "Table_Name"
+```
+
 **Description:**
 
 This will show you information about a table's columns:
@@ -732,8 +738,10 @@ This will show you information about a table's columns:
 
 You can add a `+` sign, an `S` char right after `\d` (no space), to get some extra information.
 
-:::info
-If `\d` is used without a pattern argument, it is equivalent to `\dtvmsE` which will show a list of all visible tables, views, materialized views, sequences and foreign tables. This is purely a convenience measure.
+:::tip
+Notice the double quotes?
+
+The problem: **PostgreSQL translates unquoted identifiers to lowercase by default**. So if you created a table names "Actions", typing `\d Actions` would translate to `\d actions`. Therefore, in such cases you need to type `\d "Actions"`. **With double quotes PostgreSQL treats "Actions" as a case-sensitive identifier**.
 :::
 
 <br/>
