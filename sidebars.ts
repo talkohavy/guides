@@ -54,52 +54,82 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         {
+          type: 'doc',
+          id: 'programming/aws-kubernetes',
+          label: '- AWS Kubernetes',
+        },
+        {
+          type: 'doc',
+          id: 'programming/certificates',
+          label: '- Certificates',
+        },
+        {
+          type: 'doc',
+          id: 'programming/crypto',
+          label: '- Crypto',
+        },
+        {
+          type: 'doc',
+          id: 'programming/css',
+          label: '- CSS',
+        },
+        {
           type: 'category',
-          label: '- Software Concepts',
+          label: '- Databases',
           link: {
             type: 'generated-index',
-            title: 'Software Concepts Guides',
-            description: 'Software development concepts',
-            slug: '/software-concepts', // defaults to: '/category/[categoryName]'
-            keywords: ['software'],
-            image: '/img/heart.svg',
+            title: 'Databases Guides',
+            description: 'All about databases',
+            slug: '/db',
+            keywords: ['database'],
           },
           items: [
             {
               type: 'doc',
-              id: 'programming/concepts/solid',
-              label: '-- SOLID',
+              id: 'programming/databases/elasticsearch',
+              label: '- ElasticSearch',
             },
             {
               type: 'doc',
-              id: 'programming/concepts/design-by-contract',
-              label: '-- Design By Contract',
+              id: 'programming/databases/mongodb',
+              label: '- MongoDB',
+            },
+            {
+              type: 'doc',
+              id: 'programming/databases/postgres-sql',
+              label: '- Postgres',
+            },
+            {
+              type: 'doc',
+              id: 'programming/databases/redis',
+              label: '- Redis',
             },
           ],
         },
         {
-          type: 'category',
-          label: '- Web',
-          link: {
-            type: 'generated-index',
-            title: 'Web Guides',
-            description: 'Advanced concepts of the web',
-            slug: '/web',
-            keywords: ['web'],
-            image: '/img/heart.svg',
-          },
-          items: [
-            {
-              type: 'doc',
-              id: 'programming/web/fetch-api',
-              label: '- Fetch API',
-            },
-            {
-              type: 'doc',
-              id: 'programming/web/headers',
-              label: '- Headers',
-            },
-          ],
+          type: 'doc',
+          id: 'programming/design-patterns',
+          label: '- Design Patterns',
+        },
+        {
+          type: 'doc',
+          id: 'programming/docker',
+          label: '- Docker',
+        },
+        {
+          type: 'doc',
+          id: 'programming/elk',
+          label: '- ELK Stack',
+        },
+        {
+          type: 'doc',
+          id: 'programming/git',
+          label: '- Git',
+        },
+        {
+          type: 'doc',
+          id: 'programming/helm',
+          label: '- Helm',
         },
         {
           type: 'category',
@@ -150,63 +180,66 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'category',
-          label: '- Http',
-          link: {
-            type: 'generated-index',
-            title: 'Http Guides',
-            description: 'Advanced concepts of Http',
-            slug: '/http',
-            keywords: ['http'],
-          },
-          items: [
-            {
-              type: 'doc',
-              id: 'programming/http/overview',
-              label: '- Http Overview',
-            },
-            {
-              type: 'doc',
-              id: 'programming/http/http-messages',
-              label: '- Http Messages',
-            },
-            {
-              type: 'doc',
-              id: 'programming/http/http1-limitations-and-http2',
-              label: '- Http/1 Limitations & Http/2',
-            },
-            {
-              type: 'doc',
-              id: 'programming/http/mime-type',
-              label: '- MIME types',
-            },
-          ],
+          type: 'doc',
+          id: 'programming/kubernetes',
+          label: '- Kubernetes',
+        },
+        {
+          type: 'doc',
+          id: 'programming/micro-frontends',
+          label: '- Micro-Frontends',
+        },
+        {
+          type: 'doc',
+          id: 'programming/nest',
+          label: '- NestJS',
+        },
+        {
+          type: 'doc',
+          id: 'programming/node',
+          label: '- Node',
+        },
+        {
+          type: 'doc',
+          id: 'programming/npm',
+          label: '- Npm publish a package',
+        },
+        {
+          type: 'doc',
+          id: 'programming/python-server',
+          label: '- Python Server',
+        },
+        {
+          type: 'doc',
+          id: 'programming/regex',
+          label: '- Regex',
+        },
+        {
+          type: 'doc',
+          id: 'programming/saml',
+          label: '- SAML',
         },
         {
           type: 'category',
-          label: '- Html',
+          label: '- Software Concepts',
           link: {
             type: 'generated-index',
-            title: 'Html Guides',
-            description: 'Advanced concepts of Html',
-            slug: '/html',
-            keywords: ['html'],
+            title: 'Software Concepts Guides',
+            description: 'Software development concepts',
+            slug: '/software-concepts', // defaults to: '/category/[categoryName]'
+            keywords: ['software'],
+            image: '/img/heart.svg',
           },
           items: [
             {
               type: 'doc',
-              id: 'programming/html/inert',
-              label: '- Inert',
+              id: 'programming/concepts/solid',
+              label: '-- SOLID',
             },
             {
               type: 'doc',
-              id: 'programming/html/history',
-              label: '- History',
-            },
-            {
-              type: 'doc',
-              id: 'programming/html/iframe',
-              label: '- Iframe',
+              id: 'programming/concepts/design-by-contract',
+              label: '-- Design By Contract',
             },
           ],
         },
@@ -234,124 +267,6 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'category',
-          label: '- Databases',
-          link: {
-            type: 'generated-index',
-            title: 'Databases Guides',
-            description: 'All about databases',
-            slug: '/db',
-            keywords: ['database'],
-          },
-          items: [
-            {
-              type: 'doc',
-              id: 'programming/databases/elasticsearch',
-              label: '- ElasticSearch',
-            },
-            {
-              type: 'doc',
-              id: 'programming/databases/mongodb',
-              label: '- MongoDB',
-            },
-            {
-              type: 'doc',
-              id: 'programming/databases/postgres-sql',
-              label: '- Postgres',
-            },
-            {
-              type: 'doc',
-              id: 'programming/databases/redis',
-              label: '- Redis',
-            },
-          ],
-        },
-        {
-          type: 'doc',
-          id: 'programming/aws-kubernetes',
-          label: '- AWS Kubernetes',
-        },
-        {
-          type: 'doc',
-          id: 'programming/crypto',
-          label: '- Crypto',
-        },
-        {
-          type: 'doc',
-          id: 'programming/certificates',
-          label: '- Certificates',
-        },
-        {
-          type: 'doc',
-          id: 'programming/css',
-          label: '- CSS',
-        },
-        {
-          type: 'doc',
-          id: 'programming/design-patterns',
-          label: '- Design Patterns',
-        },
-        {
-          type: 'doc',
-          id: 'programming/docker',
-          label: '- Docker',
-        },
-        {
-          type: 'doc',
-          id: 'programming/elk',
-          label: '- ELK Stack',
-        },
-        {
-          type: 'doc',
-          id: 'programming/git',
-          label: '- Git',
-        },
-        {
-          type: 'doc',
-          id: 'programming/helm',
-          label: '- Helm',
-        },
-        {
-          type: 'doc',
-          id: 'programming/kubernetes',
-          label: '- Kubernetes',
-        },
-        {
-          type: 'doc',
-          id: 'programming/micro-frontends',
-          label: '- Micro-Frontends',
-        },
-        {
-          type: 'doc',
-          id: 'programming/nest',
-          label: '- NestJS',
-        },
-        {
-          type: 'doc',
-          id: 'programming/node',
-          label: '- Node',
-        },
-        {
-          type: 'doc',
-          id: 'programming/npm',
-          label: '- npm publish a package',
-        },
-        {
-          type: 'doc',
-          id: 'programming/python-server',
-          label: '- Python Server',
-        },
-        {
-          type: 'doc',
-          id: 'programming/regex',
-          label: '- Regex',
-        },
-        {
-          type: 'doc',
-          id: 'programming/saml',
-          label: '- SAML',
-        },
-        {
           type: 'doc',
           id: 'programming/software-architecture',
           label: '- Software Architecture',
@@ -370,6 +285,78 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'programming/syntax-highlighting',
           label: '- Syntax Highlighting',
+        },
+        {
+          type: 'category',
+          label: '- Web',
+          link: {
+            type: 'generated-index',
+            title: 'Web Guides',
+            description: 'Advanced concepts of the web',
+            slug: '/web',
+            keywords: ['web'],
+            image: '/img/heart.svg',
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/web/fetch',
+              label: '- Fetch API',
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/headers',
+              label: '- Headers',
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/history',
+              label: '- History',
+            },
+            {
+              type: 'category',
+              label: '- Http',
+              link: {
+                type: 'generated-index',
+                title: 'Http Guides',
+                description: 'Advanced concepts of Http',
+                slug: '/http',
+                keywords: ['http'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/web/http/overview',
+                  label: '- Http Overview',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/web/http/http-messages',
+                  label: '- Http Messages',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/web/http/http1-limitations-and-http2',
+                  label: '- Http/1 Limitations & Http/2',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/web/http/mime-type',
+                  label: '- MIME types',
+                },
+              ],
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/iframe',
+              label: '- Iframe',
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/inert',
+              label: '- Inert',
+            },
+          ],
         },
         {
           type: 'doc',
