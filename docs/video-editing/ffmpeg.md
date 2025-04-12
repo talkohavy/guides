@@ -189,7 +189,32 @@ ffmpeg -i input.mkv -vn audio_only.ogg
 
 This command extracts only the audio from the input, encodes it as Vorbis, and saves it into audio_only.ogg. Now you have an isolated audio stream. You can also use the -an and -sn flags in the same manner to strip out audio and subtitle streams.
 
-## 5. Shrink Audio
+## 5. Extract just the Video
+
+Run the following command:
+
+```bash
+ffmpeg -i input.mp4 -an -c:v copy output_video_only.mp4
+```
+
+The above command is copying the video stream and disabling the audio.
+
+Explanation:
+
+- `-i input.mp4` — input file.
+- `-an` — disables the audio stream.
+- `-c:v copy` — copies the video stream without re-encoding.
+- `output_video_only.mp4` — your output file with just the video.
+
+### Optional:
+
+If you want to re-encode the video (for compatibility or size reasons), you can replace -c:v copy with a codec, like:
+
+```bash
+ffmpeg -i input.mp4 -an -c:v libx264 output_video_only.mp4
+```
+
+## 6. Shrink Audio
 
 When you have an audio file which is too large you can run:
 
