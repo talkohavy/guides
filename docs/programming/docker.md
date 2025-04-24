@@ -153,6 +153,14 @@ To ssh into a running container:
 docker exec -it <container_name_or_id> bash
 ```
 
+### • G: How to debug an image?
+
+To run an image, and ssh into it, use:
+
+```bash
+docker run --rm -it ${IMAGE_NAME_OR_ID} sh
+```
+
 ---
 
 ## 3. Docker Commands
