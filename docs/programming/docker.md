@@ -161,6 +161,14 @@ To run an image, and ssh into it, use:
 docker run --rm -it ${IMAGE_NAME_OR_ID} sh
 ```
 
+### • H: How to copy a file into a container?
+
+When on your desktop, run the following:
+
+```bash
+docker cp ~/Desktop/my-file.txt <container_id_or_name>:/path/in/container/my-file.txt
+```
+
 ---
 
 ## 3. Docker Commands
