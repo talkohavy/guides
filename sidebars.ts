@@ -244,6 +244,37 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
+          type: 'doc',
+          id: 'programming/software-architecture',
+          label: '- Software Architecture',
+        },
+        {
+          type: 'doc',
+          id: 'programming/ssh',
+          label: '- SSH',
+        },
+        {
+          type: 'doc',
+          id: 'programming/storybook',
+          label: '- Storybook',
+        },
+        {
+          type: 'doc',
+          id: 'programming/syntax-highlighting',
+          label: '- Syntax Highlighting',
+        },
+        {
+          type: 'category',
+          label: '- Terminal God',
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/terminal-god/terminal-god',
+              label: '- Terminal God',
+            },
+          ],
+        },
+        {
           type: 'category',
           label: '- Tests',
           link: {
@@ -265,26 +296,6 @@ const sidebars: SidebarsConfig = {
               label: '- React Testing Library',
             },
           ],
-        },
-        {
-          type: 'doc',
-          id: 'programming/software-architecture',
-          label: '- Software Architecture',
-        },
-        {
-          type: 'doc',
-          id: 'programming/ssh',
-          label: '- SSH',
-        },
-        {
-          type: 'doc',
-          id: 'programming/storybook',
-          label: '- Storybook',
-        },
-        {
-          type: 'doc',
-          id: 'programming/syntax-highlighting',
-          label: '- Syntax Highlighting',
         },
         {
           type: 'category',
@@ -355,6 +366,21 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'programming/web/inert',
               label: '- Inert',
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/service-worker',
+              label: '- Service Worker',
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/web-worker',
+              label: '- Web Worker',
+            },
+            {
+              type: 'doc',
+              id: 'programming/web/window',
+              label: '- Window',
             },
           ],
         },
