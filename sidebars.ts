@@ -91,6 +91,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/databases/indexed-db',
+              label: '- IndexedDB',
+            },
+            {
+              type: 'doc',
               id: 'programming/databases/mongodb',
               label: '- MongoDB',
             },
