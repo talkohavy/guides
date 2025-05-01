@@ -277,6 +277,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/terminal-god/terminal-god',
               label: '- Terminal God',
             },
+            {
+              type: 'doc',
+              id: 'programming/terminal-god/vi',
+              label: '- VI',
+            },
           ],
         },
         {
