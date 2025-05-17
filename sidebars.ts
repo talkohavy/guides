@@ -308,6 +308,11 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
+          type: 'doc',
+          id: 'programming/typescript',
+          label: '- TypeScript',
+        },
+        {
           type: 'category',
           label: '- Web',
           link: {
