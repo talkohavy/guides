@@ -244,3 +244,36 @@ export type ActionsAsUnion6 = Actions['login' | 'logout' | 'updateProfile'];
 // or just:
 export type ActionsAsUnion7 = Actions[keyof Actions];
 ```
+
+---
+
+## 7. function isCat(props: Animal): props is Cat {}
+
+```ts
+type Cat = {
+  message: string;
+  age: number;
+  type: string;
+};
+
+type Dog = {
+  id: number;
+  age: number;
+  email: string;
+};
+
+type Animal = Cat | Dog;
+
+function getIsCat(animal: Animal): animal is Cat {
+  return 'message' in animal;
+}
+
+const animal = { message: 'Hello, world!', type: 'doSomething' } as any;
+const isCat = getIsCat(animal);
+
+if (isCat) {
+  console.log(animal.message); // <--- would infer as Cat, showing only Cat fields.
+} else {
+  // could be anything! Not necessarily a Dog! Inference does not work here.
+}
+```
