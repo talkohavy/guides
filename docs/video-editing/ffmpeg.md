@@ -224,3 +224,23 @@ ffmpeg -i input.mp3 -b:a 128k output.mp3
 
 Set the audio bit rate to 128 kbps, which is a common compression setting.  
 You can adjust the bit rate (128k) to a lower value to further reduce the size, but note that lowering the bit rate too much may degrade the audio quality.
+
+---
+
+## 6. Generate a dummy video
+
+```bash
+ffmpeg -f lavfi -i color=c=blue:s=1280x720:d=60 -c:v libx264 -t 60 -pix_fmt yuv420p output.mp4
+```
+
+| Option             | Meaning                                                            |
+| ------------------ | ------------------------------------------------------------------ |
+| `-f lavfi`         | Use FFmpeg's internal "libavfilter" input (for generated content). |
+| `-i color=...`     | Use the color filter to generate frames.                           |
+| `c=blue`           | Choose the color (blue, red, black, #RRGGBB, etc).                 |
+| `s=1280x720`       | Set resolution to 1280x720 (HD).                                   |
+| `d=60`             | Duration in seconds (60 seconds = 1 minute).                       |
+| `-c:v libx264`     | Encode the video using H.264.                                      |
+| `-t 60`            | Duration again, just to be explicit.                               |
+| `-pix_fmt yuv420p` | Ensures compatibility with most players.                           |
+| `output.mp4`       | Output filename.                                                   |
