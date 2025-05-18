@@ -37,3 +37,5 @@ See `iframes` in the `Permissions-Policy` topic for examples.
 #### HTTP Headers - Permissions-Policy - iframes
 
 For an `<iframe>` to have a feature enabled, its allowed origin must also be in the allowlist for the parent page. Because of this inheritance behavior, it is a good idea to specify the widest acceptable support for a feature in the HTTP header, and then specify the subset of support you need in each `<iframe>`.
+
+## iframeElement.contentWindow

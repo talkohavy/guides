@@ -32,3 +32,5 @@ const response = await fetch("https://example.org/post", {
 Many headers are set automatically by the browser and can't be set by a script: these are called Forbidden header names. If the `mode` option is set to `no-cors`, then the set of permitted headers is further restricted.
 
 ## Forbidden header names
+
+## `mode: 'no-cors'`
