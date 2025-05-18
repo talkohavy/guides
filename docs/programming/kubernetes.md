@@ -374,9 +374,19 @@ kubectl port-forward TYPE/NAME [options] [LOCAL_PORT:]REMOTE_PORT [...[LOCAL_POR
 
 You way of connecting to a pod from the host.
 
-Use resource type/name such as deployment/mydeployment to select a pod. Resource type defaults to 'pod' if omitted.
+The `kubectl port-forward` command in Kubernetes allows you to forward one or more local ports to a port on a Pod (or other Kubernetes resource like a Service). **This is useful for debugging or temporarily accessing services running inside your cluster without exposing them externally**.
+
+Use resource type/name such as deployment/my_deployment to select a pod. Resource type defaults to `pod` if omitted.
 
 **Common Use-Case:**
+
+Accessing a web app running in a pod:
+
+```bash
+kubectl port-forward svc/my-service 8080:80
+```
+
+You can now access the service at http://localhost:8080.
 
 Listen on port 8888 locally (on the host), forwarding to port 5000 in the pod:
 
@@ -401,6 +411,12 @@ Listen on port 8443 locally, forwarding to the targetPort of the service's port 
 ```bash
 kubectl port-forward service/myservice 8443:https
 ```
+
+**Notes:**
+
+- This is a **temporary and local-only** tunnel; it's not for production use.
+- It requires `kubectl` to stay running in your terminal.
+- You must have access to the pod via your Kubernetes context.
 
 <br/>
 
