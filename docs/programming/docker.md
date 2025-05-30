@@ -192,7 +192,7 @@ Remove all unused containers, networks, images (both _dangling_ and _unreference
 ### • Command 2: docker login
 
 ```bash
-docker login artifactory.playtika.com --username tal.kohavy --password token_key
+docker login some.artifactory.com --username tal.kohavy --password token_key
 ```
 
 Or use `--password-stdin` instead of `--password`
