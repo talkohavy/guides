@@ -192,28 +192,54 @@ Remove all unused containers, networks, images (both _dangling_ and _unreference
 ### • Command 2: docker login
 
 ```bash
-docker login some.artifactory.com --username tal.kohavy --password token_key
-```
-
-Or use `--password-stdin` instead of `--password`
-
-```bash
-cat ~/my_password.txt | docker login artifactory.playtika.com --username tal.kohavy --password-stdin
-```
-
-Or the more simple form:
-
-```bash
 docker login
 ```
 
-**Description:**
+You can authenticate to any public or private registry for which you have credentials to, in order to push your images, and pull them for later use.
 
-Log in to a registry
+When you don't specify a registry, the default one is used, which is `https://index.docker.io/v1/`.
+
+You'll need to provide 2 credentials to login with: `username` & `password`.
+
+Avoid using the `--password` flag! Use `--password-stdin` instead.
+
+Example usage:
+
+```bash
+echo -n $DOCKER_ACCESS_TOKEN | docker login https://index.docker.io/v1/ -u talkohavy --password-stdin
+```
 
 <br/>
 
-### • Command 2: docker pull
+### • Command 2: docker push
+
+```bash
+docker image push [OPTIONS] NAME[:TAG]
+```
+
+Upload an image to a registry.
+
+When the image gets pushed to is dependant on the registry you provided when you did the `docker login`. In docker login, if the registry is omitted, dockerhub is chosen by default.
+
+In case of pushing to dockerhub, you have you **personal namespace** there, which you created and named `talkohavy`. This is also your username.
+
+Inside `talkohavy` namespace, you have `repositories`.
+
+Each `repository` is an image, and all its versions. For example, "api-gateway@0.0.1" & "api-gateway@0.0.2".
+
+Tp push an image to dockerhub, you mush first build it with **proper naming convention**:
+
+```bash
+docker build . -t username/repository@0.0.1
+```
+
+For example:
+
+```bash
+docker build . -t talkohavy/frontend@0.0.1
+```
+
+### • Command 3: docker pull
 
 ```bash
 docker pull [OPTIONS] <image-name>[:TAG|@DIGEST]
