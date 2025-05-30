@@ -42,7 +42,15 @@ Whether you do it with `docker-compose` or with `docker build` doesn't quite mat
 
 ### - 1.4. Uploading the image to a registry
 
-** complete this part... **
+In case of dockerhub as a registry, this part heavily relies on the build process.
+
+The build would have to use the `-t` flag (TAG) in the following template:
+
+```bash
+docker build . -t username/repository@0.0.1
+```
+
+Where `username` is "talkohavy" and `repository` is the name of the service (i.e. `api-gateway`).
 
 ### - 1.5. Download and Run the image
 
