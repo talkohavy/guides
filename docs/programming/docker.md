@@ -1,185 +1,78 @@
 # Guide For Docker
 
-## 1. Overall Project Workflow Process
+## **1. Most useful Commands**
 
-### - 1.1. Have a project ready
+### - Command 1: build an image
 
-The first step would be to have a project ready to be deployed to production.
-
-### - 1.2. Create a Dockerfile
-
-Then, you would need to create a **Dockerfile** for that project.  
-The **Dockerfile** instructs `docker` how to build the image.  
-The image that's going be built, would then turn into a "virtual machine" (a container), with a certain folder structure.  
-Within the **Dockerfile** we instruct docker where to copy and what to copy to our _to-be-created_ virtual machine.  
-The creation of the **Dockerfile** is a one-time thing. Once you have one, it should n't change often, or even at all.
-
-### - 1.3. build the image with docker-compose/docker build
-
-Any time the contents of your project changes, you need to build an image.
-Whether you do it with `docker-compose` or with `docker build` doesn't quite matter for your specific use-case, and here's why; Let's examine the differences between them.
-
-**The main differences between them are:**
-
-- `docker build` can only build a _single_ image, while `docker-compose build` can build _multiple_ images.
-
-- `docker build` requires a **Dockerfile**, while `docker-compose build` requires both a **Dockerfile** and a **docker-compose.yaml** file.
-
-- `docker build` is more flexible, as you can use it to build any type of image, while `docker-compose build` is designed for building multi-container applications.
-
-- `docker-compose build` is easier to use, as it takes care of all the details of building and running multiple containers.
-
-**The benefits of using `docker-compose` include:**
-
-- **Ease of use**: `docker-compose` makes it easy to build and run multi-container applications. You can define all the services in your application in a single
-  docker-compose.yaml file, and then use the `docker-compose up` command to start them all up.
-
-- **Flexibility**: `docker-compose` is flexible enough to be used with a variety of different applications. You can use it to build simple applications with a few
-  containers, or complex applications with dozens or even hundreds of containers.
-
-- **Scalability**: `docker-compose` makes it easy to scale your applications. You can start with a small number of containers, and then scale up your application by
-  adding more containers as needed.
-
-### - 1.4. Uploading the image to a registry
-
-In case of dockerhub as a registry, this part heavily relies on the build process.
-
-The build would have to use the `-t` flag (TAG) in the following template:
+**The command:**
 
 ```bash
-docker build . -t username/repository@0.0.1
+kubectl build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
 ```
 
-Where `username` is "talkohavy" and `repository` is the name of the service (i.e. `api-gateway`).
+<br/>
 
-### - 1.5. Download and Run the image
+### - Command 2: upload an image
 
-After having a ready image, you'll want to have it running, right?  
-In production, you'll probably use **kubernetes** as an orchestrating mechanism to running all the images together in a contained environment called a **cluster**.  
-In development, you might also want to use **kubernetes** as well, but it's more likely that you'd want to run a single image, and make sure it works properly as a standalone.  
-`docker run` is for running a single image, for creating a single running container from that image, making sure it runs ok, connecting to it, run commands on it, etc.  
-While you mostly be using `docker run` for debugging purposes, know that `kubernetes` also offers its own way of debugging. `Kubernetes` allows you to debug any container living inside of a cluster.  
-Well, technically, it's a way of debugging a container living inside of a pod, living inside of a deployment, living inside of a node, living inside of a cluster, but you get the idea.  
-The only time in which `docker run` is the better solution, is when you _couldn't_ get your deployment to initialize correctly, so there aren't any running pods to check.  
-Using `kubectl apply` on a kubernetes configuration yaml file, you could start/orchestrate several deployments.
-
-**Using kubernetes**
+**The command:**
 
 ```bash
-kubectl apply -f config
+kubectl build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
 ```
 
-**Using docker**
+<br/>
+
+### - Command 3: Just run an image locally
 
 ```bash
-docker run ...
+docker run -t --rm -e PORT=3000 IMAGE_ID
 ```
 
----
+<br/>
 
-## 2. Daily Use Workflow Process
-
-### • A: List docker images
+### - Command 4: Run & SSH into image locally
 
 ```bash
-docker images
+docker run -it --rm -e PORT=3000 IMAGE_ID sh
 ```
 
-### • B: Delete an image
+<br/>
 
-```bash
-docker image rm IMAGE_ID -f
-```
-
-### • C: List docker containers
-
-```bash
-docker ps -a
-```
-
-### • D: Delete a container
-
-```bash
-docker container rm CONTAINER_ID
-```
-
-### • E: Build an image
-
-```bash
-docker build . -f /path/to/Dockerfile -t <name> --no-cache
-```
-
-Or the more simple one:
-
-```bash
-docker build . -t <name>
-```
-
-### • E: Run an image locally
-
-To run an image and print all stdout in your terminal:
-
-```bash
-docker run -t --rm -e BACKEND_ENDPOINT="http://a.com" -e PORT=3000 IMAGE_ID
-```
-
-Or the more simple one:
-
-```bash
-docker run -t --rm IMAGE_NAME
-```
-
-To run an image and also go inside the container to its terminal:
-
-```bash
-docker run -it --rm -e BACKEND_ENDPOINT="http://a.com" -e PORT=3000 IMAGE_ID sh
-```
-
-Or the more simple one:
-
-```bash
-docker run -it --rm imageName sh
-```
-
-To run an image and also expose its port to the host machine:
+### - Command 5: Run an image & expose port to host
 
 ```bash
 docker run -t --rm -p 8888:8888 imageName
 ```
 
-### • F: How to debug a running container?
+<br/>
 
-To print out a container's logs:
+### - Command 6: Show logs of a running container
 
 ```bash
 docker logs IMAGE_NAME_OR_ID
 ```
 
-To ssh into a running container:
+<br/>
+
+### - Command 7: SSH into a running container
 
 ```bash
-docker exec -it <container_name_or_id> bash
+docker exec -it CONTAINER_NAME_ID sh
 ```
 
-### • G: How to debug an image?
+<br/>
 
-To run an image, and ssh into it, use:
-
-```bash
-docker run --rm -it ${IMAGE_NAME_OR_ID} sh
-```
-
-### • H: How to copy a file into a container?
+### - Command 8: Copy a file into a container
 
 When on your desktop, run the following:
 
 ```bash
-docker cp ~/Desktop/my-file.txt <container_id_or_name>:/path/in/container/my-file.txt
+docker cp ~/Desktop/my-file.txt CONTAINER_NAME_ID:/path/in/container/my-file.txt
 ```
 
 ---
 
-## 3. Docker Commands
+## **2. Docker Commands**
 
 <font size={6}>Table of contents</font>
 
@@ -716,7 +609,7 @@ bash, powershell, zsh, and sh are all **command processors**.
 
 ---
 
-## 4. How to create a Dockerfile
+## **3. How to create a Dockerfile**
 
 A **Dockerfile** is a text document needed for the `docker build` process.  
 A **Dockerfile** contains all the instructions a user could call on the command line to assemble an image. A **Dockerfile** must begin with a `FROM` instruction.
@@ -984,7 +877,7 @@ Just like we said the container has its own file system, it also has its own iso
 
 ---
 
-## 5. Docker-Compose commands
+## **4. Docker-Compose commands**
 
 ### • Command 1: docker-compose build
 
@@ -1062,7 +955,7 @@ The command `docker-compose ps` shows you all the running containers relevant to
 
 ---
 
-## 6. Docker-Compose file
+## **5. Docker-Compose file**
 
 ### • Rule 1: services
 
