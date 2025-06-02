@@ -7,7 +7,7 @@
 **The command:**
 
 ```bash
-kubectl build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
+docker build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
 ```
 
 <br/>
@@ -17,7 +17,7 @@ kubectl build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
 **The command:**
 
 ```bash
-kubectl build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
+docker build . -f path/to/Dockerfile -t talkohavy/repository:0.0.1 --no-cache
 ```
 
 <br/>
