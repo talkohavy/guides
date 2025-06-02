@@ -27,25 +27,25 @@ helm create CHART_NAME
 ### - D. Provision a deployment+service for the first time
 
 ```bash
-helm install CHART_NAME . --values values.yaml --debug --verify -n namespace --create-namespace
+helm install CHART_NAME . --values values.yaml --debug --verify -n NAMESPACE --create-namespace
 ```
 
 Or by using force:
 
 ```bash
-helm install CHART_NAME . --values values.yaml --debug --verify -n namespace --create-namespace --force
+helm install CHART_NAME . --values values.yaml --debug --verify -n NAMESPACE --create-namespace --force
 ```
 
 ### - E. Keep track of an installation progress
 
 ```bash
-helm status CHART_NAME -n default
+helm status CHART_NAME -n NAMESPACE
 ```
 
 ### - F. Upgrade (update) a chart's revision
 
 ```bash
-helm upgrade CHART_NAME . --values values.yaml -n default --create-namespace
+helm upgrade CHART_NAME . --values values.yaml -n NAMESPACE --create-namespace
 ```
 
 ### - G. Abort unsuccessful upgrade of a chart
@@ -55,13 +55,13 @@ When an upgrade is unsuccessful, and the `rollingUpdate` seems to fail, you migh
 If you know the **revision number** of the current successful chart, simply **rollback** to it:
 
 ```bash
-helm rollback CHART_NAME REVISION_NUMBER -n default
+helm rollback CHART_NAME REVISION_NUMBER -n NAMESPACE
 ```
 
 If you need to check the current revision number, you can use the **history** command:
 
 ```bash
-helm history backend -n default
+helm history backend -n NAMESPACE
 ```
 
 ---
@@ -73,13 +73,13 @@ helm history backend -n default
 **- The command:**
 
 ```bash
-helm ls -n namespace_name
+helm ls -n NAMESPACE
 ```
 
 Or...
 
 ```bash
-helm list -n namespace_name
+helm list -n NAMESPACE
 ```
 
 **- Description:**
@@ -93,7 +93,7 @@ This command lists all of the releases for a specified namespace (uses current n
 **- The command:**
 
 ```bash
-helm uninstall RELEASE_NAME -n default
+helm uninstall RELEASE_NAME -n NAMESPACE
 ```
 
 **- Description:**
@@ -109,7 +109,7 @@ This command takes a release name and uninstalls the release. It removes all of 
 **- The command:**
 
 ```bash
-helm install chart_nickname path/to/root --values path/to/values.yaml -n default --debug
+helm install chart_nickname path/to/root --values path/to/values.yaml -n NAMESPACE --debug
 ```
 
 **- Description:**
@@ -142,7 +142,7 @@ To override values in a chart, use either the '--values' flag and pass in a file
 **- Example Usage:**
 
 ```bash
-helm install user ./user --values ./user/values.yaml -n application --create-namespace
+helm install user ./user --values ./user/values.yaml -n NAMESPACE --create-namespace
 ```
 
 <br/>
@@ -152,7 +152,7 @@ helm install user ./user --values ./user/values.yaml -n application --create-nam
 **- The command: status**
 
 ```bash
-helm status chart_name -n default
+helm status CHART_NAME -n NAMESPACE
 ```
 
 **- Description:**
@@ -186,7 +186,7 @@ This command shows the status of a named release. The status consists of:
 **- The command:**
 
 ```bash
-helm create NAME
+helm create CHART_NAME
 ```
 
 **- Description:**
@@ -214,7 +214,7 @@ foo/
 **- The command:**
 
 ```bash
-helm upgrade my-app path/to/root/ --values path/to/values.yaml -n default
+helm upgrade my-app path/to/root/ --values path/to/values.yaml -n NAMESPACE
 ```
 
 **- Description:**
@@ -226,7 +226,7 @@ helm upgrade my-app path/to/root/ --values path/to/values.yaml -n default
 **- The command:**
 
 ```bash
-helm history RELEASE_NAME -n default
+helm history RELEASE_NAME -n NAMESPACE
 ```
 
 **- Description:**
@@ -242,7 +242,7 @@ Fetch a release's history.
 **- The command:**
 
 ```bash
-helm rollback RELEASE_NAME REVISION_NUMBER -n <namespace>
+helm rollback RELEASE_NAME REVISION_NUMBER -n NAMESPACE
 ```
 
 **- Description:**
@@ -290,7 +290,7 @@ Prerequisites:
 3. Installing and configuring Helm.
 4. You must have Kubernetes installed. For the latest release of Helm, we recommend the latest stable release of Kubernetes, which in most cases is the second-latest minor release.
 
-Helm has 3 big concepts to it.
+Helm has 3 big concepts to it:
 
 ### - Concept 1: Chart
 
