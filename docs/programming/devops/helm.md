@@ -290,7 +290,7 @@ Prerequisites:
 3. Installing and configuring Helm.
 4. You must have Kubernetes installed. For the latest release of Helm, we recommend the latest stable release of Kubernetes, which in most cases is the second-latest minor release.
 
-Helm has 3 big concepts to it:
+Helm has 4 big concepts to it:
 
 ### - Concept 1: Chart
 
@@ -308,15 +308,19 @@ With these concepts in mind, we can now explain Helm like this:
 
 Helm installs **charts** into Kubernetes, creating a new **release** for each installation. And to find new charts, you can search Helm chart **repositories**.
 
+```bash
 helm show values
+```
+
+### - Concept 4: Tiller
+
+**Tiller** is a component of Helm that runs inside the Kubernetes cluster. Tiller is what provides the functionality to apply the Kubernetes resource descriptions to the Kubernetes cluster. When you install a release, the helm client essentially packages up the values and charts as a release, which is submitted to Tiller.
 
 ---
 
 ## **4. What is helm?**
 
-**Helm** is a **package manager** for **kubernetes**, that makes it easy to take applications and services that are highly repeatable or get used in a lot of different scenarios and it makes it easier to deploy them to a typical kubernetes cluster.
-chart = template
-Your chart is going to consist of all the files that you're going to be template'ing here.
+**Helm** is a **package manager** for **kubernetes**, that makes it easy to take applications and services that are highly repeatable or get used in a lot of different scenarios and it makes it easier to deploy them to a typical kubernetes cluster. chart = template. Your chart is going to consist of all the files that you're going to be templating here.
 Helm talks to a component that needs to be installed on your kubernetes cluster called **Tiller**. Tiller is basically just the server-side component of helm. It's gonna take the commands you've sent with helm client, and turn it into something that your kubernetes cluster will understand. Now, this becomes extra useful when you wanna doo things like "upgrade to a new configuration" or "rollback to an older version".
 What Helm will also give you is that it actually keeps a version history for you of different configurations you've sent over the wire with help, so you can rollback to the last known working configuration whenever you want to.
 Good things to template:
