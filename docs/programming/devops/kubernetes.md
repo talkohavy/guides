@@ -579,7 +579,7 @@ Some really useful information coming from the response is:
 
 - **Containers & Container ID**: Containers hold a list of all docker containers which are running inside of our pod. An item on that list would have a container ID, which is the container ID that was generated/given to it.
 
-- **Controlled By**: this field is related to a subject called deployment - where many identical pods are considered as one collection, and so with this field we could see who controls all those identical pods. This fields basically says: "I belong to this deployment". The value here looks something like: `ReplicaSet/<deployment-name>-<replicaSet-hash>`
+- **Controlled By**: this field is related to a subject called deployment - where many identical pods are considered as one collection, and so with this field we could see who controls all those identical pods. This fields basically says: "I belong to this deployment". The value here looks something like: `ReplicaSet/DEPLOYMENT_NAME-<replicaSet-hash>`
 
 - **Image**: which image was utilized for this particular container. That's the image which was specified using the --image flag upon creation of the pod.
 
@@ -592,7 +592,7 @@ Some really useful information coming from the response is:
 **The command:**
 
 ```bash
-kubectl describe deployment <deployment-name>
+kubectl describe deployment DEPLOYMENT_NAME
 ```
 
 **Description:**
@@ -645,7 +645,7 @@ Normal ScalingReplicaSet 11m deployment-controller Scaled up replica set nginx-d
 
 - **Namespace**: The namespace where the deployment lives. Defaults to `default`.
 
-- **Label**: kubernetes automatically assigns labels to each deployment, which appears as something like: `app=<deployment-name>`
+- **Label**: kubernetes automatically assigns labels to each deployment, which appears as something like: `app=DEPLOYMENT_NAME`
 
 - **Annotations**: Created automatically.
 
@@ -731,7 +731,7 @@ A pod that's deleted, which was created by a deployment, would also be deleted f
 **The command:**
 
 ```bash
-kubectl run <name> --image=<image-name>
+kubectl run <name> --image=IMAGE_NAME
 ```
 
 **Description:**
@@ -751,7 +751,7 @@ We usually don't use this command to create new pods. We would use `create deplo
 **The command:**
 
 ```bash
-kubectl create deployment <deployment-name> --image=<image-name>
+kubectl create deployment DEPLOYMENT_NAME --image=IMAGE_NAME
 ```
 
 **Description:**
@@ -775,7 +775,7 @@ For those reasons mentioned above, the most common way to create `pods` (whether
   By default, `kubectl create deployment` creates a deployment in the `default` namespace. To create a deployment in another namespace, use the `--namespace` flag, followed by the namespace's name.
 
   ```bash
-  kubectl create deployment <deployment-name> --image <image-name> --namespace=frontend
+  kubectl create deployment DEPLOYMENT_NAME --image IMAGE_NAME --namespace=frontend
   ```
 
 **A response example would look like:**
@@ -828,7 +828,7 @@ service/my-service exposed
 **The command:**
 
 ```bash
-kubectl scale deployment <deployment-name> --replicas=#number
+kubectl scale deployment DEPLOYMENT_NAME --replicas=#number
 ```
 
 **Description:**
@@ -871,7 +871,7 @@ immediately after the `delete all` command, you'll see some pods are still alive
 **The command:**
 
 ```bash
-kubectl set image <deployment-name>=talkohavy/img-name:2.0.0
+kubectl set image DEPLOYMENT_NAME=talkohavy/img-name:2.0.0
 ```
 
 **Description:**
@@ -885,7 +885,7 @@ kubectl set image <deployment-name>=talkohavy/img-name:2.0.0
 **The command:**
 
 ```bash
-kubectl rollout status deploy <deployment-name>
+kubectl rollout status deploy DEPLOYMENT_NAME
 ```
 
 **Description:**
@@ -1317,29 +1317,29 @@ When you release a new version of your application, of course you want to roll o
 You just modified your application. You made changes and you save them. You will now use docker to build an image from your updated version of your application, and to that image you'd probably provide a new tag, like 1.0.1. After building the image, you'd probably publish it to some docker-hub-like center. Now, here comes kubernetes part. Inside the cluster, you probably have some deployment running N pods, right? All those pods are running the previous version of that image, but hey here comes a new one! So step 1 is to go to that deployment's yaml, update the image's version for that deployment to the new version. We do that by using the command:
 
 ```bash
-kubectl set image <deployment-name> <deployment-name>=talkohavy/img-name:2.0.0
+kubectl set image DEPLOYMENT_NAME DEPLOYMENT_NAME=talkohavy/img-name:2.0.0
 ```
 
 After entering this command, the image would be changed, and a roll out update would kick off! Right after that you'd see a console log saying:
 
-`deployment.apps/<deployment-name> image updated`
+`deployment.apps/DEPLOYMENT_NAME image updated`
 
 Be read to quickly run this following command immediately afterwards:
 
 ```bash
-kubectl rollout status deploy <deployment-name>
+kubectl rollout status deploy DEPLOYMENT_NAME
 ```
 
 This would show you live ongoing feedback on the status of the rollout update.
 The output would be something similar to:
 
 ```bash
-Waiting for deployment <deployment-name> rollout to finish: 3 out of 4 replicas have been updated
-Waiting for deployment <deployment-name> rollout to finish: 3 out of 4 replicas have been updated
-Waiting for deployment <deployment-name> rollout to finish: 3 out of 4 replicas have been updated
-Waiting for deployment <deployment-name> rollout to finish: 1 old replicas are pending termination
+Waiting for deployment DEPLOYMENT_NAME rollout to finish: 3 out of 4 replicas have been updated
+Waiting for deployment DEPLOYMENT_NAME rollout to finish: 3 out of 4 replicas have been updated
+Waiting for deployment DEPLOYMENT_NAME rollout to finish: 3 out of 4 replicas have been updated
+Waiting for deployment DEPLOYMENT_NAME rollout to finish: 1 old replicas are pending termination
 ...
-deployment <deployment-name> successfully rolled out
+deployment DEPLOYMENT_NAME successfully rolled out
 ```
 
 Now let's see all pods by running the command:
@@ -1460,7 +1460,7 @@ I've created a service manually with:
 _(this hardly makes any different whether it's declarative or imperative)_
 
 ```bash
-kubectl expose deployment <deployment-name> --type=LoadBalancer --port=<port>
+kubectl expose deployment DEPLOYMENT_NAME --type=LoadBalancer --port=<port>
 ```
 
 And now let's do `get services` immediately afterwards:
@@ -1931,19 +1931,12 @@ should result in something like:
 192.168.49.2
 ```
 
-This command helps you see which IP address was assigned to the virtual machine, or the docker container, which is running our kubernetes node, which was created by minikube.  
-If you were using hyperv, or virtualbox, or VMware, this was the place where you'd ssh into that machine running the kubernetes node by typing:
+This command helps you see which IP address was assigned to the virtual machine, or the docker container, which is running our kubernetes node, which was created by minikube.
 
-```bash
-ssh docker@192.168.49.2
-```
+This machine, this node, is the one running the kubernetes node.
 
-Don't be fooled by the "docker" word. Minikube simply creates a default username called "docker", with a default password of "tcuser".
-
-- **Username**: docker
-- **Password**: tcuser
-
-A second way to connect with your minikube cluster, is by using the built-in internal ssh command minikube offers:
+Not very useful, but you can ssh into that machine.
+Minikube offers a built-in internal ssh command:
 
 ```bash
 minikube ssh
@@ -1955,7 +1948,18 @@ which after that, you'll see:
 docker@minikube:~$
 ```
 
-As you can see, with this command you don't even need to enter a password, so it's much more comfortable to use. We are now inside the kubernetes node.
+Don't be fooled by the "docker" word. Minikube simply creates a default username called "docker", with a default password of "tcuser".
+
+- **Username**: docker
+- **Password**: tcuser
+
+A second way to connect with your minikube cluster is by using `docker exec`::
+
+```bash
+docker exec -it <minikube-container-id> /bin/bash
+```
+
+We are now inside the kubernetes node.
 
 ### • Step 3: check containers within your node
 
@@ -2094,7 +2098,7 @@ kubectl has a `kubectl run` command, which is very similar to the `docker run` c
 The general form of the command is:
 
 ```bash
-kubectl run <pod-name> --image=<image-name>
+kubectl run <pod-name> --image=IMAGE_NAME
 ```
 
 Let's, for instance, use `nginx` as our docker image from docker hub:
@@ -2155,40 +2159,46 @@ Annotations: <none>
 Status: Running
 IP: 172.17.0.3
 IPs:
-IP: 172.17.0.3
+  IP: 172.17.0.3
 Containers:
-nginx:
-Container ID: docker://ddfde4190e818807339700c2b996c8e8eb6c72378a4f7a913cf478c9dd32450b
-Image: nginx
-Image ID: docker-pullable://nginx@sha256:0b970013351304af46f322da1263516b188318682b2ab1091862497591189ff1
-Port: <none>
-Host Port: <none>
-State: Running
-Started: Wed, 14 Sep 2022 22:46:25 +0300
-Ready: True
-Restart Count: 0
-Environment: <none>
-Mounts:
+  nginx:
+    Container ID: docker://ddfde4190e818807339700c2b996c8e8eb6c72378a4f7a913cf478c9dd32450b
+    Image: nginx
+    Image ID: docker-pullable://nginx@sha256:0b970013351304af46f322da1263516b188318682b2ab1091862497591189ff1
+    Port: <none>
+    Host Port: <none>
+    State: Running
+      Started: Wed, 14 Sep 2022 22:46:25 +0300
+    Ready: True
+    Restart Count: 0
+    Environment: <none>
+    Mounts:
 /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vxrs4 (ro)
 Conditions:
-Type Status
-Initialized True
-Ready True
-ContainersReady True
-PodScheduled True
+    Type Status
+    Initialized True
+    Ready True
+    ContainersReady True
+    PodScheduled True
 Volumes:
-kube-api-access-vxrs4:
-Type: Projected (a volume that contains injected data from multiple sources)
-TokenExpirationSeconds: 3607
-ConfigMapName: kube-root-ca.crt
-ConfigMapOptional: <nil>
-DownwardAPI: true
+    kube-api-access-vxrs4:
+      Type: Projected (a volume that contains injected data from multiple sources)
+      TokenExpirationSeconds: 3607
+      ConfigMapName: kube-root-ca.crt
+      ConfigMapOptional: <nil>
+      DownwardAPI: true
 QoS Class: BestEffort
 Node-Selectors: <none>
 Tolerations: node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
 Events:
-Type Reason Age From Message
+  Type    Reason     Age   From               Message
+  ----    ------     ---   ----               -------
+  Normal  Scheduled  30s   default-scheduler  Successfully assigned default/nginx to minikube
+  Normal  Pulling    29s   kubelet            Pulling image "nginx"
+  Normal  Pulled     28s   kubelet            Successfully pulled image "nginx" in 1.578s (1.578s including waiting)
+  Normal  Created    28s   kubelet            Created container nginx
+  Normal  Started    28s   kubelet            Started container nginx
 ```
 
 **Some really useful information is:**
@@ -2204,7 +2214,7 @@ Type Reason Age From Message
 - **IP**: the IP address which was assigned to this specific pod. Note that this is an internal IP address! You will not be able to connect to it from outside! In order to be able to connect to pods, you have to create services in kubernetes. We'll see that a bit later.
   Containers & Container ID: Containers hold a list of all docker containers which are running inside of our pod. An item on that list would have a container ID, which is the container ID that was generated/given to it.
 
-- **Controlled By**: this field is related to a subject called deployment - where many identical pods are considered as one collection, and so with this field we could see who controls all those identical pods. This fields basically says: "I belong to this deployment". The value here looks something like: `ReplicaSet/<deployment-name>-<replicaSet-hash>`
+- **Controlled By**: this field is related to a subject called deployment - where many identical pods are considered as one collection, and so with this field we could see who controls all those identical pods. This fields basically says: "I belong to this deployment". The value here looks something like: `ReplicaSet/DEPLOYMENT_NAME-<replicaSet-hash>`
 
 - **Image**: which image was utilized for this particular container. That's the image which was specified using the --image flag upon creation of the pod.
 
@@ -2332,7 +2342,7 @@ Before moving forward, let's first delete the pod we created earlier.
 To delete a pod, use this command:
 
 ```bash
-kubectl delete pod <name-of-pod>
+kubectl delete pod POD_NAME
 ```
 
 So in our case:
@@ -2361,7 +2371,7 @@ Let's go ahead and create a deployment.
 To create a deployment, run the following command:
 
 ```bash
-kubectl create deployment <deployment-name> --image=<image-name>
+kubectl create deployment DEPLOYMENT_NAME --image=IMAGE_NAME
 ```
 
 Let's create an example deployment called:
@@ -2408,7 +2418,7 @@ We see that there is now a single pod, which is managed by this particular deplo
 Before we do that, let's first read some details about the deployment:
 
 ```bash
-kubectl describe deployment <deployment-name>
+kubectl describe deployment DEPLOYMENT_NAME
 ```
 
 So in our case, it's:
@@ -2490,7 +2500,7 @@ Now let's try to scale this deployment, and increase the number of pods living i
 For that we can use the `scale` command:
 
 ```bash
-kubectl scale deployment <deployment-name> --replicas=#number
+kubectl scale deployment DEPLOYMENT_NAME --replicas=#number
 ```
 
 let's try this out on our nginx-deployment deployment:

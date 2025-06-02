@@ -112,14 +112,37 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'doc',
-          id: 'programming/design-patterns',
-          label: '- Design Patterns',
+          type: 'category',
+          label: '- DevOps',
+          link: {
+            type: 'generated-index',
+            title: 'DevOps Guides',
+            description: 'All about DevOps',
+            slug: '/devops',
+            keywords: ['devops'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/devops/docker',
+              label: '- Docker',
+            },
+            {
+              type: 'doc',
+              id: 'programming/devops/kubernetes',
+              label: '- Kubernetes',
+            },
+            {
+              type: 'doc',
+              id: 'programming/devops/helm',
+              label: '- Helm',
+            },
+          ],
         },
         {
           type: 'doc',
-          id: 'programming/docker',
-          label: '- Docker',
+          id: 'programming/design-patterns',
+          label: '- Design Patterns',
         },
         {
           type: 'doc',
@@ -130,11 +153,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'programming/git',
           label: '- Git',
-        },
-        {
-          type: 'doc',
-          id: 'programming/helm',
-          label: '- Helm',
         },
         {
           type: 'category',
@@ -183,11 +201,6 @@ const sidebars: SidebarsConfig = {
               label: '- FinalizationRegistry',
             },
           ],
-        },
-        {
-          type: 'doc',
-          id: 'programming/kubernetes',
-          label: '- Kubernetes',
         },
         {
           type: 'doc',
