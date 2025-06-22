@@ -45,8 +45,10 @@ helm status CHART_NAME -n NAMESPACE
 ### - F. Upgrade (update) a chart's revision
 
 ```bash
-helm upgrade CHART_NAME . --values values.yaml -n NAMESPACE --create-namespace
+helm upgrade CHART_NAME . --install --values values.yaml -n NAMESPACE --create-namespace
 ```
+
+Notice the `--install` flag, which makes `helm install` command redundant, since you now no longer need to decide between `helm install` & `helm upgrade`, just always use `helm upgrade`.
 
 ### - G. Abort unsuccessful upgrade of a chart
 
