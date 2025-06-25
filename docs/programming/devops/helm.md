@@ -86,7 +86,7 @@ helm list -n NAMESPACE
 
 **- Description:**
 
-This command lists all of the releases for a specified namespace (uses current namespace context if namespace not specified).
+This command **lists all the releases** for a specified namespace (uses current namespace context if namespace not specified).
 
 <br/>
 
@@ -103,6 +103,10 @@ helm uninstall RELEASE_NAME -n NAMESPACE
 Uninstall a release.
 
 This command takes a release name and uninstalls the release. It removes all of the resources associated with the last release of the chart as well as the release history, freeing it up for future use.
+
+#### The `--keep-history` flag
+
+In the past, this was the default. Now, running `uninstall` deletes everything. If you want to uninstall a chart, but keep its history, use this flag.
 
 <br/>
 
@@ -216,10 +220,55 @@ foo/
 **- The command:**
 
 ```bash
-helm upgrade my-app path/to/root/ --values path/to/values.yaml -n NAMESPACE
+helm upgrade RELEASE CHART --values path/to/values.yaml -n NAMESPACE
 ```
 
 **- Description:**
+
+This command upgrades a release to a new version of a chart.
+
+The upgrade arguments must be a `release` and `chart`.
+
+#### - A. The `CHART` argument:
+
+The chart argument can be either: a path to a chart directory, a packaged chart, a fully qualified URL, or a chart _reference_ ('example/mariadb'). For chart _references_, the **latest** version will be specified unless the '--version' flag is set.
+
+#### - B. The `--values` flag:
+
+To override values in a chart, use either the `--values` flag and pass in a file or use the `--set` flag and pass configuration from the command line, to force string values, use `--set-string`. You can use `--set-file` to set individual values from a file when the value itself is too long for the command line or is dynamically generated. You can also use `--set-json` to set json values (scalars/objects/arrays) from the command line.  
+You can specify the `--values`/`-f` flag multiple times. **Priority will be given to the last values.yaml specified** (the one on the most-right). If both `values.yaml` and `values-override.yaml` contained a key called `Test`, the value set in `values-override.yaml` would win.
+
+#### - C. The `--reuse-values` flag:
+
+Re-use values from last release. When upgrading, reuse the last release's values, and merge in any overrides. If `--reset-values` is specified, this flag ignored.  
+Imagine this situation: You initially install a chart with...
+
+```bash
+helm install my-release my-chart --set image.tag=1.0.0 --set replicas=3
+```
+
+Later, you want to only change the image tag:
+
+```bash
+helm upgrade my-release my-chart --set image.tag=2.0.0
+```
+
+If you don't use `--reuse-values`, then:
+
+- `replicas` will reset to the chart default (e.g., let's say 1),
+- Because you're only passing `image.tag`, Helm thinks "oh, I should use only these values."
+
+#### - D. The `--dry-run` flag
+
+The `--dry-run` mode would only go through the first few steps of `helm install`, meaning it will load the charts, merge values from `values.yaml`, render the required k8s templates, but it will not submit them to the k8s API server, and thus, will not get created.
+
+To sum up, the `--dry-run` flag will output all generated `chart manifests`, including `Secrets` which can contain sensitive values. You can hide Kubernetes Secrets using the `--hide-secret` flag. Please carefully consider how and when these flags are used.
+
+**- Usage Example:**
+
+```bash
+helm upgrade --install users-service ./toolbox/deploy/charts/users-service --values ./toolbox/deploy/charts/users-service/values.yaml -n application
+```
 
 <br/>
 
@@ -323,7 +372,7 @@ helm show values
 ## **4. What is helm?**
 
 **Helm** is a **package manager** for **kubernetes**, that makes it easy to take applications and services that are highly repeatable or get used in a lot of different scenarios and it makes it easier to deploy them to a typical kubernetes cluster. chart = template. Your chart is going to consist of all the files that you're going to be templating here.
-Helm talks to a component that needs to be installed on your kubernetes cluster called **Tiller**. Tiller is basically just the server-side component of helm. It's gonna take the commands you've sent with helm client, and turn it into something that your kubernetes cluster will understand. Now, this becomes extra useful when you wanna doo things like "upgrade to a new configuration" or "rollback to an older version".
+Helm talks to a component that needs to be installed on your kubernetes cluster called **Tiller**. Tiller is basically just the server-side component of helm. It's gonna take the commands you've sent with helm client, and turn it into something that your kubernetes cluster will understand. Now, this becomes extra useful when you wanna do things like "upgrade to a new configuration" or "rollback to an older revision".
 What Helm will also give you is that it actually keeps a version history for you of different configurations you've sent over the wire with help, so you can rollback to the last known working configuration whenever you want to.
 Good things to template:
 
@@ -336,3 +385,90 @@ Good things to template:
   Create a NOTES.txt file, which outputs to the user on every upgrade command.
   This file could also be templated.
   You can create 1 values.yaml file for production and one for development.
+
+---
+
+## **5. Why Helm?**
+
+### - Intelligent Deployments
+
+Helm is very intelligent when it comes to deployments. When we directly work with Kubernetes, we have to mention the order in which the resources should be created. For example, **configmaps** and **secrets** should be usually created before **deployment** and **services**. Helm knows to consider the correct order in which Kubernetes resources should be created, and it will automatically do it for us.
+
+### - Lifecycle Hooks
+
+Helm also uses lifecycle hooks.
+
+If there is any work, which is not directly related to Kubernetes, but it has to be done during the installation or the upgrade, **helm allows us to write hooks** that can be hooked into the lifecycle events.
+
+Example lifecycle hooks are installation, upgrade, uninstallation, tests, etc.
+
+This could be writing data to database, backing up a database, or making sure that the Kubernetes cluster is in a required state before we do an installation. Such work can be put into a hook, and it can be hooked into helm's installation or upgrade, or uninstallation lifecycle.
+
+### - Security
+
+Helm has built-in support to ensure that charts which are downloaded from a central repository are secured.
+
+The **charts can be signed** using cryptography, and hashes can be generated, and when we install these charts, we're pulling them from the central repos, **helm will verify** that these charts are really from the source we are expecting and that they were not tweaked by any hacker.
+
+---
+
+## **6. How does helm work?**
+
+### - Step 1: Chart resolution
+
+- Helm looks for the chart (`<chart>`) either locally or from a remote chart repository (like `https://charts.bitnami.com/bitnami`).
+- It loads the chart into memory, including:
+  - `Chart.yaml`: metadata
+  - `values.yaml`: default configuration values
+  - `templates/`: YAML templates with Go templating
+  - Any other custom files like `NOTES.txt`
+- Helm parses the `Chart.yaml` (chart metadata) and `values.yaml` (default values) using a YAML parser. If you pass a custom values file (`-f my-values.yaml`) or `--set` flags, those are also parsed.
+
+The first thing Helm does when you do a `helm install` is to load the chart and its dependencies. If it is a local chart, it will simply load it from your local machine. If it is a chart living on a repository, it will pull that chart and it will load it.
+
+### - Step 2: Merge Values
+
+- Helm merges configuration values:
+  - `values.yaml`
+  - Any `--values` (`-f`) file provided
+  - Any `--set` CLI overrides
+- The result is a **single values map** used to render templates.
+
+### - Step 3: Template Rendering
+
+- Helm renders the Go templates inside `templates/` directory using the merged values.
+- This results in standard Kubernetes manifests (YAML) — like `Deployments`, `Services`, `Ingress`, `ConfigMaps`, etc.
+- The produces final YAML documents are in ** plain text**. These rendered YAMLs are still just strings at this point.
+
+### - Step 4: Install Release to Kubernetes
+
+- Before sending to Kubernetes, **Helm parses the rendered YAMLs** to:
+
+  - Validate them structurally (to some degree)
+  - Convert them to Kubernetes API-compatible JSON objects (Kubernetes API works with JSON under the hood)
+  - **Invalid YAMLs here will raise errors** (e.g. bad indentation, missing colons).
+  - Helm needs to convert YAML to internal objects to check for things like hooks, CRDs, kinds, etc.
+  - Kubernetes itself also validates these later, but Helm catches obvious issues first.
+
+- Helm then **connects** to the Kubernetes cluster (via `~/.kube/config` or `context`).
+- It sends the rendered manifests to the Kubernetes API server.
+- The Kubernetes API server validates and stores the manifests in etcd.
+- Resources are then created by Kubernetes controllers (e.g., `Deployment` creates `Pods`).
+
+### - Step 5: Create Release Record (in Cluster)
+
+- Helm stores a **release object** in the cluster using `secrets/configmaps` in the release namespace. (in older versions, 2 and below, it would store them in the namespace `kube-system`).
+- The release record includes:
+  - Rendered manifests
+  - Chart metadata
+  - Values used
+  - Version info
+
+### - Step 6: Run Hooks (if any exists)
+
+- Helm checks for lifecycle hooks defined in templates (like pre-install, post-install).
+- These jobs/pods are created and monitored.
+
+### - Step 7: Show Output
+
+If successful, Helm outputs the status. Release name, namespace, resources created, and any messages from `NOTES.txt` (templated and displayed).
