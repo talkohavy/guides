@@ -66,6 +66,12 @@ If you need to check the current revision number, you can use the **history** co
 helm history backend -n NAMESPACE
 ```
 
+### - H. Decrypt a helm Secret
+
+```bash
+kubectl get secret sh.helm.release.v1.mysql-db-service.v1 -o jsonpath="{ .data.release }" | base64 -d | base64 -d | gunzip -c | jq '.chart.templates[].data' | tr -d '"' | base64 -d > hello.txt
+```
+
 ---
 
 ## **2. Helm Commands**
