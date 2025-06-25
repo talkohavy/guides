@@ -90,7 +90,35 @@ This command **lists all the releases** for a specified namespace (uses current 
 
 <br/>
 
-### - Command 2: helm uninstall
+### - Command 2: helm create
+
+**- The command:**
+
+```bash
+helm create CHART_NAME
+```
+
+**- Description:**
+
+create a new **chart** with the given name.
+
+This command creates a chart directory along with the common files and directories used in a chart. `helm create` takes a _path_ for an argument. If directories in the given path do not exist, Helm will attempt to create them as it goes. If the given destination exists and there are files in that directory, conflicting files will be overwritten, but other files will be left alone.
+
+For example, `helm create foo` will create a directory structure that looks something like this:
+
+```
+foo/
+├── .helmignore   # Contains patterns to ignore when packaging Helm charts.
+├── Chart.yaml    # Information about your chart
+├── values.yaml   # The default values for your templates
+├── charts/       # Charts that this chart depends on
+└── templates/    # The template files
+    └── tests/    # The test files
+```
+
+<br/>
+
+### - Command 3: helm uninstall
 
 **- The command:**
 
@@ -110,7 +138,7 @@ In the past, this was the default. Now, running `uninstall` deletes everything. 
 
 <br/>
 
-### - Command 3: helm install
+### - Command 4: helm install
 
 **- The command:**
 
@@ -153,69 +181,7 @@ helm install user ./user --values ./user/values.yaml -n NAMESPACE --create-names
 
 <br/>
 
-### - Command 4: helm status
-
-**- The command: status**
-
-```bash
-helm status CHART_NAME -n NAMESPACE
-```
-
-**- Description:**
-
-The `helm status` commands is useful when using the `helm install` command. When running `helm install`, Helm does not wait until all of the resources are running before it exits. Many charts require Docker images that are over 600MB in size, and may take a long time to install into the cluster. So, to keep track of a release's state, or to re-read configuration information, you can use `helm status`.
-
-Display the status of the named release.
-
-This command shows the status of a named release. The status consists of:
-
-- last deployment time
-
-- k8s namespace in which the release lives
-
-- state of the release (can be: unknown, deployed, uninstalled, superseded, failed, uninstalling, pending-install, pending-upgrade or pending-rollback)
-
-- revision of the release
-
-- description of the release (can be completion message or error message, need to enable --show-desc)
-
-- list of resources that this release consists of (need to enable --show-resources)
-
-- details on last test suite run, if applicable
-
-- additional notes provided by the chart
-
-<br/>
-
-### - Command 5: helm create
-
-**- The command:**
-
-```bash
-helm create CHART_NAME
-```
-
-**- Description:**
-
-create a new **chart** with the given name.
-
-This command creates a chart directory along with the common files and directories used in a chart. `helm create` takes a _path_ for an argument. If directories in the given path do not exist, Helm will attempt to create them as it goes. If the given destination exists and there are files in that directory, conflicting files will be overwritten, but other files will be left alone.
-
-For example, `helm create foo` will create a directory structure that looks something like this:
-
-```
-foo/
-├── .helmignore   # Contains patterns to ignore when packaging Helm charts.
-├── Chart.yaml    # Information about your chart
-├── values.yaml   # The default values for your templates
-├── charts/       # Charts that this chart depends on
-└── templates/    # The template files
-    └── tests/    # The test files
-```
-
-<br/>
-
-### - Command 6: helm upgrade
+### - Command 5: helm upgrade
 
 **- The command:**
 
@@ -272,7 +238,41 @@ helm upgrade --install users-service ./toolbox/deploy/charts/users-service --val
 
 <br/>
 
-### - Command 999: helm history
+### - Command 6: helm status
+
+**- The command: status**
+
+```bash
+helm status CHART_NAME -n NAMESPACE
+```
+
+**- Description:**
+
+The `helm status` commands is useful when using the `helm install` command. When running `helm install`, Helm does not wait until all of the resources are running before it exits. Many charts require Docker images that are over 600MB in size, and may take a long time to install into the cluster. So, to keep track of a release's state, or to re-read configuration information, you can use `helm status`.
+
+Display the status of the named release.
+
+This command shows the status of a named release. The status consists of:
+
+- last deployment time
+
+- k8s namespace in which the release lives
+
+- state of the release (can be: unknown, deployed, uninstalled, superseded, failed, uninstalling, pending-install, pending-upgrade or pending-rollback)
+
+- revision of the release
+
+- description of the release (can be completion message or error message, need to enable --show-desc)
+
+- list of resources that this release consists of (need to enable --show-resources)
+
+- details on last test suite run, if applicable
+
+- additional notes provided by the chart
+
+<br/>
+
+### - Command 7: helm history
 
 **- The command:**
 
@@ -288,7 +288,7 @@ Fetch a release's history.
 
 <br/>
 
-### - Command 999: helm rollback
+### - Command 8: helm rollback
 
 **- The command:**
 
@@ -304,7 +304,7 @@ The first argument of the rollback command is the name of a release, and the sec
 
 <br/>
 
-### - Command 999: helm package
+### - Command 10: helm package
 
 **- The command:**
 
