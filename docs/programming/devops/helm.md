@@ -354,6 +354,34 @@ If '--keyring' is not specified, Helm usually defaults to the public keyring unl
 
 <br/>
 
+### - Command 11: helm get values
+
+**- The command:**
+
+```bash
+helm get values RELEASE_NAME
+```
+
+**- Description:**
+
+Download the values file for a named release.
+
+<br/>
+
+### - Command 12: helm get notes
+
+**- The command:**
+
+```bash
+helm get notes RELEASE_NAME
+```
+
+**- Description:**
+
+Get the release notes of some named release.
+
+<br/>
+
 ---
 
 ## 3. Helm Architecture
