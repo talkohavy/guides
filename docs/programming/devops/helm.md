@@ -366,6 +366,10 @@ helm get values RELEASE_NAME
 
 Download the values file for a named release.
 
+Running the command just like that, gives you the values used on this upgrade alone.
+
+To get all values, use the `--all` flag.
+
 <br/>
 
 ### - Command 12: helm get notes
