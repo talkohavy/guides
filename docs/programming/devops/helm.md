@@ -310,6 +310,24 @@ The first argument of the rollback command is the name of a release, and the sec
 
 <br/>
 
+### - Command 9: helm template
+
+**- The command:**
+
+```bash
+helm template CHART path/to/chart --values path/to/values.yaml
+```
+
+**- Description:**
+
+Render chart templates locally and display the output.
+
+Any values that would normally be looked up or retrieved in-cluster will be faked locally. Additionally, none of the server-side testing of chart validity (e.g. whether an API is supported) is done.
+
+The `template` command outputs clean templates, ready to be used by a kubernetes API server, so if you like doing all the applying job yourself, and just want helm to help you with the creation of the charts, you have an option for that as well.
+
+Note that creating a template does not communicate with the server at all, not even for validating that the resource template yaml is ok. This is as opposed to the `--dry-run` flag on `helm upgrade`, which does. This is what makes `helm template` so useful, that it doesn't need the credentials to talk to a k8x cluster, just to have a template validated.
+
 ### - Command 10: helm package
 
 **- The command:**
