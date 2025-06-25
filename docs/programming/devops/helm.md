@@ -368,7 +368,13 @@ Download the values file for a named release.
 
 Running the command just like that, gives you the values used on this upgrade alone.
 
+#### The `--all` flag
+
 To get all values, use the `--all` flag.
+
+#### The `--revision` flag
+
+To get values from a specific revision (deployment), use the `--revision` flag, followed by the number. You can get the number by running `helm history CHART`.
 
 <br/>
 
@@ -383,6 +389,26 @@ helm get notes RELEASE_NAME
 **- Description:**
 
 Get the release notes of some named release.
+
+<br/>
+
+### - Command 13: helm get manifest
+
+**- The command:**
+
+```bash
+helm get manifest RELEASE_NAME
+```
+
+**- Description:**
+
+Download the manifest for a named release.
+
+The manifest is a YAML representation of all the Kubernetes resources that were generated from this release's chart(s).
+
+#### The `--revision` flag
+
+Get the manifest of a specific revision.
 
 <br/>
 
