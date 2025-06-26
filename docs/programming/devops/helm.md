@@ -494,7 +494,7 @@ The **charts can be signed** using cryptography, and hashes can be generated, an
 
 ---
 
-## **6. How does helm work?**
+## **6. What `helm install` is doing behind the scenes?**
 
 ### - Step 1: Chart resolution
 
@@ -554,3 +554,13 @@ The first thing Helm does when you do a `helm install` is to load the chart and 
 ### - Step 7: Show Output
 
 If successful, Helm outputs the status. Release name, namespace, resources created, and any messages from `NOTES.txt` (templated and displayed).
+
+---
+
+## \*\*7. A successful installation (`--wait`)
+
+`helm` considers an installation successful as soon as the `manifest` is received by the kubernetes API server. It doesn't wait for the pods to be up and running.
+
+If you want that to happen, you can use the `--wait` flag. With it, `helm` will wait for the services and deployments to be created, and for the pods to be up and running. Only then the installation is considered successful.
+
+By default, `helm` waits about 5 minutes (300 seconds), and if the installation doesn't complete by that time, the installation is marked as **failure**. If you want to override the default timeout, you can use the `--timeout` flag, followed by the time. Examples of valid time values: `5m`, `10s`, `5m10s` (without quotes!).
