@@ -557,10 +557,18 @@ If successful, Helm outputs the status. Release name, namespace, resources creat
 
 ---
 
-## \*\*7. A successful installation (`--wait`)
+## **7. A successful installation (`--wait`)**
 
 `helm` considers an installation successful as soon as the `manifest` is received by the kubernetes API server. It doesn't wait for the pods to be up and running.
 
 If you want that to happen, you can use the `--wait` flag. With it, `helm` will wait for the services and deployments to be created, and for the pods to be up and running. Only then the installation is considered successful.
 
 By default, `helm` waits about 5 minutes (300 seconds), and if the installation doesn't complete by that time, the installation is marked as **failure**. If you want to override the default timeout, you can use the `--timeout` flag, followed by the time. Examples of valid time values: `5m`, `10s`, `5m10s` (without quotes!).
+
+By default, upon a failure, created resources remain created (i.e. secrets), and the pod is endlessly trying to live. If you want to go back to a successful previous release, and keep your deployment as clean as possible, use the `--atomic` flag. If `--atomic` is set, upgrade process rolls back changes made in case of failed upgrade. The `--wait` flag will be set automatically if `--atomic` is used.
+
+A full command would look like:
+
+```bash
+helm upgrade RELEASE --values values.yaml --wait --timeout 7m --atomic
+```
