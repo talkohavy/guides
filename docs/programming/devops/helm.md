@@ -149,7 +149,7 @@ In the past, this was the default. Now, running `uninstall` deletes everything. 
 **- The command:**
 
 ```bash
-helm install chart_nickname path/to/root --values path/to/values.yaml -n NAMESPACE --debug
+helm install RELEASE_NAME path/to/chart-root --values path/to/values.yaml -n NAMESPACE --debug
 ```
 
 **- Description:**
@@ -192,7 +192,7 @@ helm install user ./user --values ./user/values.yaml -n NAMESPACE --create-names
 **- The command:**
 
 ```bash
-helm upgrade RELEASE CHART --values path/to/values.yaml -n NAMESPACE
+helm upgrade RELEASE_NAME path/to/chart-root --values path/to/values.yaml -n NAMESPACE
 ```
 
 **- Description:**
