@@ -606,3 +606,129 @@ Cleanup on fail cleans up (i.e.) deletes any secrets and objects created due to 
 What does it mean to use `--force` with upgrade?
 
 we do a helm upgrade, kubernetes receives a request to modify the existing objects. It will restart only the pods whose values have changed. It will NOT restart all the pods all the time. It will only restart the pods if there are any values that have changed for those pods. But if we have a requirement where you want to forcefully restart all pods, you can use the `--force` option. Internally, `helm` will delete the current deployment. Instead of modifying the deployment, it will delete the deployment, and it will recreate the deployment. As a result, Kube will delete the old pods and create new ones. **So there will be some downtime when you use `--force` option**. This is a major risk of using `--force`flag.
+
+---
+
+## **10. Creating a Chart**
+
+When you run `helm create CHART_NAME`, a folder will be created with the following structure:
+
+- Chart.yaml
+- values.yaml
+- templates/
+- charts/
+
+### - A. Chart.yaml
+
+#### • Description
+
+The **Chart.yaml** for helm is much like what the **package.json** is for npm.
+
+The **Chart.yaml** is a required metadata file for every Helm chart. It serves as the manifest that defines the chart itself.
+
+#### • Purpose of Chart.yaml
+
+It contains key metadata about your chart so that Helm and other tools know:
+
+- What the chart is
+- What version it is
+- What it depends on
+- What Kubernetes resources it describes
+
+#### • Common fields in Chart.yaml
+
+```yml
+apiVersion: v2
+name: my-app
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
+```
+
+| Field       | Purpose                                                                            |
+| ----------- | ---------------------------------------------------------------------------------- |
+| apiVersion  | (required) Chart API version (v2 for Helm 3).                                      |
+| name        | (required) Name of the chart.                                                      |
+| version     | (required) Version of the chart itself. Helm uses this for upgrades and rollbacks. |
+| description | Short human-readable summary.                                                      |
+| type        | `application` (default) or `library`.                                              |
+| appVersion  | Version of the actual app being deployed (informational). i.e, MongoDB 8.0         |
+
+#### • Why it matters
+
+- Helm installs and upgrades charts based on `version`.
+- `dependencies` can be listed here, allowing Helm to pull in subcharts automatically.
+- Tools like `helm repo` and `helm package` read this file to index and distribute your chart.
+
+#### • More optional keys
+
+- You can specify an `icon`.
+- You can specify `keywords`.
+- You can specify `home`, which is the home url of your project.
+- `maintainers`: list of people maintaining this chart.
+
+<br/>
+
+### -B. helpers
+
+```
+_helpers.tpl
+```
+
+It starts with an underscore (`_`) so that it would always come on top.
+The `tpl` stands for template.
+
+The `_helpers.tpl` contains methods that can be used in a `.yaml` file. If you open it you can see a bunch of functions defined.
+
+```yml
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "hello.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
+```
+
+```yml
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "hello.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+```
+
+---
+
+## 11. Templating Syntax & tricks
+
+### - A. if statement
+
+```yaml
+{{- if .Values.ingress.enabled}}
+```
+
+<br/>
+
+### - B. `include`
+
+`include` is a way to invoke a helper function, defined in one of your `.tpl` files.  
+You can pass all parameters to it like so: `.`
+
+```yaml
+{{ include SOME.FUNC.NAME}}
+```
+
+<br/>
