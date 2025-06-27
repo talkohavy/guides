@@ -1622,6 +1622,78 @@ volumes:
 
 <br/>
 
+### - Resource 6: ServiceAccount
+
+#### - A. What is a ServiceAccount
+
+A **ServiceAccount** is a Kubernetes resource that provides an **identity for pods** to interact with the Kubernetes API. It defines what a pod is allowed to do within the cluster using associated **credentials and permissions**.
+
+#### - B. Why Do We Need It?
+
+- **Authentication**: Every pod that accesses the Kubernetes API needs an identity.
+- **Fine-grained permissions**: Paired with **RBAC** (Role-Based Access Control) to restrict what a pod can do (e.g., list pods, read secrets).
+- **Isolation**: Different pods can use different ServiceAccounts with different privileges.
+
+#### - C. Default Behavior
+
+- Each _namespace_ has a **default ServiceAccount**.
+- If no `ServiceAccount` is specified, pods use `default`.
+- Kubernetes automatically mounts a token from the `ServiceAccount` into pods at `/var/run/secrets/kubernetes.io/serviceaccount`.
+
+#### - D. How to create a ServiceAccount
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+```
+
+Or using kubectl:
+
+```bash
+kubectl create secret generic db-secret \
+  --from-literal=username=admin \
+  --from-literal=password=secret123
+```
+
+#### - C. How to Attach a ServiceAccount to a Deployment
+
+```yaml
+spec:
+  serviceAccountName: app-sa
+```
+
+#### - D. Combining with RBAC
+
+To control access:
+
+- Create a **Role** or **ClusterRole**
+- Create a **RoleBinding** or **ClusterRoleBinding** that binds the role to the ServiceAccount.
+
+Example RoleBinding:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: app-sa
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+#### - E. Best Practices
+
+- **Use least privilege**: Only grant the permissions a pod truly needs.
+- Avoid using the `default` ServiceAccount for production workloads.
+- **Rotate tokens** if compromised (via ServiceAccount recreation or automation).
+
 ---
 
 ## **6. Kubernetes Architecture & Concepts**
