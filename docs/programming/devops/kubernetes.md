@@ -1502,11 +1502,13 @@ When looking up the host `my-service.prod.svc.cluster.local`, the cluster DNS Se
 
 ### - Concept 5: Using Service Name for internal communication
 
-Any resource living inside our cluster, whether it's a **service** or a **deployment**, has the _potential_ of communicating with other resources in that cluster! All we gotta do is provide a **service** (which we did) that acts as the single point of entry to that **deployment**'s pods. The entry point exposes an ip address, which other deployments can use in order to communicate with that specific deployment. However, that virtual ip address that gets exposed is **DYNAMIC**! And is known only **AFTER** creation! Therefore, it is best to use the **NAME** of the **service** inside your application, instead of that exposed ip address. As opposed to the ip address, the **name is static**! So even if the ip address changes, the name would still work as the hostname. That's how you could very easily connect different **deployments** together. Such resolution (from the word resolve) of the service-name to an ip address is performed by an internal service of the kubernetes cluster, which is called **DNS**.
+Any resource in a Kubernetes cluster, like a **service** or **deployment**, can communicate with others. To let one deployment talk to another, we expose it through a service, which provides a virtual IP. But this IP is dynamic and is only known _after_ creation. So instead, we use the **service name**, which is static and acts as a **stable hostname**. Kubernetes DNS handles the name-to-IP resolution, making it easy for deployments to connect.
 
 ### - Concept 6: Node Communication
 
-We talked about internal communication between **Services**, but what about **node** communication? How do those nodes actually communicate with each other? How are they managed?
+In [Concept 5](#--concept-5-using-service-name-for-internal-communication), We talked about internal communication between **Services**, but what about **node** communication? How do those nodes actually communicate with each other? How are they managed?
+
+In this case, you do not need to do anything. It is done for you automatically. How?
 
 Well, in a kubernetes cluster there is what's known as a `master node`. The rest of the nodes in the cluster are called `worker nodes`. It's the `master node` job to manage communication between `worker nodes`. It is also the `master node`'s job to distribute load across `worker nodes`. All `pods` related to your application are deployed on `worker node`'s. The `master node` runs in what is known as `system pods`, which are responsible for the actual work of the kubernetes cluster in general. Basically, we could say that a master node in a kubernetes cluster is more like "the control plane", and it does not run your client applications.
 
