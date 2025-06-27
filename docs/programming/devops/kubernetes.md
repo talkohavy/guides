@@ -1584,7 +1584,7 @@ kubectl create secret generic db-secret \
   --from-literal=password=secret123
 ```
 
-#### - C. How to Attach a Secret to a Deployment
+#### - D. How to Attach a Secret to a Deployment
 
 As Environment Variables:
 
@@ -1606,14 +1606,14 @@ volumes:
       name: db-secret
 ```
 
-#### - D. Additional Notes
+#### - E. Additional Notes
 
 - Secrets are **base64-encoded**, not encrypted by default.
 - Enable encryption at rest via `EncryptionConfiguration` for stronger protection.
 - Secrets are **namespaced**.
 - Avoid printing Secrets in logs or exposing them in `kubectl describe`.
 
-#### - E. Best Practices
+#### - F. Best Practices
 
 - Use `Secret` for anything you wouldn't commit to Git.
 - Combine with `ConfigMap` for full app configuration.
@@ -1657,14 +1657,14 @@ kubectl create secret generic db-secret \
   --from-literal=password=secret123
 ```
 
-#### - C. How to Attach a ServiceAccount to a Deployment
+#### - E. How to Attach a ServiceAccount to a Deployment
 
 ```yaml
 spec:
   serviceAccountName: app-sa
 ```
 
-#### - D. Combining with RBAC
+#### - F. Combining with RBAC
 
 To control access:
 
@@ -1688,11 +1688,78 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-#### - E. Best Practices
+#### - G. Best Practices
 
 - **Use least privilege**: Only grant the permissions a pod truly needs.
 - Avoid using the `default` ServiceAccount for production workloads.
 - **Rotate tokens** if compromised (via ServiceAccount recreation or automation).
+
+<br/>
+
+### - Resource 999: Ingress
+
+#### - A. What is an Ingress
+
+An **Ingress** is a Kubernetes resource that **manages external HTTP(S) access** to services within a cluster. It acts as a **layer 7 (application layer) reverse proxy**, routing traffic based on hostnames and paths.
+
+#### - B. Why Do We Need It?
+
+- **Single entry point**: Consolidates external access to multiple services.
+- **Path-based (or host-based) routing**: Routes requests to different services based on URL or hostname.
+- **TLS termination**: Handles HTTPS at the edge.
+- **Custom rules**: Supports redirects, headers, rate limiting, etc. via annotations or controllers.
+
+#### - C. How It Works
+
+- An Ingress requires an **Ingress Controller** (e.g., NGINX, Traefik, HAProxy).
+- The Ingress resource defines rules.
+- The controller watches Ingress resources and updates its proxy configuration accordingly.
+
+#### - D. How to create a ServiceAccount
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /app
+            pathType: Prefix
+            backend:
+              service:
+                name: my-service
+                port:
+                  number: 80
+```
+
+#### - E. How to Expose a Deployment via Ingress
+
+```yaml
+spec:
+  tls:
+    - hosts:
+        - example.com
+      secretName: tls-secret
+```
+
+#### - F. Additional Notes
+
+- Works only with HTTP(S) traffic (for TCP/UDP, use a LoadBalancer or Service).
+- You must **install an Ingress Controller** separately (Ingress alone does nothing).
+- Supports rewrite rules, authentication, rate limiting, etc. via annotations.
+
+#### - G. Best Practices
+
+- Use **host-based routing** for cleaner URL management.
+- Use **TLS** for secure traffic.
+- Keep Ingress rules in sync with DNS entries.
+- Monitor and secure your Ingress Controller — it's a major attack surface.
 
 ---
 
