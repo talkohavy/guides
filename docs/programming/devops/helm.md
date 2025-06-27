@@ -557,7 +557,7 @@ If successful, Helm outputs the status. Release name, namespace, resources creat
 
 ---
 
-## **7. A successful installation (`--wait`)**
+## **7. A successful installation/upgrade**
 
 `helm` considers an installation successful as soon as the `manifest` is received by the kubernetes API server. It doesn't wait for the pods to be up and running.
 
@@ -565,10 +565,44 @@ If you want that to happen, you can use the `--wait` flag. With it, `helm` will 
 
 By default, `helm` waits about 5 minutes (300 seconds), and if the installation doesn't complete by that time, the installation is marked as **failure**. If you want to override the default timeout, you can use the `--timeout` flag, followed by the time. Examples of valid time values: `5m`, `10s`, `5m10s` (without quotes!).
 
-By default, upon a failure, created resources remain created (i.e. secrets), and the pod is endlessly trying to live. If you want to go back to a successful previous release, and keep your deployment as clean as possible, use the `--atomic` flag. If `--atomic` is set, upgrade process rolls back changes made in case of failed upgrade. The `--wait` flag will be set automatically if `--atomic` is used.
+---
+
+## **8. Installation failure**
+
+By default, upon a failure, created resources remain created (i.e. secrets), and the pod is endlessly and desperately trying to live.
+
+In such case, you have a few options:
+
+### - Option 1: Do nothing
+
+Bad idea. You are leaving a dirty environment, and a pod that's endlessly and desperately trying to live takes up resources, which costs money.
+
+### - Option 2: Go back to a previous successful release
+
+If you want to go back to a previous successful release, and keep your deployment as clean as possible, use the `--atomic` flag. If `--atomic` is set, the upgrade process rolls back changes made in case of failed upgrade. The `--wait` flag will be set automatically if `--atomic` is used.
+
+What this will do:
+
+- remove secrets
+- kill the pod (euthanize)
 
 A full command would look like:
 
 ```bash
 helm upgrade RELEASE --values values.yaml --wait --timeout 7m --atomic
 ```
+
+### - Option 3: cleanup on fail
+
+Cleanup on fail cleans up (i.e.) deletes any secrets and objects created due to the failed upgrade. It is different than go back to a previous release in 2 ways:
+
+1. It doesn't create a new helm-history item (stored as a secret)
+2. It doesn't kill the pod trying to live.
+
+---
+
+## **9. Forceful upgrade**
+
+What does it mean to use `--force` with upgrade?
+
+we do a helm upgrade, kubernetes receives a request to modify the existing objects. It will restart only the pods whose values have changed. It will NOT restart all the pods all the time. It will only restart the pods if there are any values that have changed for those pods. But if we have a requirement where you want to forcefully restart all pods, you can use the `--force` option. Internally, `helm` will delete the current deployment. Instead of modifying the deployment, it will delete the deployment, and it will recreate the deployment. As a result, Kube will delete the old pods and create new ones. **So there will be some downtime when you use `--force` option**. This is a major risk of using `--force`flag.
