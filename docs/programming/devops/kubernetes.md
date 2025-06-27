@@ -1193,29 +1193,20 @@ Nowadays, Kubernetes supports these types of container runtimes:
 
 ---
 
-## **5. Kubernetes Architecture & Concepts**
+## **5. Kubernetes Resources**
 
 Let's start with some terminology and talk about the architecture of kubernetes:
 
-### - Concept 1: A Pod
+### - Resource 1: A Pod
 
 A **Pod** is the smallest unit that exists within the _kubernetes_ world.  
 Note that **container** is the smallest unit that exists within the _docker_ world. In kubernetes however, it is the **pod**.  
 Containers are created INSIDE a pod!  
 Inside the pod, there could be one or more containers, although the most common scenario is to have **a single container running inside a pod**. One pod, one container.
 
-### - Concept 2: A Kubernetes Cluster & node
+<br/>
 
-A kubernetes **cluster** consists of **nodes**.  
-A **node** is actually a server.
-
-You can include multiple **nodes** (servers) inside a kubernetes **cluster**, and they could be located in different data-centers in different parts of the world. But usually, nodes which belong to the same kubernetes cluster are located close to each other. This is in order to perform tasks more efficiently.
-
-Inside each **node**, there are **pods**, and inside of each **pod** there are **containers** (usually just 1). Each **pod** can have a _pod sibling_, meaning that they're both living under the same **deployment**, or a _pod cousin_, meaning that they're both living under different **deployments**.
-
-Nodes will not automatically form a cluster without your intervention! But after such initial configuration, everything will be automated. And kubernetes will automatically deploy pods on different nodes.
-
-### - Concept 3: Deployment
+### - Resource 2: Deployment
 
 #### -- A. Core Concept
 
@@ -1350,9 +1341,10 @@ kubectl get pods
 
 and notice the age of those pods. All of them should say **RUNNING**, and all have been created only a few seconds ago. Also, of course, all the hashes are new hashes.
 That's it! We are now running a new version of our application!
-02:09:55
 
-### - Concept 4: Service
+<br/>
+
+### - Resource 3: Service
 
 #### -- A. What is a Service?
 
@@ -1500,11 +1492,156 @@ spec:
 
 When looking up the host `my-service.prod.svc.cluster.local`, the cluster DNS Service returns a `CNAME` record with the value `my.database.example.com`. Accessing `my-service` works in the same way as other Services but with the crucial difference that redirection happens at the DNS level rather than via proxying or forwarding. Should you later decide to move your database into your cluster, you can start its Pods, add appropriate selectors or endpoints, and change the Service's `type`.
 
-### - Concept 5: Using Service Name for internal communication
+<br/>
+
+### - Resource 4: Secret
+
+#### - A. What is a ConfigMap
+
+A **ConfigMap** is a Kubernetes resource used **to store non-confidential** configuration data in key-value pairs. It **decouples configuration** artifacts **from container images**, allowing applications to be configured dynamically **without rebuilding images**.
+
+#### - B. How to create a ConfigMap
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  LOG_LEVEL: "debug"
+  APP_MODE: "production"
+```
+
+Or using kubectl:
+
+```bash
+kubectl create configmap app-config --from-literal=LOG_LEVEL=debug --from-literal=APP_MODE=production
+```
+
+#### - C. How to Attach a ConfigMap to a Deployment
+
+As Environment Variables:
+
+```yaml
+envFrom:
+  - configMapRef:
+      name: app-config
+```
+
+As Mounted Files (e.g. config files):
+
+```yaml
+volumeMounts:
+  - name: config-volume
+    mountPath: /etc/config
+volumes:
+  - name: config-volume
+    configMap:
+      name: app-config
+```
+
+#### - D. Additional Notes
+
+- ConfigMaps are **namespaced**.
+- Not suitable for secrets; use `Secret` for sensitive data.
+- If the ConfigMap is deleted or changed, pods may need a restart (unless files are mounted and watched).
+- You can combine ConfigMaps with `Downward API` to inject runtime metadata.
+
+<br/>
+
+### - Resource 5: Secret
+
+#### - A. What is a Secret
+
+A **Secret** is a Kubernetes resource used to **store sensitive data**, such as passwords, API keys, tokens, or TLS certificates, in a secure and encoded way.
+
+#### - B. Common Use Cases
+
+- Database credentials
+- OAuth tokens
+- SSH keys
+- TLS certs and keys
+- Third-party service credentials
+
+#### - C. How to create a Secret
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+data:
+  username: YWRtaW4=      # "admin"
+  password: c2VjcmV0MTIz  # "secret123"
+```
+
+Or using kubectl:
+
+```bash
+kubectl create secret generic db-secret \
+  --from-literal=username=admin \
+  --from-literal=password=secret123
+```
+
+#### - C. How to Attach a Secret to a Deployment
+
+As Environment Variables:
+
+```yaml
+envFrom:
+  - secretKeyRef:
+      name: db-secret
+```
+
+As Mounted Files (e.g. config files):
+
+```yaml
+volumeMounts:
+  - name: secret-volume
+    mountPath: /etc/secrets
+volumes:
+  - name: secret-volume
+    configMap:
+      name: db-secret
+```
+
+#### - D. Additional Notes
+
+- Secrets are **base64-encoded**, not encrypted by default.
+- Enable encryption at rest via `EncryptionConfiguration` for stronger protection.
+- Secrets are **namespaced**.
+- Avoid printing Secrets in logs or exposing them in `kubectl describe`.
+
+#### - E. Best Practices
+
+- Use `Secret` for anything you wouldn't commit to Git.
+- Combine with `ConfigMap` for full app configuration.
+- Use Kubernetes RBAC to restrict access to secrets.
+- Rotate secrets regularly and automate updates with tools like Vault or SealedSecrets.
+
+<br/>
+
+---
+
+## **6. Kubernetes Architecture & Concepts**
+
+### - Concept 1: A Kubernetes Cluster & node
+
+A kubernetes **cluster** consists of **nodes**.  
+A **node** is actually a server.
+
+You can include multiple **nodes** (servers) inside a kubernetes **cluster**, and they could be located in different data-centers in different parts of the world. But usually, nodes which belong to the same kubernetes cluster are located close to each other. This is in order to perform tasks more efficiently.
+
+Inside each **node**, there are **pods**, and inside of each **pod** there are **containers** (usually just 1). Each **pod** can have a _pod sibling_, meaning that they're both living under the same **deployment**, or a _pod cousin_, meaning that they're both living under different **deployments**.
+
+Nodes will not automatically form a cluster without your intervention! But after such initial configuration, everything will be automated. And kubernetes will automatically deploy pods on different nodes.
+
+### - Concept 2: Using Service Name for internal communication
 
 Any resource in a Kubernetes cluster, like a **service** or **deployment**, can communicate with others. To let one deployment talk to another, we expose it through a service, which provides a virtual IP. But this IP is dynamic and is only known _after_ creation. So instead, we use the **service name**, which is static and acts as a **stable hostname**. Kubernetes DNS handles the name-to-IP resolution, making it easy for deployments to connect.
 
-### - Concept 6: Node Communication
+### - Concept 3: Node Communication
 
 In [Concept 5](#--concept-5-using-service-name-for-internal-communication), We talked about internal communication between **Services**, but what about **node** communication? How do those nodes actually communicate with each other? How are they managed?
 
@@ -1518,16 +1655,16 @@ Well, in a kubernetes cluster there is what's known as a `master node`. The rest
 
 There are services such as _kubelet_, _kube-proxy_, and a _container runtime_. Those services are present ON EACH NODE in the kubernetes cluster. A container runtime is the mechanism where your containers actually run. We mentioned 3: docker, containerd, CRI-O.
 
-### - Concept 7: DNS service
+### - Concept 4: DNS service
 
 The **DNS service** is a service which runs on the master node, and is **responsible for names resolution** in the entire kubernetes cluster.
 
-### - Concept 8: API Server
+### - Concept 5: API Server
 
 **API server** service is the main point of communication between nodes inside the kubernetes world. The **API server** is the main service inside the `master node`.
-Using this **API server** service, you could actually manage the entire kubernetes cluster. It is done by using `kubectl`. Or, kube-control.
+Using this **API server** service, you could actually manage the entire kubernetes cluster. It is done by using `kubectl`. Or, `kube-control`.
 
-### - Concept 8: kubectl
+### - Concept 6: kubectl
 
 Kubectl is a separate command-line tool, which allows you to connect with a specific kubernetes cluster, and manage it remotely.  
 kubectl could even be ran on your local machine.  
@@ -1547,7 +1684,7 @@ Pods could be created, removed, moved from one node to another, and all this hap
 API Server service is the center main point of communication between master node and other worker nodes.  
 Using the API Server service, you could manage the kubernetes cluster by using the kubectl tool, which has to be installed on your computer, if you perform management from your computer.
 
-### - Concept 9: kubelet
+### - Concept 7: kubelet
 
 The **kubelet** is the **primary "node agent"** that runs on each **node**. It can register the node with the apiserver using one of:
 
@@ -1559,33 +1696,33 @@ The **kubelet** works in terms of a _PodSpec_. A _PodSpec_ is a YAML or JSON obj
 
 Each worker node has 1 **kubelet** service on it, which communicates with an API server service on the master node.
 
-### - Concept 10: kube-Proxy
+### - Concept 8: kube-Proxy
 
 A **kube-proxy** service is found on each of the worker nodes, and is responsible for network communication within the node, and between nodes.
 
-### - Concept 11: Scheduler
+### - Concept 9: Scheduler
 
 There are services that are present ONLY on the master node.  
 One of them is the **scheduler**.  
 The **scheduler** is responsible for planning and distributing of the workload inside the cluster.
 
-### - Concept 12: Kube Controller Manager
+### - Concept 10: Kube Controller Manager
 
 Kube Controller Manager is a single point which controls everything inside the kubernetes cluster, and it controls what happens on each of the nodes in the cluster.
 
-### - Concept 13: Cloud Controller Manager
+### - Concept 11: Cloud Controller Manager
 
 Its job is to **interact with your cloud service provider**, where you actually run your kubernetes cluster. Because usually you don't create these clusters to run on your own servers, instead you usually choose to run them on one of the cloud providers.  
 which actually performs almost automated creation of all nodes, and the connection between such nodes. And for that, you have to run Cloud Controller Manager service on the master node. Also for example if you want to create deployment of your application inside of the kubernetes cluster, which will be opened to the outside world, and allow connection from outside, you could create a load-balancer IP addresses, and those load-balancer IP addresses are usually provided by those specific cloud providers.
 
-### - Concept 14: etcd
+### - Concept 12: etcd
 
 Also on master node, there's such a thing called etcd.
 Etcd is a service which actually stores all logs related to the operation of the entire kubernetes cluster, and such logs are stored inside of it as key-value pairs.
 
 ---
 
-## **6. Download & Install Minikube and Kubectl**
+## **7. Download & Install Minikube and Kubectl**
 
 ### • A. Installing Minikube
 
@@ -1645,7 +1782,7 @@ In this guide we'll be creating 2 yaml configuration files for 1 single deployme
 
 ---
 
-## **7. Configuration Templates**
+## **8. Configuration Templates**
 
 ### **• Imperative Vs. Declarative**
 
@@ -1843,7 +1980,7 @@ service "<name-of-service>" deleted
 
 ---
 
-## **8. Minikube Playground - Getting Started**
+## **9. Minikube Playground - Getting Started**
 
 ### • Step 1: Create a minikube cluster
 
