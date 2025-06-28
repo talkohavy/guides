@@ -1208,139 +1208,222 @@ Inside the pod, there could be one or more containers, although the most common 
 
 ### - Resource 2: Deployment
 
-#### -- A. Core Concept
+#### - A. What is a Deployment?
 
-1. **Purpose**: A Deployment is a higher-level abstraction that builds on top of _ReplicaSets_. It adds declarative updates to applications, allowing you to describe the desired state for your application and automatically handles the deployment process.
+A Deployment is a higher-level Kubernetes resource that manages the **lifecycle of Pods** via **ReplicaSets**. It allows you to declaratively define the desired state of your application (e.g., how many replicas, what image, which config) and lets Kubernetes automatically handle creating, updating, and healing Pods to match that state.
 
-2. **Rolling Updates and Rollbacks**: Deployments support _rolling updates_, allowing you to update your application with minimal downtime by gradually replacing old Pods with new ones. If something goes wrong, Deployments support easy _rollbacks_ to a previous version.
+#### - B. Why Do We Need It?
 
-3. **Declarative Configuration**: Deployments use a declarative configuration to define the desired state of the application, making it easier to manage and update. You define the desired state, and the Deployment controller takes care of making it happen.
+- **Declarative Management**: Define what your app should look like, and Kubernetes makes it happen.
+- **Rolling Updates**: Deploy new versions with zero downtime by gradually replacing old Pods.
+- **Rollbacks**: Easily revert to previous versions if something goes wrong.
+- **Scalability**: Seamlessly scale your app up or down by adjusting the replicas count.
 
-#### -- B. Selectors
+#### - C. What a Deployment Does Internally
 
-**Selectors** are used in order to connect **pods** to a **deployment**. In kubernetes, pods & deployments are actually separate objects, so we need some kind of system to know how to **assign a pod to a deployment**. If you were to use the manual way to create a new deployment (which creates both a deployment and a new pod), you should see the same selector on the pod, as well as on the deployment.
+A Deployment uses a **Pod template** to define what Pods should look like — including container images, ports, environment variables, and more.
+It **automatically creates a ReplicaSet**, which in turn ensures that the specified number of identical Pods are running.
 
-#### -- C. ReplicaSet
+If the Pod template changes (e.g., new image version), the Deployment creates a **new ReplicaSet**, and gradually shifts traffic from the old Pods to the new ones — this is the **rolling update strategy**, which is the default.
 
-_**Deployments use ReplicaSets under the hood!!!**_
+#### - D. Anatomy of a Deployment
 
-Behind the scenes, a **deployment** manages a **ReplicaSet**. When you create a Deployment, it creates and manages the associated ReplicaSets to ensure the desired number of replicas are running. A **ReplicaSet**'s purpose is to maintain a stable set of replica Pods running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
+Minimal YAML Example:
 
-Here are the key components and concepts associated with a **ReplicaSet**:
-
-1. **Purpose**: The primary purpose of a ReplicaSet is to maintain a specified number of replica Pods running at all times. It doesn't provide higher-level deployment features such as rolling updates or rollbacks.
-
-2. **Updates**: If you need to update the application running in your Pods (e.g., updating the container image), you typically need to manually delete the existing ReplicaSet and create a new one with the updated configuration. This approach can result in downtime during the transition.
-
-3. **Desired State**: A ReplicaSet specifies the desired number of replicas (identical copies) of a Pod that should be running. This is defined using the **replicas** field in the ReplicaSet configuration.
-
-4. **Pod Template**: The ReplicaSet uses a template to create new Pods. The template specifies the characteristics of the Pod, such as the container image, volumes, and other settings. When the ReplicaSet creates new Pods, it uses this template.
-
-5. **Selector**: The ReplicaSet uses a label selector to identify the Pods it is managing. The selector is defined in the ReplicaSet configuration and matches the labels assigned to the Pods.
-
-6. **Scaling**: The primary purpose of a ReplicaSet is to maintain the desired number of replicas. If the actual number of Pods deviates from the desired state (either too many or too few), the ReplicaSet controller takes corrective actions to scale the number of Pods up or down.
-
-**Use Cases**:
-
-- **ReplicaSet**: Use a ReplicaSet when you need a basic way to ensure a certain number of identical Pods are always running. If you don't need advanced deployment features like rolling updates and rollbacks, a ReplicaSet may be sufficient.
-
-- **Deployment**: Use a Deployment when you want to manage the deployment and scaling of applications more declaratively. Deployments are particularly useful when you need to update your application without downtime, handle rollbacks, or manage multiple environments (e.g., development, staging, production) with different configurations.
-
-**Recommendations**:
-
-For most use cases, it is recommended to use Deployments over ReplicaSets. Deployments provide more features, including rolling updates and rollbacks, making application updates smoother and less error-prone. Deployments are considered a higher-level abstraction that abstracts away some of the complexities associated with managing replica sets directly.  
-In summary, while ReplicaSets are a fundamental building block for managing replicated Pods, Deployments offer a higher-level abstraction with additional features that simplify the management of application updates and scaling. Deployments are generally preferred for managing applications in a production environment.
-
-**• How does a ReplicaSet work**
-
-A **ReplicaSet** is defined with fields, including a _selector_ that specifies how to identify Pods it can acquire, a number of replicas indicating how many Pods it should be maintaining, and a pod template specifying the data of new Pods it should create to meet the number of replicas criteria. A ReplicaSet then fulfills its purpose by creating and deleting Pods as needed to reach the desired number. When a ReplicaSet needs to create new Pods, it uses its Pod template.
-A ReplicaSet is linked to its Pods via the Pods' metadata.ownerReferences field, which specifies what resource the current object is owned by. All Pods acquired by a ReplicaSet have their owning ReplicaSet's identifying information within their ownerReferences field. It's through this link that the ReplicaSet knows of the state of the Pods it is maintaining and plans accordingly.
-A ReplicaSet identifies new Pods to acquire by using its selector. If there is a Pod that has no OwnerReference or the OwnerReference is not a Controller and it matches a ReplicaSet's selector, it will be immediately acquired by said ReplicaSet.
-
-#### -- D. Deployment Replicas
-
-**Replicas** represents the state of a deployment.
-
-When you run the command:
-
-```bash
-kubectl describe deployment
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp
+          image: myapp:1.0.0
+          ports:
+            - containerPort: 8080
 ```
 
-One of the fields shown on screen is **Replicas**.  
-The output of it would look something like:
+- `replicas`: Number of desired Pods.
+- `selector`.matchLabels: Matches Pods to the Deployment (must match labels in the template).
+- `template`: The Pod "recipe" — what gets created.
+- `strategy`: By default, uses **RollingUpdate**.
+
+To apply this Deployment:
 
 ```bash
-Replicas:       3 desired | 1 updated | 4 total | 3 available | 1 unavailable
+kubectl apply -f deployment.yaml
 ```
 
-Here we see 5 groups: `desired`, `updated`, `total`, `available`, `unavailable`.  
-The combination of these groups define the current state of a deployment at a given time.
+#### - E. Rolling Updates & Rollbacks
 
-- `desired`  
-  This one is the easiest one to explain. It's the number of pods you wanted the deployment to have in the first place. A deployment will aim to be in that number. Best case scenario, the number under `desired` would match the number under `available`.
-- `available`
-  The number of pods currently available to serve. Can be lower or higher than the number of desired pods.
-- `unavailable`
-  Things can go bad, and a pod can go down. That's the `unavailable` group.
-- `total`
-  ...
-- `updated`
-  ...
-
-#### -- E. Deployment's StrategyType
-
-When you run the command:
+Update image:
 
 ```bash
-kubectl describe deployment
+kubectl set image deployment/myapp myapp=myapp:2.0.0
 ```
 
-One of the fields shown on screen is **StrategyType**.
-
-This field tells how to perform updated of deployments, basically for when you're updating an image's version. The default value is **RollingUpdate**.
-
-What does **RollingUpdate** mean?  
-When you release a new version of your application, of course you want to roll out this new version in production smoothly, without breaking any of the services. Kubernetes allows that right out of the box, and it's very easy to utilize. This **RollingUpdate** type means that new pods will be created with the newer image, while the old pods would still be running. So essentially old pods would get replaced one by one, and finally after some time, there would only be new pods, running the new image.
-
-• When does this happen and how?
-
-You just modified your application. You made changes and you save them. You will now use docker to build an image from your updated version of your application, and to that image you'd probably provide a new tag, like 1.0.1. After building the image, you'd probably publish it to some docker-hub-like center. Now, here comes kubernetes part. Inside the cluster, you probably have some deployment running N pods, right? All those pods are running the previous version of that image, but hey here comes a new one! So step 1 is to go to that deployment's yaml, update the image's version for that deployment to the new version. We do that by using the command:
+Watch rollout progress:
 
 ```bash
-kubectl set image DEPLOYMENT_NAME DEPLOYMENT_NAME=talkohavy/img-name:2.0.0
+kubectl rollout status deployment/myapp
 ```
 
-After entering this command, the image would be changed, and a roll out update would kick off! Right after that you'd see a console log saying:
-
-`deployment.apps/DEPLOYMENT_NAME image updated`
-
-Be read to quickly run this following command immediately afterwards:
+Roll back to previous version:
 
 ```bash
-kubectl rollout status deploy DEPLOYMENT_NAME
+kubectl rollout undo deployment/myapp
 ```
 
-This would show you live ongoing feedback on the status of the rollout update.
-The output would be something similar to:
+Kubernetes ensures that updates are **safe and gradual** — new Pods start running before old ones are terminated.
+
+#### - F. Behind the Scenes: ReplicaSets
+
+Deployments **create and manage ReplicaSets**, which are responsible for keeping a set number of Pods running.
+
+- A **ReplicaSet** watches for Pods that match its selector and creates or deletes Pods as needed to maintain the `replicas` count.
+- Each Deployment manages **its own ReplicaSet** — when the template changes, a new ReplicaSet is created and gradually scaled up while the old one is scaled down.
+- Pods link back to their managing ReplicaSet using `metadata.ownerReferences`.
+
+This architecture makes **rolling updates and rollbacks** possible — switching between different ReplicaSets with different Pod templates.
+
+#### - G. How to Scale
+
+Modify the **replicas** field and reapply:
+
+```yaml
+spec:
+  replicas: 5
+```
+
+Or use the CLI:
 
 ```bash
-Waiting for deployment DEPLOYMENT_NAME rollout to finish: 3 out of 4 replicas have been updated
-Waiting for deployment DEPLOYMENT_NAME rollout to finish: 3 out of 4 replicas have been updated
-Waiting for deployment DEPLOYMENT_NAME rollout to finish: 3 out of 4 replicas have been updated
-Waiting for deployment DEPLOYMENT_NAME rollout to finish: 1 old replicas are pending termination
-...
-deployment DEPLOYMENT_NAME successfully rolled out
+kubectl scale deployment myapp --replicas=5
 ```
 
-Now let's see all pods by running the command:
+Kubernetes ensures that the actual number of Pods running matches the desired count.
+
+#### - H. Monitoring Deployment State
+
+Run:
 
 ```bash
-kubectl get pods
+kubectl describe deployment myapp
 ```
 
-and notice the age of those pods. All of them should say **RUNNING**, and all have been created only a few seconds ago. Also, of course, all the hashes are new hashes.
-That's it! We are now running a new version of our application!
+You'll see fields like:
+
+- **Replicas**: Current status — desired, updated, available, unavailable.
+- **StrategyType**: Usually RollingUpdate.
+
+Example:
+
+```
+Replicas: 3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+```
+
+#### - I. Deployment Strategies
+
+The `Deployment` resource supports two update strategies via the strategy.type field:
+
+##### -- 1. RollingUpdate (default)
+
+- **What it does**: Gradually replaces old Pods with new ones.
+- **Benefit**: Ensures zero downtime if configured properly.
+- **How it works**:
+
+  - Creates new Pods using the updated template.
+  - Slowly terminates old Pods while ensuring availability.
+  - Controlled by:
+    ```yaml
+    strategy:
+      type: RollingUpdate # default
+        rollingUpdate:
+          maxUnavailable: 25% # default
+          maxSurge: 25% # default
+    ```
+    - `maxSurge`: How many extra Pods can be created temporarily during the update (**round up**). For example, if you set `maxSurge: 25%`, it means that up to 25% more Pods than the desired number can be created temporarily during the update. With 4 replicas, up to 1 extra pod can be created during rollout.
+    - `maxUnavailable`: How many Pods can be unavailable during the update (**round down**). For example, if you set `maxUnavailable: 25%`, it means that up to 25% of the desired Pods can be unavailable during the update. For example, if you have 4 replicas, 1 pod can be unavailable during the update.
+
+✅ Example 1: replicas: 4
+
+- maxSurge: 25% → 1 extra pod
+- maxUnavailable: 25% → 1 pod can be offline
+
+Initial state:
+
+- 4 running Pods (v1)
+
+Step-by-step update:
+
+1. Kubernetes creates 1 new Pod (v2) — allowed by maxSurge.
+   - Now: 4 old Pods (v1) + 1 new Pod (v2) = 5 Pods total.
+2. Once the new Pod (v2) is ready, Kubernetes terminates 1 old Pod (v1) — allowed by maxUnavailable.
+   - Now: 3 old (v1) + 1 new (v2)
+3. Repeat:
+   - Create 1 new Pod (v2) → total 5 Pods.
+   - Terminate 1 old Pod (v1)
+4. After 4 cycles, you end up with 4 Pods, all running the new version.
+
+**Summary:**
+
+- Update proceeds 1 pod at a time.
+- Total pods never exceed 5 (replicas + maxSurge).
+- No more than 1 pod is down (maxUnavailable) at a time.
+
+✅ Example 2: replicas: 2
+
+- maxSurge: 25% → 0.5 → rounds up → 1 extra pod
+- maxUnavailable: 25% → 0.5 → rounds down → 0 pods can be unavailable
+
+Initial state:
+
+- 2 running Pods (v1)
+
+**Step-by-step update:**
+
+1. Kubernetes creates **1 new Pod (v2)** — allowed by maxSurge.
+   - Now: 2 old Pods (v1) + 1 new Pod (v2) = 3 Pods total.
+2. It **waits** for the new Pod to become **Ready**.
+3. Once it's Ready, Kubernetes can now terminate an old Pod — but must ensure **0 downtime**, so **it keeps 2 Pods running at all times**.
+4. It deletes 1 old Pod and repeats.
+
+**Summary:**
+
+- Even stricter update: **no downtime allowed at all**.
+- Only 1 Pod is updated at a time.
+- Total Pods temporarily reach 3 (due to maxSurge).
+
+**🔍 Key Takeaways**
+
+| Replicas | maxSurge (25%) | maxUnavailable (25%) | Max Total Pods | Min Available During Update |
+| -------- | -------------- | -------------------- | -------------- | --------------------------- |
+| 4        | 1              | 1                    | 5              | 3                           |
+| 2        | 1              | 0                    | 3              | 2                           |
+
+##### -- 2. Recreate
+
+- **What it does**: Terminates **all existing Pods** before creating new ones.
+- **Benefit**: Guarantees that new and old versions **never run simultaneously**.
+- **Drawback**: Causes downtime during the transition.
+- **Use case**: Useful when your app **can't handle two versions running at once** (e.g., breaking DB schema changes, shared volume locks).
+
+#### - J. Best Practices
+
+- **Use labels consistently** for `selector.matchLabels` and `template.metadata.labels` — they must match.
+- **Avoid using `latest` tags** for images to prevent unpredictable rollouts.
+- **Pair with ConfigMaps and Secrets** for environment configuration.
+- **Use resource limits** (CPU/memory) to avoid noisy neighbors and enable autoscaling.
+- **Monitor rollout status** after each update to catch issues early.
 
 <br/>
 
@@ -1934,99 +2017,6 @@ Let's do an example right now.
 
 ### • B. Deployment Configuration
 
-`Deployments` use a `Pod` template, which contains a specification for its Pods. The Pod specification determines how each Pod should look like: what applications should run inside its containers, which volumes the Pods should mount, its labels, and more. When a Deployment's Pod template is changed, new Pods are automatically created one at a time.
-
-**• How to Create a Deployment Using the Declarative Way**
-Let's create a deployment using the declarative approach.  
-Create a new file and name it as deployment.yaml.  
-At the top of it, start typing the word "deploy".  
-Then, the kubernetes extension would kick, and you should see an auto-completion suggestion that would fill in quite a bit of boiler-plate for you.  
-It's a template for creating a deployment.
-
-It would look something like:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myapp
-  namespace: default
-  labels:
-    app: configuration-server
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: myapp
-  template:
-    metadata:
-      labels:
-        app: myapp
-    spec:
-      containers:
-      - name: myapp
-        image: <image>
-        ports:
-        - containerPort: <Port>
-        envFrom:
-        - configMapRef:
-            name: myconfigmapv1.0
-        resources:
-          requests:
-            memory: "16Mi"
-            cpu: "50m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-```
-
-When using this shortcut, all places with the myapp value would be highlighted, and you could type in the name of your deployment.
-
-**-- Attributes:**
-
-- 1. matchLables
-     spec -> selector -> matchLabels
-     inside this matchLabels key we specify which pod would be managed by this deployment.
-
-- 2. template
-     Right below matchLabels we have a nested template.
-     This template describes a recipe for how to create a single pod.
-     Right under `template` there should appear a key `kind: Pod`, but because this template is under Deployment configuration, this key could be omitted.
-     We can see that within the pod's template there's a label that matches the deployment's label. It's the same label that appears under the selector key above. They MUST match!
-     Just as there's a key in the root called spec, the template key itself also has contains a key named as spec. Inside this inner spec key of the template, we specify which containers we want to create in this pod. That's why it has a containers key. We see that there is just a single container under spec. Inside the containers key, we see a name key - that's already been filled, an image - which needs to be filled, and a ports key - which we need to modify and specify which ports we'd like to open. As you can see, the ports key is a list, meaning you could expose more than 1 port if you desire. Also there's a resources key aligned alongside them, a key which has been filled automatically. Under resources we see a limits key which specifies memory and cpu limits. The values were filled automatically to the default values.
-
-     Kubernetes has a great documentation on how to create all sorts of resources, like deployments, replicaSets, StatefulSets, pods, and many more.
-     Here's the link, you should check it out:
-     https://kubernetes.io/docs/reference/kubernetes-api/
-
-Let's now apply this configuration file. Open up a terminal in the same folder as the yaml config file, and run the command:
-
-```bash
-kubectl apply -f deployment.yaml
-```
-
-The response should look like:
-
-```bash
-deployment.apps/<name-of-deployment> created
-```
-
-And that's it! Simple as that.  
-To check that you now actually have a deployment up and running, run:
-
-```bash
-kubectl get deployments
-```
-
-```bash
-kubectl get pods
-```
-
-And now begs the question: how can we scale this deployment?  
-The answer is: Very easily! By simply modifying our config file.
-
-Under the `spec` key, located in the root of the yaml file, add another key called `replicas`. Give it a numeric value, like 3 or 5. Notice that when we're _not_ specifying a `replicas` key, kubernetes assumes that its value defaults to 1. After making the desired changes in the yaml file, you simply need to run the `kubectl apply` command once again, and that's it, your changes would override any previous ones.
-
 ### • C. Service Configuration
 
 **• How to Create a Service Using the Declarative Way**
@@ -2080,7 +2070,7 @@ Then, simply go to your web browser, and type:
 <minikube's-ip>:<the-auto-generated-port>
 ```
 
-And you should see a response coming back from one you’re the pods inside the exposed deployment! Pretty cool, huh?
+And you should see a response coming back from one you're the pods inside the exposed deployment! Pretty cool, huh?
 You could also use the built-in minikube's command:
 
 ```bash
