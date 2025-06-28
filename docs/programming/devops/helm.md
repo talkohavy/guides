@@ -712,7 +712,7 @@ Create chart name and version as used by the chart label.
 
 ---
 
-## 11. Templating Syntax & tricks
+## **11. Templating Syntax & tricks**
 
 ### - A. if statement
 
@@ -731,4 +731,14 @@ You can pass all parameters to it like so: `.`
 {{ include SOME.FUNC.NAME}}
 ```
 
-<br/>
+---
+
+## **12. helm package**
+
+To package a chart, go to the command line, and type:
+
+```bash
+helm package path/to/chart-root
+```
+
+The output of this command is a file named: `CHART_NAME-0.1.0.tgz`.
