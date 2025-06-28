@@ -160,6 +160,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/devops/kubernetes/kubernetes-api-server',
+                  label: '- K8S API Server',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/devops/kubernetes/architecture-and-concepts',
                   label: '- Architecture and Concepts',
                 },
