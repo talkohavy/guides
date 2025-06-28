@@ -2,16 +2,16 @@
 
 Let's start with some terminology and talk about the architecture of kubernetes:
 
-## - Resource 1: A Pod
+## Resource 1: A Pod
 
 A **Pod** is the smallest unit that exists within the _kubernetes_ world.  
 Note that **container** is the smallest unit that exists within the _docker_ world. In kubernetes however, it is the **pod**.  
 Containers are created INSIDE a pod!  
 Inside the pod, there could be one or more containers, although the most common scenario is to have **a single container running inside a pod**. One pod, one container.
 
-<br/>
+---
 
-## - Resource 2: Deployment
+## Resource 2: Deployment
 
 ### - A. What is a Deployment?
 
@@ -230,9 +230,9 @@ Initial state:
 - **Use resource limits** (CPU/memory) to avoid noisy neighbors and enable autoscaling.
 - **Monitor rollout status** after each update to catch issues early.
 
-<br/>
+---
 
-## - Resource 3: Service
+## Resource 3: Service
 
 ### -- A. What is a Service?
 
@@ -400,9 +400,9 @@ spec:
 
 When looking up the host `my-service.prod.svc.cluster.local`, the cluster DNS Service returns a `CNAME` record with the value `my.database.example.com`. Accessing `my-service` works in the same way as other Services but with the crucial difference that redirection happens at the DNS level rather than via proxying or forwarding. Should you later decide to move your database into your cluster, you can start its Pods, add appropriate selectors or endpoints, and change the Service's `type`.
 
-<br/>
+---
 
-## - Resource 4: Secret
+## Resource 4: Secret
 
 ### - A. What is a ConfigMap
 
@@ -455,9 +455,9 @@ volumes:
 - If the ConfigMap is deleted or changed, pods may need a restart (unless files are mounted and watched).
 - You can combine ConfigMaps with `Downward API` to inject runtime metadata.
 
-<br/>
+---
 
-## - Resource 5: Secret
+## Resource 5: Secret
 
 ### - A. What is a Secret
 
@@ -528,9 +528,9 @@ volumes:
 - Use Kubernetes RBAC to restrict access to secrets.
 - Rotate secrets regularly and automate updates with tools like Vault or SealedSecrets.
 
-<br/>
+---
 
-## - Resource 6: ServiceAccount
+## Resource 6: ServiceAccount
 
 ### - A. What is a ServiceAccount
 
@@ -602,9 +602,9 @@ roleRef:
 - Avoid using the `default` ServiceAccount for production workloads.
 - **Rotate tokens** if compromised (via ServiceAccount recreation or automation).
 
-<br/>
+---
 
-## - Resource 999: Ingress
+## Resource 999: Ingress
 
 ### - A. What is an Ingress
 
@@ -668,5 +668,3 @@ spec:
 - Use **TLS** for secure traffic.
 - Keep Ingress rules in sync with DNS entries.
 - Monitor and secure your Ingress Controller — it's a major attack surface.
-
----
