@@ -128,9 +128,47 @@ const sidebars: SidebarsConfig = {
               label: '- Docker',
             },
             {
-              type: 'doc',
-              id: 'programming/devops/kubernetes',
+              type: 'category',
               label: '- Kubernetes',
+              link: {
+                type: 'generated-index',
+                title: 'Kubernetes Guides',
+                description: 'All about Kubernetes',
+                slug: '/kubernetes',
+                keywords: ['kubernetes'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kubernetes/overview',
+                  label: '- Overview',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kubernetes/most-useful-commands',
+                  label: '- Most Useful Commands',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kubernetes/kubectl-commands',
+                  label: '- All Kubectl Commands',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kubernetes/resources',
+                  label: '- K8S Resources',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kubernetes/architecture-and-concepts',
+                  label: '- Architecture and Concepts',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kubernetes/minikube',
+                  label: '- Minikube',
+                },
+              ],
             },
             {
               type: 'doc',
