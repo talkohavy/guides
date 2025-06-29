@@ -156,12 +156,12 @@ const sidebars: SidebarsConfig = {
                 {
                   type: 'doc',
                   id: 'programming/devops/kubernetes/resources',
-                  label: '- K8S Resources',
+                  label: '- Resources',
                 },
                 {
                   type: 'doc',
                   id: 'programming/devops/kubernetes/kubernetes-api-server',
-                  label: '- K8S API Server',
+                  label: '- kube-apiserver',
                 },
                 {
                   type: 'doc',

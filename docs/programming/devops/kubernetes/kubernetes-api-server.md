@@ -1,4 +1,4 @@
-# K8S API Server
+# Kube-ApiServer
 
 ## 📌 What Is the Kubernetes API Server?
 
