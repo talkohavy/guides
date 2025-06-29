@@ -1,6 +1,6 @@
 # FFMPEG
 
-## 1. Compress Video to H.265
+## 1. How to compress a video to H.265
 
 Extract a thumbnail:
 
@@ -117,7 +117,7 @@ Options are: `matroska` | `mp4`
 
 ---
 
-## 2. Compress Video to Webm
+## 2. How to compress a video to Webm
 
 ```bash
 ffmpeg -i aaa.mp4 aaa-muxed.webm
@@ -131,7 +131,7 @@ ffmpeg -i aaa.mp4 -c:v vp9 -c:a libvorbis aaa-muxed.webm
 
 ---
 
-## 3. Trim A Video
+## 3. How to trim a video
 
 ### - A. When you know the start point & end point
 
@@ -179,7 +179,7 @@ Note that this time '-ss' value was the frame number, however '-t' value still r
 
 ---
 
-## 4. Extract just the Audio
+## 4. How to extract audio from video
 
 Sometimes you don't really care about the video, you just want the audio. Luckily this is very straightforward in FFmpeg with the `-vn` flag:
 
@@ -189,7 +189,7 @@ ffmpeg -i input.mkv -vn audio_only.ogg
 
 This command extracts only the audio from the input, encodes it as Vorbis, and saves it into audio_only.ogg. Now you have an isolated audio stream. You can also use the -an and -sn flags in the same manner to strip out audio and subtitle streams.
 
-## 5. Extract just the Video
+## 5. How to extract just the video
 
 Run the following command:
 
@@ -214,7 +214,15 @@ If you want to re-encode the video (for compatibility or size reasons), you can 
 ffmpeg -i input.mp4 -an -c:v libx264 output_video_only.mp4
 ```
 
-## 6. Shrink Audio
+## 6. How to attach subtitles (soft) to video
+
+Run:
+
+```bash
+ffmpeg -i input.mp4 -i subtitles.srt -c copy -c:s mov_text output.mp4
+```
+
+## 7. How to shrink an audio file
 
 When you have an audio file which is too large you can run:
 
@@ -227,7 +235,7 @@ You can adjust the bit rate (128k) to a lower value to further reduce the size, 
 
 ---
 
-## 6. Generate a dummy video
+## 8. How to generate a dummy video
 
 ```bash
 ffmpeg -f lavfi -i color=c=blue:s=1280x720:d=60 -c:v libx264 -t 60 -pix_fmt yuv420p output.mp4
