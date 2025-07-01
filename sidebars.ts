@@ -123,9 +123,42 @@ const sidebars: SidebarsConfig = {
           },
           items: [
             {
-              type: 'doc',
-              id: 'programming/devops/docker',
+              type: 'category',
               label: '- Docker',
+              link: {
+                type: 'generated-index',
+                title: 'Docker Guides',
+                description: 'All about Docker',
+                slug: '/docker',
+                keywords: ['docker'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/devops/docker/most-useful-commands',
+                  label: '- Most Useful Commands',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/docker/docker-commands',
+                  label: '- All Docker Commands',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/docker/how-to-create-a-dockerfile',
+                  label: '- How to Create a Dockerfile',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/docker/docker-compose-commands',
+                  label: '- Docker Compose Commands',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/docker/how-to-create-a-docker-compose-file',
+                  label: '- How to Create a Docker-Compose File',
+                },
+              ],
             },
             {
               type: 'category',
