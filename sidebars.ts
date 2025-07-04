@@ -145,13 +145,13 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
-                  id: 'programming/devops/docker/docker-build',
-                  label: '- Docker Build',
+                  id: 'programming/devops/docker/how-to-create-a-dockerfile',
+                  label: '- How to Create a Dockerfile',
                 },
                 {
                   type: 'doc',
-                  id: 'programming/devops/docker/how-to-create-a-dockerfile',
-                  label: '- How to Create a Dockerfile',
+                  id: 'programming/devops/docker/avoiding-architecture-mismatch',
+                  label: '- Avoiding Architecture Mismatch',
                 },
                 {
                   type: 'doc',
