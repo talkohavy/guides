@@ -602,3 +602,11 @@ docker run --rm -it ${TAG_NAME} sh
 
 bash, powershell, zsh, and sh are all **command processors**.  
 `sh` is the name of a program, and it is a program that's being executed inside of that container. `sh` is a command processor or a shell. It's something that allows us to type commands in and have them be executed inside that container. You are already making use of a program very much like `sh` on your own computer Traditionally, a LOT of different containers you're going to be working with are probably going to have the `sh` program already included. Some more complete versions of containers or images are going to also have the bash command processor as well. So in some cases you can make use of bash directly, and in the vast majority you're probably going to use the sh to start up a command prompt and start typing in commands.
+
+<br/>
+
+### • Command 14: Show context list
+
+```bash
+docker context ls
+```
