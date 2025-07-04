@@ -203,6 +203,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/devops/kubernetes/troubleshooting',
+                  label: '- Troubleshooting',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/devops/kubernetes/minikube',
                   label: '- Minikube',
                 },
