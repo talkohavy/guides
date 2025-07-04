@@ -145,6 +145,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/devops/docker/docker-build',
+                  label: '- Docker Build',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/devops/docker/how-to-create-a-dockerfile',
                   label: '- How to Create a Dockerfile',
                 },
