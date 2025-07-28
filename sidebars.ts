@@ -208,6 +208,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/devops/kubernetes/kubernetes-rbac',
+                  label: '- RBAC',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/devops/kubernetes/troubleshooting',
                   label: '- Troubleshooting',
                 },
