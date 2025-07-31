@@ -408,6 +408,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/socket-io/acknowledgements',
               label: '- Acknowledgements',
             },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/rooms',
+              label: '- Rooms',
+            },
           ],
         },
         {
