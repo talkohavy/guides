@@ -413,6 +413,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/socket-io/rooms',
               label: '- Rooms',
             },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/handle-disconnects',
+              label: '- Handle Disconnects',
+            },
           ],
         },
         {
