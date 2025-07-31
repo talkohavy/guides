@@ -398,6 +398,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/socket-io/reserved-event-names',
               label: '- Reserved Event Names',
             },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/broadcasting',
+              label: '- Broadcasting',
+            },
           ],
         },
         {
