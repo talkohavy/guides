@@ -403,6 +403,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/socket-io/broadcasting',
               label: '- Broadcasting',
             },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/acknowledgements',
+              label: '- Acknowledgements',
+            },
           ],
         },
         {
