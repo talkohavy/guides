@@ -395,8 +395,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/socket-io/socket-io',
-              label: '- Socket IO',
+              id: 'programming/socket-io/reserved-event-names',
+              label: '- Reserved Event Names',
             },
           ],
         },
