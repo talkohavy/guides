@@ -375,6 +375,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/socket-io/scaling-horizontally',
               label: '- Scaling Horizontally',
             },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/q-n-a',
+              label: '- Q & A',
+            },
           ],
         },
         {
