@@ -418,6 +418,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/socket-io/handle-disconnects',
               label: '- Handle Disconnects',
             },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/scaling-horizontally',
+              label: '- Scaling Horizontally',
+            },
           ],
         },
         {
