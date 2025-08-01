@@ -342,6 +342,11 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'programming/socket-io/socketio-vs-websockets',
+              label: '- SocketIO vs WebSockets',
+            },
+            {
+              type: 'doc',
               id: 'programming/socket-io/getting-started',
               label: '- Getting Started',
             },
