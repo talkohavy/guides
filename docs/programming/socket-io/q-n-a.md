@@ -15,3 +15,7 @@ Answer: ...
 ## Question 4: How can you send a message between servers? Can you send a message between servers?
 
 Answer: ...
+
+## Question 5: Is Socket.IO still needed today?
+
+That's a fair question, since WebSockets are supported almost everywhere now. That being said, we believe that, if you use plain WebSockets for your application, you will eventually need to implement most of the features that are already included (and battle-tested) in Socket.IO, like **reconnection**, **acknowledgements** or **broadcasting**.
