@@ -330,54 +330,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: '- Javascript',
-          link: {
-            type: 'generated-index',
-            title: 'JavaScript Guides',
-            description: 'Advanced concepts of JavaScript',
-            slug: '/js',
-            keywords: ['javascript'],
-          },
-          items: [
-            {
-              type: 'doc',
-              id: 'programming/javascript/call-apply-bind',
-              label: '- Call, Apply & Bind',
-            },
-            {
-              type: 'doc',
-              id: 'programming/javascript/iterator',
-              label: '- Iterator',
-            },
-            {
-              type: 'doc',
-              id: 'programming/javascript/getters-and-setters',
-              label: '- Getters & Setters',
-            },
-            {
-              type: 'doc',
-              id: 'programming/javascript/strict-mode',
-              label: '- Strict Mode',
-            },
-            {
-              type: 'doc',
-              id: 'programming/javascript/prototype',
-              label: '- Prototype',
-            },
-            {
-              type: 'doc',
-              id: 'programming/javascript/valueOf',
-              label: '- valueOf',
-            },
-            {
-              type: 'doc',
-              id: 'programming/javascript/finalization-registry',
-              label: '- FinalizationRegistry',
-            },
-          ],
-        },
-        {
-          type: 'category',
           label: '- Socket IO',
           link: {
             type: 'generated-index',
