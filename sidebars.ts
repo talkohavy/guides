@@ -352,6 +352,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/socket-io/under-the-hood-engine-io',
+              label: '- Under the Hood - Engine.IO',
+            },
+            {
+              type: 'doc',
               id: 'programming/socket-io/reserved-event-names',
               label: '- Reserved Event Names',
             },
