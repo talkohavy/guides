@@ -357,8 +357,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/socket-io/reserved-event-names',
-              label: '- Reserved Event Names',
+              id: 'programming/socket-io/under-the-hood-socket-io',
+              label: '- Under the Hood - Socket.IO',
             },
             {
               type: 'doc',
@@ -372,18 +372,23 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/socket-io/rooms',
-              label: '- Rooms',
-            },
-            {
-              type: 'doc',
               id: 'programming/socket-io/handle-disconnects',
               label: '- Handle Disconnects',
             },
             {
               type: 'doc',
+              id: 'programming/socket-io/rooms',
+              label: '- Rooms',
+            },
+            {
+              type: 'doc',
               id: 'programming/socket-io/scaling-horizontally',
               label: '- Scaling Horizontally',
+            },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/reserved-event-names',
+              label: '- Reserved Event Names',
             },
             {
               type: 'doc',
