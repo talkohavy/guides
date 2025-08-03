@@ -342,23 +342,8 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'programming/socket-io/socketio-vs-websockets',
-              label: '- SocketIO vs WebSockets',
-            },
-            {
-              type: 'doc',
               id: 'programming/socket-io/getting-started',
               label: '- Getting Started',
-            },
-            {
-              type: 'doc',
-              id: 'programming/socket-io/under-the-hood-engine-io',
-              label: '- Under the Hood - Engine.IO',
-            },
-            {
-              type: 'doc',
-              id: 'programming/socket-io/under-the-hood-socket-io',
-              label: '- Under the Hood - Socket.IO',
             },
             {
               type: 'doc',
@@ -384,6 +369,26 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'programming/socket-io/scaling-horizontally',
               label: '- Scaling Horizontally',
+            },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/socketio-vs-websockets',
+              label: '- SocketIO vs WebSockets',
+            },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/under-the-hood-engine-io',
+              label: '- Under the Hood - Engine.IO',
+            },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/under-the-hood-socket-io',
+              label: '- Under the Hood - Socket.IO',
+            },
+            {
+              type: 'doc',
+              id: 'programming/socket-io/delivery-guarantees',
+              label: '- Delivery Guarantees',
             },
             {
               type: 'doc',
