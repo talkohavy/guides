@@ -59,6 +59,13 @@ That being said, it is indeed a great feature since you don't have to synchroniz
 
 ## 3. Server delivery
 
+"Server delivery" is all _about what to do when the client reconnects_.  
+More specifically, **how to resume client state after a reconnection**. We use the term "Server delivery" as a context of "the server **delivers the state** to the client".
+
+The most common case is:
+
+> The server was about to send some update/messages to the client, but the client was temporarily disconnected, and is soon to be reconnected with the `socket.recovered` set to true.
+
 There are two common ways to synchronize the state of the client upon reconnection:
 
 - either the server sends the whole state
@@ -66,9 +73,9 @@ There are two common ways to synchronize the state of the client upon reconnecti
 
 Both are totally valid solutions and choosing one will depend on your use case. In this tutorial, we will go with the latter.
 
-First, let's persist the messages of our chat application. Today there are plenty of great options, we will use SQLite here.
+First, let's persist the messages of our chat application. We will store each message in a database.
 
-We will simply store each message in a database:
+In our implementation example, we will use SQLite:
 
 ```ts
 import express from 'express';
@@ -207,7 +214,7 @@ io.on('connection', async (socket) => {
 
 As you will notice, it works:
 
-- after a temporary disconnection
+- after a temporary disconnection (of the client)
 - and after a full page refresh
 
 OK, now let's talk about the client delivery.
