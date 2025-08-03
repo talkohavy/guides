@@ -68,10 +68,6 @@ Both are totally valid solutions and choosing one will depend on your use case. 
 
 First, let's persist the messages of our chat application. Today there are plenty of great options, we will use SQLite here.
 
-:::tip
-If you are not familiar with SQLite, there are plenty of tutorials available online, like this one.
-:::
-
 We will simply store each message in a database:
 
 ```ts
