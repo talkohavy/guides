@@ -362,6 +362,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/socket-io/connection-state-recovery',
+              label: '- Connection State Recovery',
+            },
+            {
+              type: 'doc',
               id: 'programming/socket-io/rooms',
               label: '- Rooms',
             },
