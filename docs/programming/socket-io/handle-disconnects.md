@@ -223,11 +223,9 @@ OK, now let's talk about the client delivery.
 
 ## 4. Client Delivery
 
-Let's see how we can make sure that the server always receives the messages sent by the clients.
+"Client delivery" is all about making sure the the server gets our messages sent from the client.
 
-:::info
-By default, Socket.IO provides an "at most once" guarantee of delivery (also known as "fire and forget"), which means that there will be no retry in case the message does not reach the server.
-:::
+Let's see how we can make sure that the server always receives those messages.
 
 ### A. Buffered events
 
@@ -237,17 +235,26 @@ When the sender gets disconnected, and is trying to send messages while offline,
 
 This behavior might be totally sufficient for your application. However, there are a few cases where a message could be lost:
 
-- the connection is severed while the event is being sent
-- the server crashes or get restarted while processing the event
-- the database is temporarily not available
+- Client: the connection is severed while the event is being sent (like a page refresh or tab close)
+- Server: the server crashes or get restarted while processing the event
+- Database: the database is temporarily not available
 
-### B. At least once
+### B. At most once
 
-We can implement an "at least once" guarantee:
+By default, Socket.IO provides an "at most once" guarantee of delivery (also known as "fire and forget"), which means that there will be no retry in case the message does not reach the server.
 
-manually with an acknowledgement:
+### C. At least once
 
-```ts
+We can implement an "at least once" guarantee. using 2 of Socket.IO features:
+
+- acknowledgements
+- ack timeout
+
+When opening a connection, one of the options is `ackTimeout`. By default, `ackTimeout` is not set, which means there's no timeout. You can override an ack timeout on a specific `emit()` by using `socket.timeout(5000).emit(...)`.
+
+Implementing `at least once` using manual acknowledgement & an override timeout:
+
+```ts title="frontend"
 function emit(socket, event, arg) {
   socket.timeout(5000).emit(event, arg, (err) => {
     if (err) {
@@ -260,9 +267,11 @@ function emit(socket, event, arg) {
 emit(socket, 'hello', 'world');
 ```
 
+Implementing `at least once` using automatic acknowledgement of `retries` & an `ackTimeout`:
+
 or with the `retries` option:
 
-```ts
+```ts title="frontend"
 const socket = io({
   ackTimeout: 10000,
   retries: 3
@@ -273,7 +282,7 @@ socket.emit('hello', 'world');
 
 In both cases, the client will retry to send the message until it gets an acknowledgement from the server:
 
-```ts
+```ts title="backend"
 io.on('connection', (socket) => {
   socket.on('hello', (value, callback) => {
     // once the event is successfully handled
@@ -286,9 +295,9 @@ io.on('connection', (socket) => {
 With the `retries` option, the order of the messages is guaranteed, as the messages are queued and sent one by one. This is not the case with the first option.
 :::
 
-### C. Exactly once
+### D. Exactly once
 
-The problem with retries is that the server might now receive the same message multiple times, so it needs a way to uniquely identify each message, and only store it once in the database.
+The problem with `retries` is that the server might now receive the same message multiple times, so it needs a way to uniquely identify each message, and only store it once in the database.
 
 Let's see how we can implement an "exactly once" guarantee in our chat application.
 
