@@ -45,9 +45,3 @@ ps
 ```bash
 echo '{ "a": true, "name": "tal kohavy", "age": 28, "hobbies": ["computers", "sports"], "agent": null }' | jq
 ```
-
-## - Tip Number 5: find
-
-```bash
-find . -name file.ext
-```

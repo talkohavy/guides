@@ -460,6 +460,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/terminal-god/vi',
               label: '- VI',
             },
+            {
+              type: 'doc',
+              id: 'programming/terminal-god/find',
+              label: '- Find',
+            },
           ],
         },
         {
