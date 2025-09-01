@@ -470,6 +470,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/terminal-god/find',
               label: '- Find',
             },
+            {
+              type: 'doc',
+              id: 'programming/terminal-god/scp',
+              label: '- Scp',
+            },
           ],
         },
         {
