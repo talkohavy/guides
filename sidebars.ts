@@ -475,6 +475,11 @@ const sidebars: SidebarsConfig = {
               id: 'programming/terminal-god/scp',
               label: '- Scp',
             },
+            {
+              type: 'doc',
+              id: 'programming/terminal-god/debug-a-running-node-server',
+              label: '- Debug Node server',
+            },
           ],
         },
         {
