@@ -137,6 +137,7 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: 'programming/devops/docker/most-useful-commands',
                   label: '- Most Useful Commands',
+                  key: 'docker-most-useful-commands',
                 },
                 {
                   type: 'doc',
@@ -185,6 +186,7 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: 'programming/devops/kubernetes/most-useful-commands',
                   label: '- Most Useful Commands',
+                  key: 'kubernetes-most-useful-commands',
                 },
                 {
                   type: 'doc',

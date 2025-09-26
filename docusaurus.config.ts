@@ -195,7 +195,11 @@ const config: Config = {
   baseUrl: '/guides/', // <--- Set the /<baseUrl>/ pathname under which your site is served. For GitHub pages deployment, it is often '/<projectName>/'
   url: 'https://talkohavy.github.io/', // <--- Set the production url of your site here
   onBrokenLinks: 'throw', // <--- This saved me once on a broken URL on the SOLID guide. You do NOT use the baseUrl as prefix to App URLs!
-  onBrokenMarkdownLinks: 'throw', // <--- was `warn`. I changed to `throw`.
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw', // <--- migrated from deprecated onBrokenMarkdownLinks
+    },
+  },
   trailingSlash: true, // <--- this config is under test! Now it's set to `true`, should examine a case of `false` as well.
 
   // -------------------------
