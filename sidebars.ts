@@ -531,11 +531,6 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/web/headers',
-              label: '- Headers',
-            },
-            {
-              type: 'doc',
               id: 'programming/web/history',
               label: '- History',
             },
@@ -569,6 +564,12 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: 'programming/web/http/mime-type',
                   label: '- MIME types',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/web/http/cache-control-headers',
+                  label: '- Cache Control Headers',
+                  key: 'cache-control-headers',
                 },
               ],
             },
