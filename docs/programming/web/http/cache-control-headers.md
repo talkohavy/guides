@@ -67,9 +67,11 @@ Cache-Control: max-age=3600  # Fresh for 1 hour
 
 **Key points:**
 
-- Time is calculated from when response was generated, not received
-- Negative values or non-integers are treated as `0`
 - Most important caching directive
+- If not set, defaults to browser's heuristics
+- Time is calculated from when response was generated, not received
+- Value is in seconds
+- Negative values or non-integers are treated as `0`
 
 #### `s-maxage=<seconds>`
 
