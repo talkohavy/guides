@@ -123,9 +123,52 @@ Cache-Control: public, max-age=3600
 
 ### Validation Control
 
+**⚠️ Important: Directive Conflicts and Interactions**
+
+Before diving into validation directives, it's crucial to understand how they interact with storage control directives. Mixing incompatible directives can lead to unexpected behavior or the most restrictive directive taking precedence.
+
+**Common Problematic Combinations:**
+
+```http
+# ❌ CONFLICTING: Can't validate what you can't store
+Cache-Control: no-store, must-revalidate
+
+# ❌ MEANINGLESS: Can't revalidate if you always validate
+Cache-Control: no-cache, must-revalidate
+
+# ❌ REDUNDANT: Private already prevents proxy caching
+Cache-Control: private, proxy-revalidate
+```
+
+**What Actually Happens:**
+
+1. **`no-store` with any validation directive** → `no-store` wins, response is never cached, validation directives are ignored
+2. **`no-cache` with `must-revalidate`** → Redundant, `no-cache` already forces validation
+3. **`private` with `proxy-revalidate`** → `proxy-revalidate` is ignored since proxies can't cache private responses
+4. **Conflicting max-age values** → Most restrictive (lowest) value is typically honored
+
+**Correct Combinations:**
+
+```http
+# ✅ GOOD: Cache privately, re-use when fresh, validate when stale
+Cache-Control: private, max-age=3600, must-revalidate
+
+# ✅ GOOD: re-use when fresh, re-use when stale, and validate when convenient
+Cache-Control: max-age=300, stale-while-revalidate=3600
+
+# ✅ GOOD: Public caching with proxy validation
+Cache-Control: public, max-age=300, s-maxage=3600, proxy-revalidate
+```
+
+**Best Practice:** Always think about the complete caching lifecycle when combining directives. Ask yourself: "Can this response be stored? How long is it fresh? What happens when it becomes stale?"
+
 #### `must-revalidate`
 
-When response becomes stale, it MUST be validated before reuse. Prevents serving stale content when disconnected.
+When response becomes stale, it MUST be validated before reuse. Prevents serving stale content when disconnected.  
+As mentioned above, **never** use if you already used one of: `no-cache` | `no-store`.  
+Why?  
+In case of `no-cache`, you're always validating already, even when fresh, so there's nothing to re-validate.
+And in case of `no-store`, it should be pretty obvious, that if you don't store anything, what is there to re-validate? Nothing.
 
 ```http
 Cache-Control: max-age=3600, must-revalidate
