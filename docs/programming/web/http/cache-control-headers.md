@@ -156,25 +156,15 @@ Cache-Control: private, proxy-revalidate
 
 #### `immutable`
 
-Adding this header to a response tells the browser: "Never validate this response while it's fresh". When is it useful? If your resources include cache busting in their name already, there's (near) zero chance that they'll produce the same cache busting id. This header prevents unnecessary revalidation on browser refresh.
+Adding this header to a response tells the browser: "Never validate this response while it's fresh".  
+**When is it useful?** If your resources include cache busting in their name already, there's (near) zero chance that they'll produce the cache busting id (hash, timestamp, or semver) for a different content. This header prevents unnecessary revalidation on browser refresh.  
+**When to avoid it?** Never use it on resources without cache busting, like `remoteEntry.js`, since you can't really guarantee that a deploy will happen (for example) once every two weeks and exactly once two weeks - never less. Your users might potentially miss out on important `hotfix`es.
 
-**When to use:** Only for resources where the URL guarantees the content will never change - typically achieved through cache busting in the filename:
-
-1. versioning
-2. hashing
-3. timestamps
-
-```http
-Cache-Control: max-age=31536000, immutable  # Perfect for static assets with versioning
-```
-
-**Examples of good candidates:**
+Examples of good candidates:
 
 - `app.v1.2.3.js` (semantic versioning)
 - `bundle.abc123def.js` (content hash)
 - `styles.20240928.css` (build timestamp)
-
-**⚠️ Never use on non-versioned resources** like `main.js`, `remoteEntry.js`, or `app.css` - these filenames might serve different content after deployments, and users would be stuck with outdated cached versions until the cache expires.
 
 #### `stale-while-revalidate=<seconds>`
 
