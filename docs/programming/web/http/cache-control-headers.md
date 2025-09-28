@@ -2,17 +2,7 @@
 
 The `Cache-Control` HTTP header is the primary mechanism for controlling caching behavior in browsers and intermediate caches (proxies, CDNs). It can be used in both requests and responses to specify exactly how caching should work.
 
-## Table of Contents
-
-- [Basic Syntax](#basic-syntax)
-- [Key Concepts](#key-concepts)
-- [Response Directives](#response-directives)
-- [Request Directives](#request-directives)
-- [Practical Examples](#practical-examples)
-- [Common Patterns](#common-patterns)
-- [Best Practices](#best-practices)
-
-## Basic Syntax
+## 1. Basic Syntax
 
 ```http
 Cache-Control: <directive>, <directive>, ...
@@ -31,31 +21,31 @@ Cache-Control: no-cache, must-revalidate
 Cache-Control: private, max-age=0
 ```
 
-## Key Concepts
+## 2. Key Concepts
 
-### Cache Types
+### A. Cache Types
 
 - **Private Cache**: Browser cache, stores content for a single user
 - **Shared Cache**: Proxy/CDN cache, stores content for multiple users
 - **Origin Server**: The original source of the content
 
-### Response States
+### B. Response States
 
 - **Fresh**: Response can be used without validation
 - **Stale**: Response is outdated and should be validated
 - **Age**: Time since response was generated on origin server
 
-### Cache Operations
+### C. Cache Operations
 
 - **Store**: Save response in cache
 - **Reuse**: Serve cached response without contacting origin
 - **Revalidate**: Check with origin if cached response is still valid
 
-## Response Directives
+## 3. Response Directives
 
 These directives are sent by the server to control how responses are cached.
 
-### Freshness Control
+### A. Freshness Control
 
 #### `max-age=<seconds>`
 
@@ -81,7 +71,7 @@ Like `max-age` but only for shared caches. Overrides `max-age` for proxies/CDNs.
 Cache-Control: max-age=300, s-maxage=3600  # 5 min for browsers, 1 hour for CDNs
 ```
 
-### Storage Control
+### B. Storage Control
 
 #### `no-store`
 
@@ -97,7 +87,8 @@ Cache-Control: no-store  # Never cache this response
 
 ⚠️ **Common misconception**: This does NOT mean "don't cache"!
 
-Actually means: "Cache it, but always validate with origin before reuse"
+Actually means: "Cache it, but always validate with origin before reuse"  
+Another phrase: "Never serve **fresh** response without first validating it with the server"
 
 ```http
 Cache-Control: no-cache  # Cache but always revalidate
@@ -121,13 +112,27 @@ Response can be cached by any cache, even when normally it wouldn't be (e.g., wi
 Cache-Control: public, max-age=3600
 ```
 
-### Validation Control
+### C. Validation Control
 
-**⚠️ Important: Directive Conflicts and Interactions**
+**⚠️ Common Misconception: When Do Browsers Actually Validate?**
 
-Before diving into validation directives, it's crucial to understand how they interact with storage control directives. Mixing incompatible directives can lead to unexpected behavior or the most restrictive directive taking precedence.
+Many developers believe that browsers never revalidate fresh responses unless explicitly told to with `no-cache`. This is not entirely accurate. **Browsers may choose to validate even fresh responses** in several scenarios:
 
-**Common Problematic Combinations:**
+- **User-initiated refresh** (F5) - Browser often validates regardless of freshness
+- **Force refresh** (Ctrl+F5/Cmd+Shift+R) - Always validates with `no-cache` or `max-age=0`
+- **Navigation from address bar** - Some browsers validate more aggressively
+- **Heuristic decisions** - Based on resource type, user patterns, or browser policies
+- **Memory pressure** - When cache is full, browsers may validate before serving
+
+The key difference is that validation directives like `must-revalidate` **only** control what happens to **stale** responses (they must be validated before reuse), while fresh responses can still be served directly from cache. However, browsers may still choose to validate fresh responses in certain user-initiated scenarios regardless of cache directives.
+
+#### `must-revalidate`
+
+When a response is considered stale, and only when a response is considered stale, adding the `must-revalidate` header tells the browser the response MUST be validated before reuse. Without `must-revalidate`, HTTP caches are allowed to serve stale responses in certain situations (like when disconnected from the origin server).
+**Never** use `must-revalidate` together with one of: `no-cache`, `no-store`.  
+Why?  
+In case of `no-cache`, you're always validating already, even when fresh, so there's nothing to re-validate.
+And in case of `no-store`, it should be pretty obvious, that if you don't store anything, what is there to re-validate? Nothing.
 
 ```http
 # ❌ CONFLICTING: Can't validate what you can't store
@@ -135,60 +140,41 @@ Cache-Control: no-store, must-revalidate
 
 # ❌ MEANINGLESS: Can't revalidate if you always validate
 Cache-Control: no-cache, must-revalidate
-
-# ❌ REDUNDANT: Private already prevents proxy caching
-Cache-Control: private, proxy-revalidate
-```
-
-**What Actually Happens:**
-
-1. **`no-store` with any validation directive** → `no-store` wins, response is never cached, validation directives are ignored
-2. **`no-cache` with `must-revalidate`** → Redundant, `no-cache` already forces validation
-3. **`private` with `proxy-revalidate`** → `proxy-revalidate` is ignored since proxies can't cache private responses
-4. **Conflicting max-age values** → Most restrictive (lowest) value is typically honored
-
-**Correct Combinations:**
-
-```http
-# ✅ GOOD: Cache privately, re-use when fresh, validate when stale
-Cache-Control: private, max-age=3600, must-revalidate
-
-# ✅ GOOD: re-use when fresh, re-use when stale, and validate when convenient
-Cache-Control: max-age=300, stale-while-revalidate=3600
-
-# ✅ GOOD: Public caching with proxy validation
-Cache-Control: public, max-age=300, s-maxage=3600, proxy-revalidate
-```
-
-**Best Practice:** Always think about the complete caching lifecycle when combining directives. Ask yourself: "Can this response be stored? How long is it fresh? What happens when it becomes stale?"
-
-#### `must-revalidate`
-
-When response becomes stale, it MUST be validated before reuse. Prevents serving stale content when disconnected.  
-As mentioned above, **never** use if you already used one of: `no-cache` | `no-store`.  
-Why?  
-In case of `no-cache`, you're always validating already, even when fresh, so there's nothing to re-validate.
-And in case of `no-store`, it should be pretty obvious, that if you don't store anything, what is there to re-validate? Nothing.
-
-```http
-Cache-Control: max-age=3600, must-revalidate
 ```
 
 #### `proxy-revalidate`
 
-Like `must-revalidate` but only applies to shared caches.
+Like `must-revalidate` but only applies to shared caches.  
+**Never** use it together with: `private`, since it's contradicting. You're telling shared caches "Don't store any responses, and revalidate the one you do".
 
-### Advanced Directives
+```http
+# ❌ REDUNDANT: Private already prevents proxy caching
+Cache-Control: private, proxy-revalidate
+```
+
+### D. Advanced Directives
 
 #### `immutable`
 
-Response will never change while fresh. Prevents unnecessary revalidation on browser refresh.
+Adding this header to a response tells the browser: "Never validate this response while it's fresh". When is it useful? If your resources include cache busting in their name already, there's (near) zero chance that they'll produce the same cache busting id. This header prevents unnecessary revalidation on browser refresh.
+
+**When to use:** Only for resources where the URL guarantees the content will never change - typically achieved through cache busting in the filename:
+
+1. versioning
+2. hashing
+3. timestamps
 
 ```http
 Cache-Control: max-age=31536000, immutable  # Perfect for static assets with versioning
 ```
 
-**Use for:** Versioned static assets (`app.v1.2.3.js`, `image.abc123.png`)
+**Examples of good candidates:**
+
+- `app.v1.2.3.js` (semantic versioning)
+- `bundle.abc123def.js` (content hash)
+- `styles.20240928.css` (build timestamp)
+
+**⚠️ Never use on non-versioned resources** like `main.js`, `remoteEntry.js`, or `app.css` - these filenames might serve different content after deployments, and users would be stuck with outdated cached versions until the cache expires.
 
 #### `stale-while-revalidate=<seconds>`
 
@@ -216,7 +202,7 @@ Prevents intermediaries from modifying the response content.
 Cache-Control: no-transform  # Don't compress, convert, or modify
 ```
 
-## Request Directives
+## 4. Request Directives
 
 These directives are sent by clients to control caching behavior for their requests.
 
@@ -262,7 +248,7 @@ Cache-Control: min-fresh=600  # Must be fresh for at least 10 more minutes
 
 Client only wants cached responses, return 504 if nothing cached.
 
-## Practical Examples
+## 5. Practical Examples
 
 ### Static Assets (CSS, JS, Images)
 
@@ -303,7 +289,7 @@ Cache-Control: no-cache
 Cache-Control: private, max-age=0, must-revalidate
 ```
 
-## Common Patterns
+## 6. Common Patterns
 
 ### Cache Busting Pattern
 
@@ -340,7 +326,7 @@ Cache-Control: max-age=300, stale-if-error=3600
 Cache-Control: max-age=300, s-maxage=3600
 ```
 
-## Best Practices
+## 7. Best Practices
 
 ### ✅ Do's
 
@@ -382,3 +368,35 @@ curl -I https://example.com/api/data
 ```
 
 Remember: Caching is about finding the right balance between performance and freshness for your specific use case!
+
+## 8. Use Cases
+
+**Correct Combinations:**
+
+```http
+# ✅ GOOD: Cache privately, re-use when fresh, validate when stale
+Cache-Control: private, max-age=3600, must-revalidate
+
+# ✅ GOOD: re-use when fresh, re-use when stale, and validate when convenient
+Cache-Control: max-age=300, stale-while-revalidate=3600
+
+# ✅ GOOD: Public caching with proxy validation
+Cache-Control: public, max-age=300, s-maxage=3600, proxy-revalidate
+```
+
+## 999. Directive Conflicts
+
+**⚠️ Important: Directive Conflicts and Interactions**
+
+Before diving into validation directives, it's crucial to understand how they interact with storage control directives. Mixing incompatible directives can lead to unexpected behavior or the most restrictive directive taking precedence.
+
+**Common Problematic Combinations:**
+
+**What Actually Happens:**
+
+1. **`no-store` with any validation directive** → `no-store` wins, response is never cached, validation directives are ignored
+2. **`no-cache` with `must-revalidate`** → Redundant, `no-cache` already forces validation
+3. **`private` with `proxy-revalidate`** → `proxy-revalidate` is ignored since proxies can't cache private responses
+4. **Conflicting max-age values** → Most restrictive (lowest) value is typically honored
+
+**Best Practice:** Always think about the complete caching lifecycle when combining directives. Ask yourself: "Can this response be stored? How long is it fresh? What happens when it becomes stale?"
