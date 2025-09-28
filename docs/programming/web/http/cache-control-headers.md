@@ -186,7 +186,7 @@ Cache-Control: max-age=3600, stale-if-error=86400
 
 #### `no-transform`
 
-Prevents intermediaries from modifying the response content.
+Prevents intermediaries from modifying (for example, compressing) the response content.
 
 ```http
 Cache-Control: no-transform  # Don't compress, convert, or modify
