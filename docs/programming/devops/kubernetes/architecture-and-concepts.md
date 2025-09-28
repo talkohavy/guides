@@ -17,7 +17,7 @@ Any resource in a Kubernetes cluster, like a **service** or **deployment**, can 
 
 ## - Concept 3: Node Communication
 
-In [Concept 5](#--concept-5-using-service-name-for-internal-communication), We talked about internal communication between **Services**, but what about **node** communication? How do those nodes actually communicate with each other? How are they managed?
+In [Concept 5](#--concept-2-using-service-name-for-internal-communication), We talked about internal communication between **Services**, but what about **node** communication? How do those nodes actually communicate with each other? How are they managed?
 
 In this case, you do not need to do anything. It is done for you automatically. How?
 
