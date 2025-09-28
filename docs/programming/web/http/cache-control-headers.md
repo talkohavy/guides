@@ -243,17 +243,19 @@ Client only wants cached responses, return 504 if nothing cached.
 ### Static Assets (CSS, JS, Images)
 
 ```http
-# For versioned static assets
+# For versioned static assets (i.e. banana.h2e5b1.js)
 Cache-Control: public, max-age=31536000, immutable
 
-# For non-versioned static assets
+# For non-versioned static assets (i.e. remoteEntry.js)
 Cache-Control: public, max-age=3600
+# Or...
+Cache-Control: no-store
 ```
 
 ### API Responses
 
 ```http
-# Public API data that changes infrequently
+# Public API data that rarely changes
 Cache-Control: public, max-age=300
 
 # Private user data
@@ -269,7 +271,7 @@ Cache-Control: no-store
 ### HTML Pages
 
 ```http
-# Static pages
+# Static pages (i.e. index.html)
 Cache-Control: public, max-age=3600
 
 # Dynamic pages with cache busting
@@ -277,36 +279,6 @@ Cache-Control: no-cache
 
 # Personalized pages
 Cache-Control: private, max-age=0, must-revalidate
-```
-
-## 6. Common Patterns
-
-### Cache Busting Pattern
-
-For static assets, use versioning in URLs:
-
-```html
-<!-- HTML (always revalidate) -->
-<script src="/app.v1.2.3.js"></script>
-<link rel="stylesheet" href="/styles.abc123.css">
-```
-
-```http
-# HTML response
-Cache-Control: no-cache
-
-# Static assets response
-Cache-Control: public, max-age=31536000, immutable
-```
-
-### Progressive Enhancement
-
-```http
-# Serve stale while updating
-Cache-Control: max-age=300, stale-while-revalidate=3600
-
-# Fallback to stale on errors
-Cache-Control: max-age=300, stale-if-error=3600
 ```
 
 ### CDN Optimization
@@ -331,8 +303,7 @@ Cache-Control: max-age=300, s-maxage=3600
 1. **Don't use `no-cache` when you mean `no-store`**
 2. **Don't cache personalized content in shared caches**
 3. **Don't use long TTLs without versioning**
-4. **Don't ignore mobile users** - Consider data usage
-5. **Don't forget about intermediate caches**
+4. **Don't forget about intermediate caches**
 
 ### Quick Reference
 
@@ -346,47 +317,3 @@ Cache-Control: max-age=300, s-maxage=3600
 | API responses     | `public, max-age=300, stale-while-revalidate=3600` |
 | CDN optimization  | `max-age=300, s-maxage=3600`                       |
 | Error resilience  | `max-age=300, stale-if-error=3600`                 |
-
-### Testing Your Cache Headers
-
-```bash
-# Check headers with curl
-curl -I https://example.com/api/data
-
-# Check with browser dev tools
-# Network tab → Response Headers → Cache-Control
-```
-
-Remember: Caching is about finding the right balance between performance and freshness for your specific use case!
-
-## 8. Use Cases
-
-**Correct Combinations:**
-
-```http
-# ✅ GOOD: Cache privately, re-use when fresh, validate when stale
-Cache-Control: private, max-age=3600, must-revalidate
-
-# ✅ GOOD: re-use when fresh, re-use when stale, and validate when convenient
-Cache-Control: max-age=300, stale-while-revalidate=3600
-
-# ✅ GOOD: Public caching with proxy validation
-Cache-Control: public, max-age=300, s-maxage=3600, proxy-revalidate
-```
-
-## 999. Directive Conflicts
-
-**⚠️ Important: Directive Conflicts and Interactions**
-
-Before diving into validation directives, it's crucial to understand how they interact with storage control directives. Mixing incompatible directives can lead to unexpected behavior or the most restrictive directive taking precedence.
-
-**Common Problematic Combinations:**
-
-**What Actually Happens:**
-
-1. **`no-store` with any validation directive** → `no-store` wins, response is never cached, validation directives are ignored
-2. **`no-cache` with `must-revalidate`** → Redundant, `no-cache` already forces validation
-3. **`private` with `proxy-revalidate`** → `proxy-revalidate` is ignored since proxies can't cache private responses
-4. **Conflicting max-age values** → Most restrictive (lowest) value is typically honored
-
-**Best Practice:** Always think about the complete caching lifecycle when combining directives. Ask yourself: "Can this response be stored? How long is it fresh? What happens when it becomes stale?"
