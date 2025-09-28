@@ -15,7 +15,7 @@ At the beginning of the Engine.IO connection, the server sends some information:
 
 - the `sid` is the ID of the session, it must be included in the `sid` query parameter in all subsequent HTTP requests
 - the `upgrades` array contains the list of all "better" transports that are supported by the server
-- the `pingInterval` and `pingTimeout` values are used in the [heartbeat mechanism](#heartbeat-mechanism)
+- the `pingInterval` and `pingTimeout` values are used in the [heartbeat mechanism](#4-heartbeat-mechanism)
 
 ## 2. Upgrade mechanism
 
