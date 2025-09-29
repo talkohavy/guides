@@ -125,31 +125,48 @@ mongosh --host localhost:27017
 mongosh --host 127.0.0.1 --port 27017
 ```
 
-You should see the following output:
+### - C Difference between "mongodb://" and "mongodb+srv://"
+
+The difference between `mongodb://` and `mongodb+srv://` connection strings is about how MongoDB resolves the server addresses:
+
+**`mongodb://` (Standard Connection String)**
+
+- **Direct specification**: You must explicitly list all the hostnames and ports
+- **Static**: The connection string contains the exact server addresses
+- **Manual maintenance**: If servers change, you need to update the connection string
+- **Example**:
 
 ```bash
-Current Mongosh Log ID:	67909697207e4a089faba1d2
-Connecting to:		mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.3
-(node:56199) ExperimentalWarning: CommonJS module /opt/homebrew/Cellar/mongosh/2.3.3/libexec/lib/node_modules/@mongosh/cli-repl/node_modules/@mongodb-js/devtools-proxy-support/dist/fetch.js is loading ES Module /opt/homebrew/Cellar/mongosh/2.3.3/libexec/lib/node_modules/@mongosh/cli-repl/node_modules/node-fetch/src/index.js using require().
-Support for loading ES Module in require() is an experimental feature and might change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
-Using MongoDB:		6.0.20
-Using Mongosh:		2.3.3
-
-For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
-
-------
-   The server generated these startup warnings when booting
-   2025-01-22T06:56:17.488+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
-   2025-01-22T06:56:18.084+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
-   2025-01-22T06:56:18.084+00:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never' in this binary version
-   2025-01-22T06:56:18.084+00:00: vm.max_map_count is too low
-------
-
-test>
+mongodb://user:pass@server1.example.com:27017,server2.example.com:27017,server3.example.com:27017/mydb
 ```
 
-You should now be able to run `mongodb` commands.
+**`mongodb+srv://` (SRV Connection String)**
+
+- **DNS-based discovery**: Uses DNS SRV records to automatically discover server addresses
+- **Dynamic**: MongoDB driver queries DNS to get the current list of servers
+- **Automatic maintenance**: If servers are added/removed, DNS is updated and clients automatically discover the changes
+- **Simplified syntax**: You only specify the cluster hostname, not individual servers
+- **Example**:
+
+```bash
+mongodb+srv://user:pass@cluster0.example.com/mydb
+```
+
+**Key Advantages of `mongodb+srv://`:**
+
+1. **Automatic Failover**: When replica set members change, the DNS records are updated automatically
+2. **Cleaner URLs**: Much shorter and more readable connection strings
+3. **Load Balancing**: DNS can distribute connections across available servers
+4. **Maintenance-free**: No need to update application code when infrastructure changes
+
+**When to Use Each:**
+
+- **Use `mongodb+srv://`** for production deployments, especially with MongoDB Atlas or managed services
+- **Use `mongodb://`** for development, local testing, or when you need explicit control over server addresses
+
+:::info
+**SRV** stands for **"Service Record"** - a type of DNS record that provides information about available services, including service location, port numbers, priority, and load balancing weights.
+:::
 
 ---
 
