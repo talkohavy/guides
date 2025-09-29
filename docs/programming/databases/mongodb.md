@@ -1,8 +1,6 @@
 # MongoDB
 
-## 1. Installing mongoDB
-
-### - Run a mongoDB server using docker
+## 1. Run mongoDB server (docker)
 
 Go to the Official Image of mongo:
 
@@ -38,7 +36,7 @@ docker run --name mongo -d \
 See how to create a certificate over at the [certificates guide](/docs/programming/certificates#--step-1-create-2-private-keys---1-for-the-ca--1-for-the-server).
 :::
 
-You now should have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
+You should now have a container running a **MongoDB server** listening on the standard MongoDB port **27017**.
 
 **In the next section we'll be testing the connection** to our server, stay tunned.
 
@@ -46,41 +44,21 @@ You now should have a container running a **MongoDB server** listening on the st
 
 ## 2. Test Server Connectivity
 
-Before using the CLI tool, check to see that the mongo server's logs are ok:
-
-```bash
-docker logs mongo
-```
-
-Or you can ssh into it using:
-
-```bash
-docker exec -it mongo bash
-```
-
-Second, make sure you have mongo CLI tool installed.
-
-```bash
-mongocli
-```
-
-Or...
-
-```bash
-mongosh
-```
-
-If not, install it:
+### - A. Install mongosh
 
 **- MacOS:**
 
 Use `homebrew` to install (the official recommended way):
 
 ```bash
-brew install mongocli
+brew install mongosh
 ```
 
-You now have access to the global command `mongosh`.
+Test that `mongosh` was installed correctly:
+
+```bash
+mongosh --version
+```
 
 **- Windows:**
 
@@ -88,19 +66,50 @@ Go to: [https://www.mongodb.com/docs/mongocli/current/](https://www.mongodb.com/
 
 And hit **Install MongoDB CLI**, then hit the **Download** button.
 
-Once installed, run the following command in your terminal:
+### - B. Get the connection string
+
+While `mongosh` supports many useful flags, like:
+
+- host
+- port
+- username
+- retryWrites
+- authenticationDatabase
+- password
+
+and more, sometimes you just want them all combined as a **connection string** to store as a single _environment variable_ for a service to consume.
+
+Shape:
+
+```bash
+mongosh mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
+```
+
+Example:
+
+```bash
+mongosh mongodb://myUser:myPassword@localhost:27017/myDatabase?ssl=true&sslValidate=true&sslCA=/path/to/ca.pem&sslCert=/path/to/client.pem&sslKey=/path/to/client-key.pem&retryWrites=true&retryReads=true&w=majority
+```
+
+The most basic one, which should work for a local mongodb server, looks like:
 
 ```bash
 mongosh "mongodb://localhost:27017"
 ```
 
-Or, if you have a password:
+Or, if you have a username & password:
 
 ```bash
-mongosh --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
+mongosh mongodb://myUser:myPassword@localhost:27017/myDatabase
 ```
 
-Or, if you have a certificate:
+And as mentioned, you _can_ use `mongosh` flags instead of a connection string if you want. So here is the same connection string with the username & password combo split into flags:
+
+```bash
+mongosh --host localhost:27017 --username myUser --password myPassword --authenticationDatabase myDatabase
+```
+
+And here is the certificate one split to `mongosh` flags:
 
 ```bash
 mongosh --tls --tlsCAFile rootCA.crt --tlsCertificateKeyFile client.pem --host localhost:27017 --username mongoadmin --password secret --authenticationDatabase admin
@@ -140,7 +149,7 @@ For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
 test>
 ```
 
-You should now be able to run mongodb commands.
+You should now be able to run `mongodb` commands.
 
 ---
 
