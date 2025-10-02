@@ -85,17 +85,17 @@ Upon successful login you should see the following terminal being opened:
 
 ### - Command 1: ping
 
-#### Syntax
+**Syntax**
 
 ```bash
 ping
 ```
 
-#### Description
+**Description**
 
 Simple ping request.
 
-#### Example response:
+**Example response**
 
 ```bash
 PONG
@@ -105,13 +105,13 @@ PONG
 
 ### - Command 2: FLUSHALL
 
-#### Syntax
+**Syntax**
 
 ```bash
 FLUSHALL
 ```
 
-#### Description
+**Description**
 
 Delete all the keys of all the existing databases, not just the currently selected one. This command never fails.
 
@@ -137,13 +137,13 @@ FLUSHALL SYNC
 
 ### - Command 3: SCAN
 
-#### Syntax
+**Syntax**
 
 ```bash
 SCAN cursor [MATCH pattern] [COUNT count] [TYPE type]
 ```
 
-#### Description
+**Description**
 
 The `SCAN` command (and relatives `SSCAN`, `HSCAN` and `ZSCAN`) are used in order to incrementally iterate over a collection of elements.
 
@@ -154,7 +154,7 @@ The `SCAN` command (and relatives `SSCAN`, `HSCAN` and `ZSCAN`) are used in orde
 
 Since these commands allow for **incremental iteration**, returning only a small number of elements per call, they can be used in production without the downside of commands like `KEYS` or `SMEMBERS` that may block the server for a long time (even several seconds) when called against big collections of keys or elements.
 
-#### SCAN basic usage
+**SCAN basic usage**
 
 An iteration starts when the cursor is set to 0:
 
@@ -193,7 +193,7 @@ In NO. 1, we get back the **cursor return value** to use as input in order to ge
 
 Since in the second call the returned cursor is 0, the server signaled to the caller that the iteration finished, and the **collection was completely explored**.
 
-#### SCAN with a COUNT option
+**SCAN with a COUNT option**
 
 SCAN also comes with a COUNT option, which can be used like so:
 
@@ -218,7 +218,7 @@ And an example output is:
     3) "key9"
 ```
 
-#### SCAN with a MATCH option
+**SCAN with a MATCH option**
 
 SCAN also has a MATCH option. This will iterate elements that match a specific pattern.
 
@@ -237,7 +237,7 @@ SCAN 0 MATCH k*
 
 Gets everything that starts with the letter k.
 
-#### SCAN with other DATA TYPES
+**SCAN with other DATA TYPES**
 
 SCAN is also available with other data-types.
 The full list of SCANs available to use is:
@@ -250,7 +250,7 @@ The full list of SCANs available to use is:
 
 ### - Command 4: KEYS
 
-#### Syntax
+**Syntax**
 
 ```bash
 KEYS som*Pattern
@@ -266,13 +266,13 @@ Note that it **SHOULD BE AVOIDED IN PRODUCTION ENVIRONMENTS!!!** Because it retu
 
 ### - Command 5: SET
 
-#### Syntax
+**Syntax**
 
 ```bash
 SET foo-key 42
 ```
 
-#### Description
+**Description**
 
 Set key to hold a string value. If key already holds a value, it is overwritten, regardless of its type. Any previous time to live associated with the key is discarded on successful SET operation.
 
@@ -307,13 +307,13 @@ Note: Since the SET command options can replace `SETNX`, `SETEX`, `PSETEX`, `GET
 
 ### - Command 6: EXISTS
 
-#### Syntax
+**Syntax**
 
 ```bash
 EXISTS key [key ...]
 ```
 
-#### Description
+**Description**
 
 Returns 1 if a key (keys) exists. Returns 0 if does not exist.  
 Can be used on multiple keys at once.
@@ -323,13 +323,13 @@ When querying multiple keys, the return integer specifies the number of keys tha
 
 ### - Command 7: GET
 
-#### Syntax
+**Syntax**
 
 ```bash
 GET key
 ```
 
-#### Description
+**Description**
 
 Get the value of key. If the key does not exist the special value `nil` is returned.
 
@@ -339,14 +339,14 @@ An **error is returned if the value** stored at key **is not a string**, because
 
 ### - Command 7: GETEX
 
-#### Syntax
+**Syntax**
 
 ```bash
 GETEX key [EX seconds | PX milliseconds | EXAT unix-time-seconds |
   PXAT unix-time-milliseconds | PERSIST]
 ```
 
-#### Description
+**Description**
 
 Get the value of key and optionally set its expiration. GETEX is similar to GET, but is a write command with additional options.
 
@@ -378,13 +378,13 @@ redis>
 
 ### - Command 8: TTL
 
-#### Syntax
+**Syntax**
 
 ```bash
 TTL key
 ```
 
-#### Description
+**Description**
 
 Returns the remaining time to live of a key that has a timeout. This introspection capability allows a Redis client to check how many seconds a given key will continue to be part of the dataset.
 
@@ -399,13 +399,13 @@ You also have the `PTTL` command that **returns the same information only in mil
 
 ### - Command 9: DEL
 
-#### Syntax
+**Syntax**
 
 ```bash
 DEL key [key ...]
 ```
 
-#### Description
+**Description**
 
 Removes the specified keys. A key is ignored if it does not exist.
 
