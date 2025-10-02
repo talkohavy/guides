@@ -38,6 +38,12 @@ Accessing a web app running in a pod:
 kubectl port-forward svc/my-service 8080:80
 ```
 
+Or...
+
+```bash
+kubectl port-forward deployment/frontend-server -n application 8080:3000
+```
+
 You can now access the service at http://localhost:8080.
 
 **Notes:**
