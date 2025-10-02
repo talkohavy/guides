@@ -421,3 +421,37 @@ DEL no-exist-key
 > DEL key1 key2 key3
 (integer) 2
 ```
+
+<br/>
+
+### - Command 10: HSET
+
+**Syntax**
+
+```bash
+HSET key field value [field value ...]
+```
+
+**Description**
+
+Sets the specified fields to their respective values in the hash stored at key. This command overwrites the values of specified fields that already exist in the hash. If key doesn't exist, a new key holding a hash is created.
+
+The command can set multiple field-value pairs at once. The return value is the number of fields that were added to the hash (not including updates to existing fields).
+
+Benefit - instead of going roundtrip n times, you can in one trip set many key-value pairs.
+
+Examples:
+
+```bash
+> HSET user:1000 username antirez email john@example.com age 30
+(integer) 3
+> HGET user:1000 username
+"antirez"
+> HGETALL user:1000
+1) "username"
+2) "antirez"
+3) "email"
+4) "john@example.com"
+5) "age"
+6) "30"
+```
