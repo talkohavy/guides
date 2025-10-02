@@ -455,3 +455,84 @@ Examples:
 5) "age"
 6) "30"
 ```
+
+<br/>
+
+### - Command 11: HGET
+
+**Syntax**
+
+```bash
+HGET key field
+```
+
+**Description**
+
+Returns the value associated with field in the hash stored at key. If the field doesn't exist in the hash, or if the key doesn't exist, the command returns `nil`.
+
+Unlike `HSET` which can set multiple fields at once, `HGET` retrieves the value of only one specific field from a hash. If you need to get multiple fields, use `HMGET` for multiple specific fields or `HGETALL` to get all fields and their values.
+
+**Use Cases:**
+
+- Retrieve a specific piece of information from a hash (e.g., just the username from a user profile)
+- Check if a particular field exists in a hash
+- Access individual properties of complex data structures stored as Redis hashes
+
+Examples:
+
+```bash
+> HSET user:1000 username antirez email john@example.com age 30
+(integer) 3
+> HGET user:1000 username
+"antirez"
+> HGET user:1000 email
+"john@example.com"
+> HGET user:1000 nonexistent
+(nil)
+> HGET nonexistent:key username
+(nil)
+```
+
+<br/>
+
+### - Command 12: HGETALL
+
+**Syntax**
+
+```bash
+HGETALL key
+```
+
+**Description**
+
+Returns all fields and values of the hash stored at key. In the returned value, every field name is followed by its value, so the length of the reply is twice the size of the hash.
+
+If the key doesn't exist, the command returns an empty list. This command is useful when you need to retrieve all the data from a hash at once, but be careful with large hashes as it can be memory intensive.
+
+**Use Cases:**
+
+- Retrieve complete user profiles or configuration objects
+- Debug or inspect the entire contents of a hash
+- Export all data from a hash structure
+- Check what fields exist in a hash
+
+**Performance Note:**
+For large hashes, consider using `HSCAN` instead of `HGETALL` to avoid blocking the Redis server.
+
+Examples:
+
+```bash
+> HSET user:1000 username antirez email john@example.com age 30 country USA
+(integer) 4
+> HGETALL user:1000
+1) "username"
+2) "antirez"
+3) "email"
+4) "john@example.com"
+5) "age"
+6) "30"
+7) "country"
+8) "USA"
+> HGETALL nonexistent:key
+(empty array)
+```
