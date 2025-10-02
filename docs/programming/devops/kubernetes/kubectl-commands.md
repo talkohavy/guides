@@ -381,13 +381,7 @@ Use resource type/name such as deployment/my_deployment to select a pod. Resourc
 Accessing a web app running in a pod:
 
 ```bash
-kubectl port-forward svc/my-service 8080:80
-```
-
-Or...
-
-```bash
-kubectl port-forward deployment/frontend-server -n application 8080:3000
+kubectl port-forward svc/frontend-server -n application 8080:3000
 ```
 
 You can now access the service at http://localhost:8080.

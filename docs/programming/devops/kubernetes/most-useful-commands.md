@@ -32,25 +32,30 @@ Use resource type/name such as deployment/my_deployment to select a pod. Resourc
 
 **Common Use-Case:**
 
-Accessing a web app running in a pod:
+Accessing a web app running in a pod.
+
+✅ Do this:
 
 ```bash
-kubectl port-forward svc/my-service 8080:80
-```
-
-Or...
-
-```bash
-kubectl port-forward deployment/frontend-server -n application 8080:3000
+kubectl port-forward svc/frontend-server -n application 8080:3000
 ```
 
 You can now access the service at http://localhost:8080.
+
+❌ NEVER DO THIS:
+
+```bash
+kubectl port-forward deployment/my-service 8080:3000
+```
+
+While using `deployment/` may seem like it works, you're losing so many benefits that `svc/` provides. The former is a direct connection to one specific pod (Kubernetes picks one), where the latter routes through the Service's load balancing mechanism, so you have multiple pods, a service discovery, and resilience: (If a pod dies),
 
 **Notes:**
 
 - This is a **temporary and local-only** tunnel; it's not for production use.
 - It requires `kubectl` to stay running in your terminal.
 - You must have access to the pod via your Kubernetes context.
+- always use `svc/`, do not use `deployment/`.
 
 <br/>
 
