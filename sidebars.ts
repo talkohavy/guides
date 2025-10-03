@@ -459,6 +459,11 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'programming/terminal-god/linux-install',
+              label: '- Linux Install',
+            },
+            {
+              type: 'doc',
               id: 'programming/terminal-god/terminal-god',
               label: '- Terminal God',
             },
