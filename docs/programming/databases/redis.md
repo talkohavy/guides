@@ -536,3 +536,76 @@ Examples:
 > HGETALL nonexistent:key
 (empty array)
 ```
+
+<br/>
+
+### - Command 13: HSCAN
+
+**Syntax**
+
+```bash
+HSCAN key cursor [MATCH pattern] [COUNT count]
+```
+
+**Description**
+
+Incrementally iterates over the fields and values of a hash stored at key. This command is the hash-specific version of the `SCAN` command and is designed to handle large hashes without blocking the Redis server.
+
+The `HSCAN` command returns:
+
+1. A new cursor value (to be used in the next call)
+2. An array of field-value pairs from the hash
+
+Like `SCAN`, the iteration starts with cursor 0 and ends when the returned cursor is 0.
+
+**Options:**
+
+- `MATCH pattern` - Only return fields that match the given pattern (supports glob-style patterns)
+- `COUNT count` - Hint about how many elements to return per call (default is usually around 10)
+
+**Use Cases:**
+
+- Safely iterate through large hashes in production
+- Search for specific fields in a hash using pattern matching
+- Process hash data in chunks to avoid memory issues
+- Inspect hash contents without risking server blocking
+
+**When to use HSCAN vs HGETALL:**
+
+- Use `HSCAN` for large hashes (>1000 fields) or in production environments
+- Use `HGETALL` for small hashes or development/debugging
+
+Examples:
+
+```bash
+> HSET user:1000 username antirez email john@example.com age 30 country USA city SF phone 555-1234
+(integer) 6
+> HSCAN user:1000 0
+1) "0"
+2) 1) "username"
+   2) "antirez"
+   3) "email"
+   4) "john@example.com"
+   5) "age"
+   6) "30"
+   7) "country"
+   8) "USA"
+   9) "city"
+  10) "SF"
+  11) "phone"
+  12) "555-1234"
+> HSCAN user:1000 0 MATCH *e*
+1) "0"
+2) 1) "username"
+   2) "antirez"
+   3) "email"
+   4) "john@example.com"
+   5) "phone"
+   6) "555-1234"
+> HSCAN user:1000 0 COUNT 2
+1) "0"
+2) 1) "username"
+   2) "antirez"
+   3) "email"
+   4) "john@example.com"
+```
