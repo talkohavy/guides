@@ -12,10 +12,16 @@ Add a script:
 }
 ```
 
-Install these:
+Install these for react:
 
 ```bash
 pnpm add -D jest jest-environment-jsdom ts-jest json-easy-strip @types/jest @testing-library/dom @testing-library/jest-dom @testing-library/react @testing-library/user-event
+```
+
+Install these for node:
+
+```
+pnpm add -D jest ts-jest json-easy-strip @types/jest
 ```
 
 Create a `jest.config.js` file:  
