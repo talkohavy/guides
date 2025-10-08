@@ -145,10 +145,10 @@ The `Deployment` resource supports two update strategies via the strategy.type f
 - **What it does**: Gradually replaces old Pods with new ones.
 - **Benefit**: Ensures zero downtime if configured properly.
 - **How it works**:
-
   - Creates new Pods using the updated template.
   - Slowly terminates old Pods while ensuring availability.
   - Controlled by:
+
     ```yaml
     strategy:
       type: RollingUpdate # default
@@ -156,6 +156,7 @@ The `Deployment` resource supports two update strategies via the strategy.type f
           maxUnavailable: 25% # default
           maxSurge: 25% # default
     ```
+
     - `maxSurge`: How many extra Pods can be created temporarily during the update (**round up**). For example, if you set `maxSurge: 25%`, it means that up to 25% more Pods than the desired number can be created temporarily during the update. With 4 replicas, up to 1 extra pod can be created during rollout.
     - `maxUnavailable`: How many Pods can be unavailable during the update (**round down**). For example, if you set `maxUnavailable: 25%`, it means that up to 25% of the desired Pods can be unavailable during the update. For example, if you have 4 replicas, 1 pod can be unavailable during the update.
 
@@ -604,7 +605,7 @@ roleRef:
 
 ---
 
-## Resource 999: Ingress
+## Resource 7: Ingress
 
 ### - A. What is an Ingress
 
@@ -623,7 +624,7 @@ An **Ingress** is a Kubernetes resource that **manages external HTTP(S) access**
 - The Ingress resource defines rules.
 - The controller watches Ingress resources and updates its proxy configuration accordingly.
 
-### - D. How to create a ServiceAccount
+### - D. How to create an Ingress
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -646,17 +647,7 @@ spec:
                   number: 80
 ```
 
-### - E. How to Expose a Deployment via Ingress
-
-```yaml
-spec:
-  tls:
-    - hosts:
-        - example.com
-      secretName: tls-secret
-```
-
-### - F. Additional Notes
+### - E. Additional Notes
 
 - Works only with HTTP(S) traffic (for TCP/UDP, use a LoadBalancer or Service).
 - You must **install an Ingress Controller** separately (Ingress alone does nothing).
@@ -668,3 +659,35 @@ spec:
 - Use **TLS** for secure traffic.
 - Keep Ingress rules in sync with DNS entries.
 - Monitor and secure your Ingress Controller — it's a major attack surface.
+
+---
+
+### - Ingress rules
+
+Each HTTP rule contains the following information:
+
+- An optional host. In this example, no host is specified, so the rule applies to all inbound HTTP traffic through the IP address specified. If a host is provided (for example, foo.bar.com), the rules apply to that host.
+
+- A list of paths (for example, /testpath), each of which has an associated backend defined with a service.name and a service.port.name or service.port.number. Both the host and path must match the content of an incoming request before the load balancer directs traffic to the referenced Service.
+
+- A backend is a combination of Service and port names as described in the Service doc or a custom resource backend by way of a CRD. HTTP (and HTTPS) requests to the Ingress that match the host and path of the rule are sent to the listed backend.
+
+---
+
+- Traffic routing is controlled by rules defined on the Ingress resource.
+
+- You must have an Ingress controller to satisfy an Ingress. Only creating an Ingress resource has no effect.
+
+- You may need to deploy an Ingress controller such as ingress-nginx. You can choose from a number of Ingress controllers.
+
+- Make sure you review your Ingress controller's documentation to understand the caveats of choosing it.
+
+- Ingress frequently uses annotations to configure some options depending on the Ingress controller, an example of which is the rewrite-target annotation.
+
+- Different Ingress controllers support different annotations. Review the documentation for your choice of Ingress controller to learn which annotations are supported.
+
+- Ingress resource only supports rules for directing HTTP(S) traffic.
+
+- If the `ingressClassName` is omitted, a _default Ingress class_ should be defined.
+
+- There are some ingress controllers, that work without the definition of a default IngressClass. For example, the Ingress-NGINX controller can be configured with a flag --watch-ingress-without-class. It is recommended though, to specify the default IngressClass as shown below.
