@@ -691,3 +691,82 @@ Each HTTP rule contains the following information:
 - If the `ingressClassName` is omitted, a _default Ingress class_ should be defined.
 
 - There are some ingress controllers, that work without the definition of a default IngressClass. For example, the Ingress-NGINX controller can be configured with a flag --watch-ingress-without-class. It is recommended though, to specify the default IngressClass as shown below.
+
+### - DefaultBackend
+
+An Ingress with no rules sends all traffic to a single default backend and `.spec.defaultBackend` is the backend that should handle requests in that case. The `defaultBackend` is conventionally a configuration option of the **Ingress controller** and is not specified in your Ingress resources. If no `.spec.rules` are specified, `.spec.defaultBackend` must be specified. If defaultBackend is not set, the handling of requests that do not match any of the rules will be up to the ingress controller (consult the documentation for your ingress controller to find out how it handles this case).
+
+If none of the hosts or paths match the HTTP request in the Ingress objects, the traffic is routed to your default backend.
+
+### - Path types
+
+Each path in an Ingress is required to have a corresponding path type. **Paths that do not include an explicit `pathType` will fail validation**.  
+There are three supported path types:
+
+- `ImplementationSpecific`: With this path type, matching is up to the IngressClass. Implementations can treat this as a separate pathType or treat it identically to Prefix or Exact path types.
+- `Exact`: Matches the URL path **exactly** and with **case sensitivity**.
+- `Prefix`: Matches based on a URL path prefix split by `/`. **Matching is case sensitive** and done on a path element by element basis. A path element refers to the list of labels in the path split by the `/` separator. A request is a match for path `p` if every `p` is an element-wise prefix of `p` of the request path.
+
+**Examples**
+
+| Kind   | Path(s)                     | Request path(s) | Matches?                         |
+| ------ | --------------------------- | --------------- | -------------------------------- |
+| Prefix | /                           | (all paths)     | Yes                              |
+| Exact  | /foo                        | /foo            | Yes                              |
+| Exact  | /foo                        | /bar            | No                               |
+| Exact  | /foo                        | /foo/           | No                               |
+| Exact  | /foo/                       | /foo            | No                               |
+| Prefix | /foo                        | /foo, /foo/     | Yes                              |
+| Prefix | /foo/                       | /foo, /foo/     | Yes                              |
+| Prefix | /aaa/bb                     | /aaa/bbb        | No                               |
+| Prefix | /aaa/bbb                    | /aaa/bbb        | Yes                              |
+| Prefix | /aaa/bbb/                   | /aaa/bbb        | Yes, ignores trailing slash      |
+| Prefix | /aaa/bbb                    | /aaa/bbb/       | Yes, matches trailing slash      |
+| Prefix | /aaa/bbb                    | /aaa/bbb/ccc    | Yes, matches subpath             |
+| Prefix | /aaa/bbb                    | /aaa/bbbxyz     | No, does not match string prefix |
+| Prefix | /, /aaa                     | /aaa/ccc        | Yes, matches /aaa prefix         |
+| Prefix | /, /aaa, /aaa/bbb           | /aaa/bbb        | Yes, matches /aaa/bbb prefix     |
+| Prefix | /, /aaa, /aaa/bbb           | /ccc            | Yes, matches / prefix            |
+| Prefix | /aaa                        | /ccc            | No, uses default backend         |
+| Mixed  | /foo (Prefix), /foo (Exact) | /foo            | Yes, prefers Exact               |
+
+**Multiple matches**
+
+In some cases, multiple paths within an Ingress will match a request. In those cases precedence will be given first to the longest matching path. If two paths are still equally matched, precedence will be given to paths with an exact path type over prefix path type.
+
+### - TLS
+
+You can secure an Ingress by specifying a `Secret` that contains a TLS **private key** and **certificate**. The Ingress resource only supports a single TLS port, 443, and assumes TLS termination at the ingress point (**traffic to the Service and its Pods is in plaintext**). The TLS secret must contain keys named tls.crt and tls.key that contain the certificate and private key to use for TLS. For example:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: testsecret-tls
+  namespace: default
+data:
+  tls.crt: base64 encoded cert
+  tls.key: base64 encoded key
+type: kubernetes.io/tls
+```
+
+Referencing this secret in an `Ingress` tells the `Ingress controller` to secure the channel from the client to the load balancer using TLS. You need to make sure the TLS secret you created came from a certificate that contains a Common Name (CN), also known as a Fully Qualified Domain Name (FQDN) for https-example.foo.com.
+
+:::note
+Keep in mind that TLS will not work on the default rule because the certificates would have to be issued for all the possible sub-domains. Therefore, `hosts` in the `tls` section need to explicitly match the host in the rules section.
+
+:::
+
+### - Load balancing
+
+An Ingress controller is bootstrapped with some load balancing policy settings that it applies to all Ingress, such as the load balancing algorithm, backend weight scheme, and others. More advanced load balancing concepts (e.g. sticky sessions, dynamic weights) are not yet exposed through the Ingress. You can instead get these features through the load balancer used for a Service.
+
+It's also worth noting that even though health checks are not exposed directly through the Ingress, there exist parallel concepts in Kubernetes such as readiness probes that allow you to achieve the same end result. Please review the controller specific documentation to see how they handle health checks (for example: nginx, or GCE).
+
+---
+
+## Resource 8: Ingress Controller
+
+In order for an `Ingress` to work in your cluster, there must be an **ingress controller** running. You need to select at least one ingress controller and make sure it is set up in your cluster. This section lists common ingress controllers that you can deploy.
+
+Kubernetes as a project supports and maintains `AWS`, `GCE`, and `nginx` ingress controllers.
