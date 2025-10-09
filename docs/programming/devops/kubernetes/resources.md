@@ -770,3 +770,83 @@ It's also worth noting that even though health checks are not exposed directly t
 In order for an `Ingress` to work in your cluster, there must be an **ingress controller** running. You need to select at least one ingress controller and make sure it is set up in your cluster. This section lists common ingress controllers that you can deploy.
 
 Kubernetes as a project supports and maintains `AWS`, `GCE`, and `nginx` ingress controllers.
+
+---
+
+## Enable the Ingress controller
+
+1. To enable the NGINX Ingress controller, run the following command:
+
+```bash
+minikube addons enable ingress
+```
+
+2. Verify that the NGINX Ingress controller is running
+
+```bash
+kubectl get pods -n ingress-nginx
+```
+
+:::note
+It can take up to a minute before you see these pods running OK.
+:::
+
+## Create an Ingress
+
+The following manifest defines an Ingress that sends traffic to your Service via `hello-world.example`.
+
+1. Create `example-ingress.yaml` from the following file:
+
+```yaml title=service/networking/example-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hello-world.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 8080
+```
+
+2. Create the Ingress object by running the following command:
+
+```bash
+kubectl apply -f path/to/service/networking/example-ingress.yaml
+```
+
+3. Verify the IP address is set:
+
+```bash
+kubectl get ingress
+```
+
+:::note
+This can take a couple of minutes.
+:::
+
+4. Verify that the Ingress controller is directing traffic. Visit `hello-world.example` from your browser.
+
+Add a line at the bottom of the `/etc/hosts` file on your computer (you will need administrator access):
+
+```
+127.0.0.1 hello-world.example
+```
+
+After you make this change, your web browser sends requests for `hello-world.example` URLs to Minikube.
+
+## Test your Ingress
+
+1. Access the 1st version of the Hello World app.
+
+```bash
+minikube tunnel
+```
