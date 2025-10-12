@@ -39,7 +39,7 @@ docker run -it --rm -e PORT=3000 IMAGE_ID sh
 ## - Command 5: Run an image & expose port to host
 
 ```bash
-docker run -t --rm -p 8888:8888 imageName
+docker run -t --rm -p 8888:8888 IMAGE_NAME
 ```
 
 <br/>

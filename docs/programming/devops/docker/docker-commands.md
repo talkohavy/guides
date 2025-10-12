@@ -39,7 +39,7 @@ docker run -it --rm -e PORT=3000 IMAGE_ID sh
 ## - Command 5: Run an image & expose port to host
 
 ```bash
-docker run -t --rm -p 8888:8888 imageName
+docker run -t --rm -p 8888:8888 IMAGE_NAME
 ```
 
 <br/>
@@ -288,7 +288,8 @@ RUN addgroup app && adduser -S -G app app
   Example:
 
   ```bash
-  docker run <my-image-name> --name <my-container-name>
+  # The order here matters! flags MUST come before image name/ID!
+  docker run --name CONTAINER_NAME IMAGE_NAME
   ```
 
 - **Flag 3: [:tag]**  
@@ -306,7 +307,7 @@ RUN addgroup app && adduser -S -G app app
   Example:
 
   ```bash
-  docker run --rm <image-name>
+  docker run --rm IMAGE_NAME
   ```
 
 - **Flag 5: -it**  
@@ -322,7 +323,7 @@ RUN addgroup app && adduser -S -G app app
   To expose a _port_ within the container to a port on your localhost.  
   Example:
   ```bash
-  docker run redis -p 5678:5678
+  docker run -p 5678:5678 redis
   ```
 - **Flag 7: --pull | --pull=never**  
   With the `--pull` flag set on, `docker run` will **always** attempt to pull a newer version of the image found on the remote, and ignore what's on your image-cache (local registry).  
