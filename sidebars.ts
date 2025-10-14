@@ -226,9 +226,42 @@ const sidebars: SidebarsConfig = {
               ],
             },
             {
-              type: 'doc',
-              id: 'programming/devops/helm',
+              type: 'category',
               label: '- Helm',
+              link: {
+                type: 'generated-index',
+                title: 'Kubernetes Guides',
+                description: 'All about Helm',
+                slug: '/helm',
+                keywords: ['helm'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/introduction',
+                  label: '- Introduction',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/helm-architecture-and-concepts',
+                  label: '- Architecture & Concepts',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/deep-behind-the-scenes',
+                  label: '- Deep Behind The Scenes',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/daily-workflow',
+                  label: '- Daily Workflow',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/helm-commands',
+                  label: '- All helm Commands',
+                },
+              ],
             },
           ],
         },
