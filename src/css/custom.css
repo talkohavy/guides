@@ -58,6 +58,10 @@
   --ifm-color-primary-lighter: #359962;
   --ifm-color-primary-lightest: #3cad6e;
 
+  --ifm-container-width: 100%;
+  --ifm-container-width-xl: 100%;
+  --doc-sidebar-width: 0px;
+
   /* affect `tagged` elements in a doc */
   /* --ifm-code-font-size: 95%; */
   --ifm-font-family-base:
@@ -127,11 +131,15 @@ body {
   font-weight: var(--ifm-font-weight-normal);
 }
 
+strong {
+  font-weight: var(--ifm-font-weight-bold);
+}
+
 /* Ensure all content areas use the improved typography */
 .theme-doc-markdown,
 .markdown,
 article {
-  font-size: var(--ifm-font-size-base);
+  font-size: var(--ifm-font-size-reading);
   font-weight: var(--ifm-font-weight-normal);
   line-height: var(--ifm-line-height-base);
 }
@@ -166,7 +174,7 @@ h6,
 .theme-doc-markdown ul,
 .theme-doc-markdown ol,
 .theme-doc-markdown li {
-  font-size: 1rem;
+  font-size: var(--ifm-font-size-reading);
   font-weight: var(--ifm-font-weight-normal);
   line-height: var(--ifm-line-height-base);
 }
