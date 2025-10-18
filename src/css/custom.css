@@ -6,6 +6,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
+  --ifm-text-primary: #343434;
   --ifm-color-primary: #2e8555;
   --ifm-color-primary-dark: #29784c;
   --ifm-color-primary-darker: #277148;
@@ -13,12 +14,37 @@
   --ifm-color-primary-light: #33925d;
   --ifm-color-primary-lighter: #359962;
   --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
+  --ifm-code-font-size: 95%; /* affect `tagged` elements in a doc */
+  --ifm-font-family-base:
+    sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
+    BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --ifm-background-color: white;
+  --ifm-background-surface-color: rgb(250, 250, 250);
+
+  /* Typography improvements */
+  --ifm-font-size-base: 16px; /* Increased from default ~14px */
+  --ifm-font-weight-light: 300;
+  --ifm-font-weight-normal: 300;
+  --ifm-font-weight-semibold: 500;
+  --ifm-font-weight-bold: 700;
+
+  /* Header font sizes using rem for proportional scaling */
+  --ifm-h1-font-size: 2.5rem;
+  --ifm-h2-font-size: 2rem;
+  --ifm-h3-font-size: 1.5rem;
+  --ifm-h4-font-size: 1.25rem;
+  --ifm-h5-font-size: 1.125rem;
+  --ifm-h6-font-size: 1rem;
+
+  /* Line height for better readability */
+  --ifm-line-height-base: 1.6;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+html[data-theme='dark'] {
+  --ifm-text-primary: white;
   --ifm-color-primary: #25c2a0;
   --ifm-color-primary-dark: #21af90;
   --ifm-color-primary-darker: #1fa588;
@@ -27,6 +53,9 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  --ifm-background-color: #212121; /* #1c1d1c */
+  --ifm-background-surface-color: #1e2939; /* #242526 */
 }
 
 * {
@@ -35,7 +64,61 @@
   box-sizing: border-box;
   -moz-outline-radius: unset;
   outline: none;
-  color: inherit;
+}
+
+/* Apply improved typography globally */
+html {
+  font-size: var(--ifm-font-size-base);
+  line-height: var(--ifm-line-height-base);
+  color: var(--ifm-text-primary);
+}
+
+body {
+  font-weight: var(--ifm-font-weight-normal);
+}
+
+/* Ensure all content areas use the improved typography */
+.theme-doc-markdown,
+.markdown,
+article {
+  font-size: 1rem;
+  font-weight: var(--ifm-font-weight-normal);
+  line-height: var(--ifm-line-height-base);
+}
+
+/* Headers with improved typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.theme-doc-markdown h1,
+.theme-doc-markdown h2,
+.theme-doc-markdown h3,
+.theme-doc-markdown h4,
+.theme-doc-markdown h5,
+.theme-doc-markdown h6 {
+  font-weight: var(--ifm-font-weight-bold);
+  line-height: 1.2;
+}
+
+/* Paragraphs in documentation */
+.theme-doc-markdown p,
+.markdown p {
+  font-size: 1.5rem;
+  font-weight: var(--ifm-font-weight-normal);
+  line-height: var(--ifm-line-height-base);
+  margin-bottom: 1rem;
+}
+
+/* Lists in documentation */
+.theme-doc-markdown ul,
+.theme-doc-markdown ol,
+.theme-doc-markdown li {
+  font-size: 1rem;
+  font-weight: var(--ifm-font-weight-normal);
+  line-height: var(--ifm-line-height-base);
 }
 
 /* html {
