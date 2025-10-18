@@ -263,6 +263,24 @@ const sidebars: SidebarsConfig = {
                 },
               ],
             },
+            {
+              type: 'category',
+              label: '- CircleCI',
+              link: {
+                type: 'generated-index',
+                title: 'Kubernetes Guides',
+                description: 'All about CircleCI',
+                slug: '/circleci',
+                keywords: ['circleci'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/devops/circleci/circleci',
+                  label: '- CircleCI',
+                },
+              ],
+            },
           ],
         },
         {
