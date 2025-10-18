@@ -80,7 +80,7 @@ export default defineConfig({
 
 Update the contents of your `tsconfig.json` file like so:
 
-```json title=tsconfig.json
+```json title="tsconfig.json"
 {
   "files": [],
   "references": [
@@ -105,7 +105,7 @@ And create a new `tsconfig.json`:
 
 And paste the below code as its contents:
 
-```json title=tsconfig.build.ts
+```json title="tsconfig.build.ts"
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -270,7 +270,7 @@ This _would_ have been a good behavior, if we weren't using types being compiled
 
 See, what happens now is that typescript creates types (just the types), puts them inside the `dist` folder, and then comes along vite and deletes them. We want to cancel that behavior:
 
-```tsx title=cite.config.ts
+```tsx title="vite.config.ts"
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -330,13 +330,13 @@ Let's create one or two:
 
 And add a very basic implementation for these components:
 
-```tsx title=lib/components/Button/Button.tsx
+```tsx title="lib/components/Button/Button.tsx"
 export default function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return <button type='button' {...props} />;
 }
 ```
 
-```tsx title=lib/components/Label/Label.tsx
+```tsx title="lib/components/Label/Label.tsx"
 export default function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return <label {...props} />;
 }
@@ -344,7 +344,7 @@ export default function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>
 
 Finally export the components from the library's main file:
 
-```tsx title=lib/main.ts
+```tsx title="lib/main.ts"
 export { default as Button } from './components/Button';
 export { default as Label } from './components/Label';
 ```
@@ -355,7 +355,7 @@ If you `npm run build` again you will notice that the transpiled file `my-compon
 
 The implementation of the components above contains React JSX code and therefore `react` (and `react/jsx-runtime`) gets bundled as well. As this library will be used in projects that have React installed anyways, you can **externalize** this dependencies to _remove the code from bundle_:
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 export default defineConfig({
   // ...
   build: {
@@ -371,7 +371,7 @@ export default defineConfig({
 
 Now take a look at your `package.json` file under `dependencies` key. Right now there should be only two there: `react` and `react-dom` You can move both to the `devDependencies`. Additionally, add them as `peerDependencies`, so that the consuming application is aware that it must have React installed to use this package.
 
-```json title=package.json
+```json title="package.json"
 {
 // diff-remove-next-line
 "dependencies": {
@@ -413,13 +413,13 @@ CSS modules are supported by Vite by default. All you have to do is to create CS
 
 And add some basic CSS classes:
 
-```css title=lib/components/Button/Button.module.scss
+```css title="lib/components/Button/Button.module.scss"
 .button {
     padding: 1rem;
 }
 ```
 
-```css title=lib/components/Label/Label.module.scss
+```css title="lib/components/Label/Label.module.scss"
 .label {
     font-weight: bold;
 }
@@ -477,7 +477,7 @@ pnpm add -D vite-plugin-lib-inject-css
 
 And use it inside our `vite.config.ts` file:
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 // diff-add-next-line
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
@@ -494,7 +494,7 @@ export default defineConfig({
 
 Build the library and take a look at the top of your bundled JavaScript file (`dist/my-component-library.js`):
 
-```tsx title=dist/my-component-library.js
+```tsx title="dist/my-component-library.js"
 import './main.css';
 
 // ...
@@ -522,7 +522,7 @@ pnpm add -D glob
 
 Then change your Vite config to this:
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 /* eslint-disable*/
 // diff-remove-next-line
 import { resolve } from 'path';
@@ -579,7 +579,7 @@ Now you end up with a bunch of JavaScript and CSS files in the root of your `dis
 
 That's why we'll add `rollupOptions.output` to our config:
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 export default defineConfig({
 
   rollupOptions: {
@@ -607,7 +607,7 @@ Your library's primary entry point is now located at `dist/main.js`, so this nee
 
 The same applies to the types' entry point: `dist/main.d.ts`
 
-```json title=package.json
+```json title="package.json"
 {
   "name": "my-component-library",
   "private": true,
@@ -624,7 +624,7 @@ The same applies to the types' entry point: `dist/main.d.ts`
 
 To prevent the CSS files from being accidentally removed by the consumer's tree-shaking efforts, you should also specify the generated CSS as side effects:
 
-```json title=package.json
+```json title="package.json"
 {
 // ...
 // diff-add-next-line
@@ -637,7 +637,7 @@ To prevent the CSS files from being accidentally removed by the consumer's tree-
 
 You can use the special lifecycle script `prepublishOnly` to guarantee that your changes are always built before the package is published:
 
-```json title=package.json
+```json title="package.json"
 {
   "scripts": {
     "dev": "vite",
@@ -653,7 +653,7 @@ You can use the special lifecycle script `prepublishOnly` to guarantee that your
 
 To just play around with your components on the demo page, you can simply import the components directly from the root of your project. This works because your `package.json` points to the transpiled main file `dist/main.ts`.
 
-```tsx title=src/App.tsx
+```tsx title="src/App.tsx"
 /* eslint-disable */
 import { Button, Input, Label } from '../';
 

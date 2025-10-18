@@ -27,7 +27,7 @@ pnpm add -D jest ts-jest json-easy-strip @types/jest
 Create a `jest.config.js` file:  
 (this file was generated using `jest --init`)
 
-```ts title=jest.config.js
+```ts title="jest.config.js"
 import requireJSON from 'json-easy-strip';
 import { createDefaultPreset } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
@@ -238,7 +238,7 @@ export default config;
 
 Create a `setup.tsx` file:
 
-```ts title=src/tests/setup.tsx
+```ts title="src/tests/setup.tsx"
 // --- Write here any Code you need as a setup! ---
 ```
 
@@ -1357,13 +1357,13 @@ This is a new scenario only possible with `spyOn`.
 
 What if we just want to spy on a function? We don't want to affect the function's implementation. We simply want to run assertions on it, such as: `toHaveBeenCalled` or `toHaveBeenCalledWith`. For that purpose, `spyOn` is our **ONLY** option.
 
-```ts title=makeFood.ts
+```ts title="makeFood.ts"
 export function makeFood(){
   return 'dinner'
 }
 ```
 
-```ts title=makeFood.test.ts
+```ts title="makeFood.test.ts"
 import { makeFood } from './makeFood';
 
 test('makeFood', () => {

@@ -354,7 +354,7 @@ We could also have used `getRandomValues()` to generate a unique offset.
 
 And then we store this offset alongside the message on the server side:
 
-```ts title=index.ts
+```ts title="index.ts"
 // [...]
 
 io.on('connection', async (socket) => {

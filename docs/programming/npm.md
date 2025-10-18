@@ -81,7 +81,7 @@ And add these files:
 
 **Eslint:**
 
-```js title=eslint.config.js
+```js title="eslint.config.js"
 import pluginJs from '@eslint/js';
 import perfectionist from 'eslint-plugin-perfectionist';
 import pluginCompiler from 'eslint-plugin-react-compiler';
@@ -208,7 +208,7 @@ export default config;
 
 **Typescript:**
 
-```json title=tsconfig.json
+```json title="tsconfig.json"
 {
   "compilerOptions": {
     // -------------------

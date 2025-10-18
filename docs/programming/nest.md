@@ -196,7 +196,7 @@ Since `@nestjs/config` relies on dotenv, it uses that package's rules for resolv
 
 Once the installation process is complete, we can import the `ConfigModule` in the root `AppModule` and control its behavior using the **.forRoot()** static method:
 
-```ts title=app.module.ts
+```ts title="app.module.ts"
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -219,7 +219,7 @@ What this does:
 
 You can also specify a different path/name for the `.env` files like so:
 
-```ts title=app.module.ts
+```ts title="app.module.ts"
 ConfigModule.forRoot({
   envFilePath: '.env.development.local',
 });
@@ -227,7 +227,7 @@ ConfigModule.forRoot({
 
 You can also specify multiple paths for .env files like so:
 
-```ts title=app.module.ts
+```ts title="app.module.ts"
 ConfigModule.forRoot({
   envFilePath: ['.env.development.local', '.env.development'],
 });
@@ -245,7 +245,7 @@ For more complex projects, you may utilize custom configuration files to return 
 
 A custom configuration file exports a factory function that returns a configuration object. The configuration object can be any arbitrarily nested plain JavaScript object. The `process.env` object will contain the fully resolved environment variable key/value pairs (with .env file and externally defined variables resolved and merged as described above). Since you control the returned configuration object, you can add any required logic to cast values to an appropriate type, set default values, etc. For example:
 
-```ts title=src/config/getConfiguration.ts
+```ts title="src/config/getConfiguration.ts"
 export default function getConfiguration() {
   return {
     port: parseInt(process.env.PORT, 10) || 3000,
@@ -259,7 +259,7 @@ export default function getConfiguration() {
 
 You can even add a validation schema to your configuration:
 
-```ts title=src/config/validationSchema.ts
+```ts title="src/config/validationSchema.ts"
 import joi from 'joi';
 
 export const envVariablesSchema = joi.object({
@@ -270,7 +270,7 @@ export const envVariablesSchema = joi.object({
 
 then...
 
-```ts title=app.module.ts
+```ts title="app.module.ts"
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -327,7 +327,7 @@ export class UsersService {
 
 On the main file of `main.ts`, add this line:
 
-```ts title=main.ts
+```ts title="main.ts"
 import { handleCors } from './common/utils/handleCors';
 
 const nodeEnv = configService.get<EnvOptions>('nodeEnv');
@@ -748,7 +748,6 @@ export class UsersController {
 
 - A `module` is a class annotated with a **@Module()** decorator.
 - The **@Module()** decorator takes a single object whose properties describe the module:
-
   - `imports`: the list of imported modules that export the providers which are required in this module.
   - `exports`: the subset of providers that are provided by this module and should be available in other modules which import this module. You can use either the provider itself or just its token (provide value).
   - `controllers`: the set of controllers defined in this module which have to be instantiated.
@@ -915,7 +914,7 @@ You can, of course, create your own pipes. Nest allows you to do that very easil
 
 #### • Type 2: Data Validation
 
-```ts title=create-user.dto.ts {1,4,8} showLineNumbers
+```ts title="create-user.dto.ts" {1,4,8} showLineNumbers
 import { MinLength } from 'class-validator';
 
 export class CreateUserDto {
@@ -928,7 +927,7 @@ export class CreateUserDto {
 }
 ```
 
-```ts title=users.controller.ts {6} showLineNumbers
+```ts title="users.controller.ts" {6} showLineNumbers
 import { CreateUserDto } from './create-user-dto.ts';
 
 // ...
@@ -1048,7 +1047,7 @@ yarn add @nestjs/swagger swagger-ui-express
 
 Next you need to go to `main.ts` file:
 
-```ts title=main.ts {3,9-17} showLineNumbers
+```ts title="main.ts" {3,9-17} showLineNumbers
 /* eslint-disable */
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -1098,7 +1097,7 @@ export class GatewayController {
 
 When using Dto objects, swagger-ui will be populated with the schemas already down at the bottom. To have routes make validations of those schemes, you can use something called an @ApiProperty decorator. Go to the Dto file inside the project and add the following:
 
-```ts title=create-user.dto.ts {4,7} showLineNumbers
+```ts title="create-user.dto.ts" {4,7} showLineNumbers
 import { ApiProperty } from './@nestjs/swagger';
 
 export class CreateUserDto {
@@ -1116,7 +1115,7 @@ The only "gotcha" above is that the @ApiProperty does not automatically catch th
 
 You are able to represent the schema for the response using the @ApiCreatedResponse decorator.
 
-```ts title=user.controller.ts {6,12} showLineNumbers
+```ts title="user.controller.ts" {6,12} showLineNumbers
 @Controller()
 export class GatewayController {
   constructor(private readonly httpService: HttpService) {}

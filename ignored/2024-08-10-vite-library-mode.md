@@ -244,7 +244,7 @@ npm i vite-plugin-dts -D
 
 Per default `dts` will generate types for both `src` and `lib` because both folders are included in the project's `.tsconfig`. This is why we need to pass one configuration parameter: `include: ['lib']`.
 
-```ts title=vite.config.ts
+```ts title="vite.config.ts"
 // diff-add-next-line
 import dts from 'vite-plugin-dts';
 
@@ -266,7 +266,7 @@ export default defineConfig({
 
 To test things out, let's add some actual code to your library. Open `lib/main.ts` and export something, for example:
 
-```ts title=lib/main.ts
+```ts title="lib/main.ts"
 export function helloAnything(thing: string): string {
   return `Hello ${thing}!`;
 }
@@ -306,13 +306,13 @@ Let's go with two very common basic components: A button, and a label.
 
 And a very basic implementation for these components:
 
-```tsx title=lib/components/Button/Button.tsx
+```tsx title="lib/components/Button/Button.tsx"
 export default function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return <button type='button' {...props} />;
 }
 ```
 
-```tsx title=lib/components/Label/Label.tsx
+```tsx title="lib/components/Label/Label.tsx"
 export function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return <label {...props} />;
 }
@@ -320,7 +320,7 @@ export function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
 
 Finally export the components from the library's main file:
 
-```tsx title=lib/main.ts
+```tsx title="lib/main.ts"
 export { Button } from './components/Button';
 export { Label } from './components/Label';
 ```
@@ -331,7 +331,7 @@ The implementation of the components above contains React JSX code and therefore
 
 As this library will be used in projects that have React installed anyways, you can externalize this dependencies to remove the code from bundle:
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 export default defineConfig({
   // ...
   build: {
@@ -369,13 +369,13 @@ CSS modules are supported by Vite per default. All you have to do is to create C
 
 And add some basic CSS classes:
 
-```css title=lib/components/Button/Button.module.css
+```css title="lib/components/Button/Button.module.css"
 .button {
     padding: 1rem;
 }
 ```
 
-```css title=lib/components/Label/Label.module.css
+```css title="lib/components/Label/Label.module.css"
 .label {
     font-weight: bold;
 }
@@ -421,7 +421,7 @@ For this to work, the transpiled JavaScript bundle must contain an import statem
 npm i vite-plugin-lib-inject-css -D
 ```
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 // diff-add-next-line
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
@@ -439,7 +439,7 @@ export default defineConfig({
 
 Build the library and take a look at the top of your bundled JavaScript file (`dist/my-component-library.js`):
 
-```tsx title=dist/my-component-library.js
+```tsx title="dist/my-component-library.js"
 import './main.css';
 
 // ...
@@ -473,7 +473,7 @@ npm i glob -D
 
 Then change your Vite config to this:
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 /* eslint-disable*/
 // diff-remove-next-line
 import { resolve } from 'path';
@@ -524,7 +524,7 @@ glob.sync('lib/**/*.{ts,tsx}', { ignore: 'lib/**/*.stories.tsx' });
 
 Now you end up with a bunch of JavaScript and CSS files in the root of your `dist` folder. It works, but it doesn't look particularly pretty, does it?
 
-```tsx title=vite.config.ts
+```tsx title="vite.config.ts"
 export default defineConfig({
 
   rollupOptions: {
@@ -558,7 +558,7 @@ Every npm package has a primary entry point, per default this file is `index.js`
 
 Your library's primary entry point is now located at `dist/main.js`, so this needs to be set in your `package.json`. The same applies to the type's entry point: `dist/main.d.ts`
 
-```json title=package.json
+```json title="package.json"
 {
   "name": "my-component-library",
   "private": true,
@@ -575,7 +575,7 @@ Your library's primary entry point is now located at `dist/main.js`, so this nee
 
 You should also define which files should be packed into your distributed package.
 
-```json title=package.json
+```json title="package.json"
 {
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -597,7 +597,7 @@ Now take a look at your `dependencies`: right now there should be only two `reac
 
 You can move those two to the `devDependencies` as well. And additionally add them as `peerDependencies` so the consuming application is aware that it must have React installed to use this package.
 
-```json title=package.json
+```json title="package.json"
 {
 // diff-remove-next-line
 "dependencies": {
@@ -621,7 +621,7 @@ You can move those two to the `devDependencies` as well. And additionally add th
 
 To prevent the CSS files from being accidentally removed by the consumer's tree-shaking efforts, you should also specify the generated CSS as side effects:
 
-```json title=package.json
+```json title="package.json"
 {
 // ...
 // diff-add-next-line
@@ -634,7 +634,7 @@ To prevent the CSS files from being accidentally removed by the consumer's tree-
 
 You can use the special lifecycle script prepublishOnly to guarantee that your changes are always built before the package is published:
 
-```json title=package.json
+```json title="package.json"
 {
   "scripts": {
     "dev": "vite",
@@ -650,7 +650,7 @@ You can use the special lifecycle script prepublishOnly to guarantee that your c
 
 To just play around with your components on the demo page, you can simply import the components directly from the root of your project. This works because your `package.json` points to the transpiled main file `dist/main.ts`.
 
-```tsx title=src/App.tsx
+```tsx title="src/App.tsx"
 /* eslint-disable */
 import { Button, Input, Label } from '../';
 
