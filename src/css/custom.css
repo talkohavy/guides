@@ -216,16 +216,16 @@ html[data-theme='dark'] .header-github-link:before {
     no-repeat;
 }
 
+.lineSeparatorAbove {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
 /* Sidebar line separator */
 html[data-theme='dark'] .lineSeparatorAbove {
   border-color: var(--ifm-color-primary-darker);
-}
-
-.lineSeparatorAbove {
-  margin-top: 20px !important;
-  padding-top: 20px !important;
-  border-top-style: solid;
-  border-top-width: 1px;
 }
 
 /* ----------------------------------------------------- */
