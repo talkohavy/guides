@@ -21,24 +21,36 @@ Good things to template:
 
 ## 2. Why Helm?
 
-### - Intelligent Deployments
+### - Reason 1: Intelligent Deployments
 
-Helm is very intelligent when it comes to deployments. When we directly work with Kubernetes, we have to mention the order in which the resources should be created. For example, **configmaps** and **secrets** should be usually created before **deployment** and **services**. Helm knows to consider the correct order in which Kubernetes resources should be created, and it will automatically do it for us.
+Helm is very intelligent when it comes to deployments. When we directly work with Kubernetes, we have to explicitly mention the order in which the resources should be created. For example, **configmaps** and **secrets** should be usually created before **deployment** and **services**. Helm knows to consider the correct order in which Kubernetes resources should be created, and it will automatically do it for us.
 
-### - Lifecycle Hooks
+### - Reason 2: Lifecycle Hooks
 
 Helm also uses lifecycle hooks.
 
-If there is any work, which is not directly related to Kubernetes, but it has to be done during the installation or the upgrade, **helm allows us to write hooks** that can be hooked into the lifecycle events.
+**`helm` allows us to write hooks** that can be hooked into the lifecycle events. So,
+if there's any work, which is not directly related to Kubernetes, but it has to be done during the installation or the upgrade, you can do that using those hooks.
 
-Example lifecycle hooks are installation, upgrade, uninstallation, tests, etc.
+Some popular lifecycle hooks are:
 
-This could be writing data to database, backing up a database, or making sure that the Kubernetes cluster is in a required state before we do an installation. Such work can be put into a hook, and it can be hooked into helm's installation or upgrade, or uninstallation lifecycle.
+- installation
+- upgrade
+- uninstallation
+- tests
+- etc.
 
-### - Security
+Examples to what to use these hooks for:
+
+- writing data to database
+- backing up a database
+- making sure that the Kubernetes cluster is in a required state before we do an installation.
+- Replace the contents of a PLACEHOLDER in a file (e.g. `BASE_URL` in a frontend app)
+
+Such work can be put into a hook, and it can be hooked into helm's installation or upgrade, or uninstallation lifecycle.
+
+### - Reason 3: Security
 
 Helm has built-in support to ensure that charts which are downloaded from a central repository are secured.
 
 The **charts can be signed** using cryptography, and hashes can be generated, and when we install these charts, we're pulling them from the central repos, **helm will verify** that these charts are really from the source we are expecting and that they were not tweaked by any hacker.
-
----

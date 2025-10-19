@@ -64,7 +64,7 @@ This command takes a release name and uninstalls the release. It removes all of 
 
 #### The `--keep-history` flag
 
-In the past, this was the default. Now, running `uninstall` deletes everything. If you want to uninstall a chart, but keep its history, use this flag.
+In the past, this flag was true by default. Now, running `uninstall` deletes everything. If you want to uninstall a chart, but keep its history, use this flag.
 
 <br/>
 
@@ -85,7 +85,8 @@ This command installs a **chart** archive, and gives it a **nickname** which you
 - The `--dry-run` flag simulates an install. `--dry-run` is similar to `--dry-run=client`, which means that it will not attempt cluster connections, while setting `--dry-run=server` attempts to connect the cluster.
 - The `--force` flag forces resource updates through a replacement strategy.
 - The `--verify` flag verifies the package before using it.
-- The `--wait` flag will wait until all Pods, PVCs, Services, and minimum number of Pods of a Deployment, StatefulSet, or ReplicaSet are in a **ready state** before marking the release as **successful**. It will wait for as long as `--timeout`.
+- The `--wait` flag will wait until all Pods, PVCs, Services, and minimum number of Pods of a Deployment, StatefulSet, or ReplicaSet are in a **ready state** before marking the release as **successful**. It will wait for as long as `--timeout`. If no `--timeout was specified`, defaults to `5m0s`.
+- `--no-hooks`: This skips running hooks for the command
 
 The install argument must be a **chart reference**, a **path to a packaged chart**, a **path to an unpacked chart directory**, or a **URL**.
 
@@ -230,7 +231,8 @@ helm rollback RELEASE_NAME REVISION_NUMBER -n NAMESPACE
 
 Roll back a release to a previous revision.
 
-The first argument of the rollback command is the name of a release, and the second is a revision (version) number. _If this argument is omitted or set to 0, it will roll back to the **previous** release_.
+- The first argument of the rollback command is the `name` of a release.
+- The second is a `revision number` (version number). _If this argument is omitted or set to 0, it will roll back to the **previous** release_.
 
 <br/>
 

@@ -248,8 +248,23 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
-                  id: 'programming/devops/helm/deep-behind-the-scenes',
-                  label: '- Deep Behind The Scenes',
+                  id: 'programming/devops/helm/helm-install-deep-dive',
+                  label: '- Helm Install: Deep Dive',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/helm-upgrade-deep-dive',
+                  label: '- Helm Upgrade: Deep Dive',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/maintain-a-chart',
+                  label: '- Maintain a Chart',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/helm/helm-strategies',
+                  label: '- Helm Strategies',
                 },
                 {
                   type: 'doc',
