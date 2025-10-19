@@ -276,6 +276,11 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'doc',
+                  id: 'programming/devops/circleci/circleci',
+                  label: '- CircleCI',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/devops/circleci/benefits-of-circleci',
                   label: '- Benefits of CircleCI',
                 },
@@ -288,6 +293,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: 'programming/devops/circleci/using-contexts',
                   label: '- Using Contexts',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/circleci/data-persistence',
+                  label: '- Data Persistence',
                 },
               ],
             },

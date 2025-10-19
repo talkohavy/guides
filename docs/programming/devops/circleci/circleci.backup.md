@@ -1,5 +1,114 @@
 # CircleCI
 
+## 1. What is CircleCI?
+
+CircleCI is an industry leading continuous integration (CI) and deployment platform that allows engineering teams to build, test, and deploy software confidently and at scale.
+Here is how the platform works: circleci integrated directly with your version control system, like github or bitbucket, and validated code changes in real-time.
+In the circleci UI, you'll see a dashboard with the status for pipelines across all of your projects. You can filter the view to see just the pipelines that you've run, by project, and/or by a branch within that project. When pipelines are running, you can see the status for the pipeline updated in real-time along with the status for the workflows within that pipeline, and the jobs within those workflows.
+
+CircleCI offers first-class support for docker, and every major operating system, including linux, macos, and windows. It supports every language and framework.
+
+---
+
+## 2. Why is CircleCI Important?
+
+Nowadays, it is rare to find a company that DOES NOT use a continuous integration (CI) approach in their development processes. In case you are not familiar with it, continuous integration is a practice that encourages developers to integrate their code early and often into a shared repository.
+
+CI tools can be configured to trigger your build and execute various sets of automated tests before merging. Depending on the configuration defined, they can even stop the integration if any failures are detected. This information will help the team identify issues early and fix them quickly, preventing bugs in your code. In other words, continuous integration improves team productivity, efficiency and confidence, so you can find problems and solve them quickly, to release higher quality and more stable products.
+
+There are many tools that can help us implement a continuous integration approach in the development of our products. CircleCI is one of them.
+
+---
+
+## 3. Getting Started
+
+If you want to hook up a new project to circleci, the first steps are very basic:
+Head over to www.circleci.com, create an account (if you don't already have one), and hook it up to your new project's source control, either github or bitbucket.
+The next step is to create a folder called `.circleci`:
+
+```bash
+mkdir .circleci
+```
+
+...and inside it, create a `config.yml` file:
+
+```bash
+touch .circleci/config.yml
+```
+
+Basically what's going on in that config.yml file is that you are creating and defining all of the steps in your CI/CD pipeline. So, whatever is inside that `config.yml`, once you add that circleci to your project, and make that link between them, circleci will run whatever's inside that config.yml file, every time code changes are pushed up into your remote source control. The next step is to populate the config file with what best reflects your projects configuration.
+
+We will start with this basic `config.yml` sample, and build on it:
+
+```yaml
+---
+version: 2.1
+
+# ############################
+# Part 1: Define All Workflows
+# ############################
+workflows:
+  # Workflow No. 1: build_and_test
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+
+# #######################
+# Part 2: Define all jobs
+# #######################
+jobs:
+  # -------------------------
+  # Job Number 1: a build job
+  # -------------------------
+  build:
+    working_directory: ~/luckylove_frontend
+    docker:
+      - image: cimg/node:18.7.0
+    steps:
+      - checkout
+      - run:
+          name: "Step 1: Enable enable for pnpm to work"
+          command: sudo corepack enable
+      - run:
+          name: "Step 2: Remove husky's prepare script"
+          command: npm pkg delete scripts.prepare
+      - run:
+          name: "Step 3: Install all project's dependancies"
+          command: pnpm install
+      - run:
+          name: "Step 4: run a production build"
+          command: pnpm run build
+  # ------------------------
+  # Job Number 2: A Test Job
+  # ------------------------
+  test:
+    working_directory: ~/luckylove_frontend
+    docker:
+      - image: cimg/node:18.7.0
+    steps:
+      - checkout
+      - run:
+          name: "Step 1: Enable enable for pnpm to work"
+          command: sudo corepack enable
+      - run:
+          name: "Step 2: Remove husky's prepare script"
+          command: npm pkg delete scripts.prepare
+      - run:
+          name: "Step 3: Install all project's dependancies"
+          command: pnpm install
+      - run:
+          name: "Step 4: run a lint test"
+          command: pnpm run lint
+      - run:
+          name: "Step 5: run e2e tests"
+          command: pnpm run test
+```
+
+---
+
 ## 4. Docker & Docker Images
 
 In the config example above, you might have come across a key called `docker`:
