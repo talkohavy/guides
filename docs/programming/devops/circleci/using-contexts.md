@@ -30,35 +30,39 @@ The format, as mentioned, is key/value.
 
 Here's an example from your code:
 
-```yaml
+```yaml title=".circleci/config.yml"
+version: 2.1
+
+executors:
+  nodejs-executor:
+    docker:
+      - image: cimg/node:22.16.0
+    resource_class: large
+
 # -----------
 # Define Jobs
 # -----------
 jobs:
   # Job name
   build:
-    executor: nodejs
-    working_directory: ~/luckylove_frontend
+    executor: nodejs-executor
+    working_directory: ~/app
     # list of steps
     steps:
-      - checkout
       - run:
-          name: "Step 0: check context variables"
-          command: echo $TOP_SECRET
+          name: "Step: check context variables"
+          command: echo $ENV_VAR_FROM_CONTEXT
 
 # ----------------
 # Define Workflows
 # ----------------
 workflows:
   # Workflow name
-  build_and_test:
+  'Build & Test':
     # List of jobs
     jobs:
       - build:
           context: luckylove
-      - test:
-          requires:
-            - build
 ```
 
 Let's break it down:

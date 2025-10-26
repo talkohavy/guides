@@ -291,18 +291,14 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'doc',
-                  id: 'programming/devops/circleci/circleci',
-                  label: '- CircleCI',
-                },
-                {
-                  type: 'doc',
                   id: 'programming/devops/circleci/benefits-of-circleci',
                   label: '- Benefits of CircleCI',
                 },
                 {
                   type: 'doc',
-                  id: 'programming/devops/circleci/configuration',
-                  label: '- Configuration',
+                  id: 'programming/devops/circleci/getting-started',
+                  label: '- Getting Started',
+                  key: 'circleci-getting-started',
                 },
                 {
                   type: 'doc',
@@ -313,6 +309,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: 'programming/devops/circleci/data-persistence',
                   label: '- Data Persistence',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/circleci/dynamic-configuration',
+                  label: '- Dynamic Configuration',
                 },
               ],
             },
