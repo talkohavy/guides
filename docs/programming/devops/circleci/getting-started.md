@@ -88,7 +88,7 @@ A `Workflow`'s name however can have spaces.
 
 ---
 
-## 2. Configure when to run configuration
+## 3. Configure when to run configuration
 
 In the CircleCI [Web Application](https://app.circleci.com/home):
 
