@@ -59,13 +59,10 @@ executors:
     resource_class: large
 
 jobs:
-  'Hello World':
+  'hello_world':
     executor: nodejs-executor
     working_directory: ~/app
     steps:
-      - run:
-          name: 'Step: initialize stuff'
-          command: echo "initializing stuff..."
       - run:
           name: 'Step: echo Hello World'
           command: echo "Hello World"
@@ -73,7 +70,7 @@ jobs:
 workflows:
   'Test Pipeline':
     jobs:
-      - 'Lint & Format'
+      - 'hello_world'
 ```
 
 As you can see, in this file we created 1 executor, 1 workflow, that runs 1 job with 2 steps inside of it.
