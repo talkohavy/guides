@@ -1,6 +1,12 @@
 # Debugging a running node server
 
-## - Step 1: Make sure it's running
+## - Case 1: What app is running on port :4800
+
+```bash
+lsof -i :4800
+```
+
+## - Case 2: List node apps are currently running?
 
 ```bash
 ps aux | grep node
@@ -20,13 +26,7 @@ Options:
 - p → show process
 - n → don’t resolve names
 
-## - Step 2: curl to the service
-
-```bash
-curl -v http://localhost:9080
-```
-
-### Step 3: sniff on requests coming to the device
+## - Case 3: How to sniff on requests coming to the device?
 
 ```bash
 sudo tcpdump -i any port 9080 -n

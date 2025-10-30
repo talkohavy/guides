@@ -18,6 +18,18 @@ helm list -n NAMESPACE
 
 This command **lists all the releases** for a specified namespace (uses current namespace context if namespace not specified).
 
+```bash
+helm list --all                 # Show all releases without any filter applied, can use -a
+helm list --all-namespaces      # List releases across all namespaces, we can use -A
+helm list -l key1=value1,key2=value2 # Selector (label query) to filter on, supports '=', '==', and '!='
+helm list --date                # Sort by release date
+helm list --deployed            # Show deployed releases. If no other is specified, this will be automatically enabled
+helm list --pending             # Show pending releases
+helm list --failed              # Show failed releases
+helm list --uninstalled         # Show uninstalled releases (if 'helm uninstall --keep-history' was used)
+helm list --superseded          # Show superseded releases
+```
+
 <br/>
 
 ## - Command 2: helm create
@@ -335,3 +347,95 @@ The manifest is a YAML representation of all the Kubernetes resources that were 
 #### The `--revision` flag
 
 Get the manifest of a specific revision.
+
+---
+
+```bash
+helm show values CHART_LOCATION
+```
+
+Not useful for local charts, but definitely useful for remote charts.
+
+Displays what options are configurable on a chart.
+
+**Override default configuration**
+
+There are two ways to pass configuration data during install:
+
+- `--values` (or `-f`): Specify a YAML file with overrides. This can be specified multiple times and the rightmost file will take precedence
+- `--set`: Specify overrides on the command line.
+
+If both are used, `--set` values are merged into `--values` with higher precedence. Overrides specified with `--set` are persisted in a Secret. Values that have been `--set` can be viewed for a given release with `helm get values <release-name>`. Values that have been `--set` can be cleared by running `helm upgrade` with `--reset-values` specified.
+
+**The Format and Limitations of `--set`**
+
+The --set option takes zero or more name/value pairs. At its simplest, it is used like this: --set name=value. The YAML equivalent of that is:
+
+```yaml
+name: value
+```
+
+Multiple values are separated by , characters. So `--set a=b,c=d` becomes:
+
+```yaml
+a: b
+c: d
+```
+
+More complex expressions are supported. For example, `--set outer.inner=value` is translated into this:
+
+```yaml
+outer:
+  inner: value
+```
+
+Lists can be expressed by enclosing values in { and }. For example, `--set name={a, b, c}` translates to:
+
+```yaml
+name:
+  - a
+  - b
+  - c
+```
+
+Certain name/key can be set to be `null` or to be an empty array `[]`. For example, `--set name=[],a=null` translates
+
+```yaml
+name:
+  - a
+  - b
+  - c
+a: b
+```
+
+to:
+
+```yaml
+name: []
+a: null
+```
+
+As of Helm 2.5.0, it is possible to access list items using an array index syntax. For example, `--set servers[0].port=80` becomes:
+
+```yaml
+servers:
+  - port: 80
+```
+
+Multiple values can be set this way. The line `--set servers[0].port=80,servers[0].host=example` becomes:
+
+```yaml
+servers:
+  - port: 80
+    host: example
+```
+
+Sometimes you need to use special characters in your `--set` lines. You can use a backslash to escape the characters; `--set name=value1\,value2` will become:
+
+```yaml
+name: "value1,value2"
+```
+
+```bash
+helm lint
+```
