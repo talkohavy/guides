@@ -29,8 +29,7 @@ Create a `jest.config.js` file:
 
 ```ts title="jest.config.js"
 import requireJSON from 'json-easy-strip';
-import { createDefaultPreset } from 'ts-jest';
-import { pathsToModuleNameMapper } from 'ts-jest';
+import { createDefaultPreset, pathsToModuleNameMapper } from 'ts-jest';
 const tsconfig = requireJSON('./tsconfig.json');
 
 /**
