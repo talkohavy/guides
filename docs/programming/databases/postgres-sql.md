@@ -531,6 +531,45 @@ psql -U talkohavy -d talkohavy -h localhost -p 5432 -E
 
 Mentioned above are the defaults ☝🏼
 
+**Using a Connection String:**
+
+You can also connect using a PostgreSQL connection string (also known as a connection URI):
+
+```bash
+psql postgresql://username:password@host:port/database
+```
+
+**Example:**
+
+```bash
+psql postgresql://postgres:1234@localhost:5432/users
+```
+
+This is equivalent to:
+
+```bash
+psql -U postgres -d users -h localhost -p 5432
+```
+
+The connection string format is:
+
+```
+postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]
+```
+
+Where:
+
+- `user` - The database username
+- `password` - The user's password (optional, you'll be prompted if omitted)
+- `host` - The server hostname or IP address (default: localhost)
+- `port` - The port number (default: 5432)
+- `dbname` - The database name
+- `param1=value1` - Additional connection parameters (optional)
+
+:::warning
+Including passwords in connection strings is **not recommended for security reasons**, especially in scripts or shared documentation. Consider using environment variables or the `~/.pgpass` file instead.
+:::
+
 <br/>
 
 ### - Command 2: List all databases
