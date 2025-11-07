@@ -330,9 +330,25 @@ const sidebars: SidebarsConfig = {
           label: '- ELK Stack',
         },
         {
-          type: 'doc',
-          id: 'programming/git',
+          type: 'category',
           label: '- Git',
+          link: {
+            type: 'generated-index',
+            title: 'Git Guides',
+            description: 'Advanced concepts of Git',
+            slug: '/git',
+            keywords: ['git'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/git/git',
+            },
+            {
+              type: 'doc',
+              id: 'programming/git/git-split-diffs',
+            },
+          ],
         },
         {
           type: 'category',
