@@ -11,6 +11,8 @@
   - Commits panel
   - Stash panel
 
+- <kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>+</kbd><kbd>Tab</kbd>: Same as above arrows
+
 ### Pushing / Pulling
 
 - <kbd>p</kbd>: invokes a `git pull`.
@@ -32,15 +34,15 @@
 ### Basic File Staging
 
 - <kbd>Space</kbd>: Toggle staging/unstaging of the selected file
-- <kbd>A</kbd>: Toggle between staging all files or resetting all files
+- <kbd>a</kbd>: Toggle between staging all files or resetting all files
 
 ### Committing Changes
 
-- <kbd>C</kbd>: Open the commit message editor to write your commit message
+- <kbd>c</kbd>: Open the commit message editor to write your commit message
 
 ### Discarding Changes
 
-- <kbd>D</kbd>: Discard changes on the selected file (shows confirmation box)
+- <kbd>d</kbd>: Discard changes on the selected file (shows confirmation box)
 - <kbd>Shift</kbd>+<kbd>D</kbd>: Open a menu with multiple discard options
   - **Nuke working tree**: Clears all changes and deletes all new files (most commonly used)
 
@@ -63,14 +65,14 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### Staging Modes
 
-- <kbd>A</kbd>: Toggle between two staging modes:
+- <kbd>a</kbd>: Toggle between two staging modes:
   - **Hunk mode**: Stage entire hunks (like VS Code's diff viewer)
   - **Line mode**: Stage individual lines
 - <kbd>Space</kbd>: Add or remove the current line/hunk (toggles between staged/unstaged)
 
 ### Range Selection
 
-- <kbd>V</kbd>: Start selecting a range of lines
+- <kbd>v</kbd>: Start selecting a range of lines
 - <kbd>↑</kbd> / <kbd>↓</kbd> (Arrow Keys Up/Down): Extend the selection range
 - <kbd>Space</kbd>: Stage or unstage the selected range
 
@@ -80,8 +82,8 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### Removing Changes
 
-- <kbd>D</kbd> (left pane): Delete the line/change
-- <kbd>D</kbd> (right pane): Unstage the change
+- <kbd>d</kbd> (left pane): Delete the line/change
+- <kbd>d</kbd> (right pane): Unstage the change
 
 ---
 
@@ -121,7 +123,7 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 ### Cherry Picking
 
 1. Navigate to the **Commits panel**
-2. <kbd>V</kbd>: Start range selection mode
+2. <kbd>v</kbd>: Start range selection mode
 3. <kbd>↑</kbd> / <kbd>↓</kbd> (Arrow Keys Up/Down): Extend the range to select multiple commits
 4. <kbd>Shift</kbd>+<kbd>C</kbd>: Copy the selected commit hashes
 5. Navigate to the **Branches panel**
@@ -165,17 +167,17 @@ To move specific changes from one commit to another:
 | <kbd>Space</kbd>              | Files panel       | Toggle file staging                  |
 | <kbd>Space</kbd>              | Diff view         | Stage/unstage line or hunk           |
 | <kbd>Space</kbd>              | Branches panel    | Check out branch                     |
-| <kbd>A</kbd>                  | Files panel       | Toggle stage/unstage all files       |
-| <kbd>A</kbd>                  | Diff view         | Toggle hunk/line mode                |
-| <kbd>C</kbd>                  | Files panel       | Open commit message editor           |
-| <kbd>D</kbd>                  | Files panel       | Discard file changes                 |
-| <kbd>D</kbd>                  | Diff view (left)  | Delete line                          |
-| <kbd>D</kbd>                  | Diff view (right) | Unstage change                       |
+| <kbd>a</kbd>                  | Files panel       | Toggle stage/unstage all files       |
+| <kbd>a</kbd>                  | Diff view         | Toggle hunk/line mode                |
+| <kbd>c</kbd>                  | Files panel       | Open commit message editor           |
+| <kbd>d</kbd>                  | Files panel       | Discard file changes                 |
+| <kbd>d</kbd>                  | Diff view (left)  | Delete line                          |
+| <kbd>d</kbd>                  | Diff view (right) | Unstage change                       |
 | <kbd>Shift</kbd>+<kbd>D</kbd> | Files panel       | Open discard menu                    |
 | <kbd>Enter</kbd>              | Files panel       | View file diff                       |
 | <kbd>Tab</kbd>                | Diff view         | Switch between unstaged/staged panes |
-| <kbd>V</kbd>                  | Diff view         | Start range selection                |
-| <kbd>V</kbd>                  | Commits panel     | Start commit range selection         |
+| <kbd>v</kbd>                  | Diff view         | Start range selection                |
+| <kbd>v</kbd>                  | Commits panel     | Start commit range selection         |
 | <kbd>Shift</kbd>+<kbd>C</kbd> | Commits panel     | Copy selected commits                |
 | <kbd>Shift</kbd>+<kbd>V</kbd> | Commits panel     | Paste/cherry-pick commits            |
 | <kbd>Shift</kbd>+<kbd>A</kbd> | Commits panel     | Amend commit                         |
