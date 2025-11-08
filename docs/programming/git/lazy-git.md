@@ -87,7 +87,10 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 - <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
 ### Creating Pull Requests
 
-- <kbd>o</kbd>: Create a pull request
+- <kbd>o</kbd>: Create a pull request from the currently selected branch
+  - The pull request will target the default branch (e.g., `main` or `master`)
+- <kbd>Shift</kbd>+<kbd>O</kbd>: Create a pull request with a target branch selection
+  - Opens a searchable dropdown allowing you to choose which branch to merge into
 
 ---
 
