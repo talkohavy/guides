@@ -49,7 +49,7 @@
 
 ---
 
-## 3. Diff View
+## 3. Files --> Diff View Sub-Panel
 
 When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can stage individual lines or hunks.
 
