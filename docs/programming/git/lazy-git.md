@@ -4,7 +4,7 @@ A practical guide to navigating and using [lazygit](https://github.com/jesseduff
 
 ---
 
-## 1. Navigation Basics
+## 1. Basics
 
 ### Panel Navigation
 
@@ -14,6 +14,12 @@ A practical guide to navigating and using [lazygit](https://github.com/jesseduff
   - Branches panel
   - Commits panel
   - Stash panel
+
+### Pushing / Pulling
+
+- <kbd>p</kbd>: invokes a `git pull`.
+- <kbd>Shift</kbd>+<kbd>P</kbd>: invokes a `git push`
+  - When git identifies a divergence, it opens a confirmation box asking whether to `push --force` or cancel the operation.
 
 ---
 
