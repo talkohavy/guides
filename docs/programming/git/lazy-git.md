@@ -126,6 +126,10 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 - <kbd>s</kbd> (on a commit): Squash the commit with the commit below it. Asks for confirmation before executing.
 
+### Reverting Commits
+
+- <kbd>t</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
+
 ---
 
 ## 6. Quick Reference Table
