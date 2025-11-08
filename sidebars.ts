@@ -348,6 +348,10 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'programming/git/git-split-diffs',
             },
+            {
+              type: 'doc',
+              id: 'programming/git/lazy-git',
+            },
           ],
         },
         {
