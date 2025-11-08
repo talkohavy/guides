@@ -17,6 +17,10 @@
 - <kbd>Shift</kbd>+<kbd>P</kbd>: invokes a `git push`
   - When git identifies a divergence, it opens a confirmation box asking whether to `push --force` or cancel the operation.
 
+### Command Prompt
+
+- <kbd>:</kbd>: Opens a command prompt that allows for quickly executing shell commands without having to quit lazygit or switch to a different terminal
+
 ---
 
 ## 2. Files Panel
