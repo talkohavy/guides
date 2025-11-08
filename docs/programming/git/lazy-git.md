@@ -45,6 +45,7 @@
 ### Stashing Changes
 
 - <kbd>s</kbd>: Stash changes. Asks for confirmation and an optional name for the stash.
+- <kbd>Shift</kbd>+<kbd>S</kbd>: Opens a stash options menu where you can choose to stash only staged changes.
 
 ---
 
