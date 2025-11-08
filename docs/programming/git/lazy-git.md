@@ -83,12 +83,13 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 - <kbd>Space</kbd> (on a branch): Check out to that branch
 
-### Rebasing
-
-- <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
 ### Fetching a Branch
 
 - <kbd>f</kbd> (on a branch): Fetch the selected branch
+
+### Rebasing
+
+- <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
 
 ### Creating Pull Requests
 
