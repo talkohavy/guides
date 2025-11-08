@@ -1,9 +1,5 @@
 # Lazygit
 
-A practical guide to navigating and using [lazygit](https://github.com/jesseduffield/lazygit) with keyboard shortcuts.
-
----
-
 ## 1. Basics
 
 ### Panel Navigation
@@ -45,6 +41,10 @@ A practical guide to navigating and using [lazygit](https://github.com/jesseduff
 - <kbd>Enter</kbd>: Navigate to the split view showing file changes
   - Left side: unstaged changes
   - Right side: staged changes
+
+### Stashing Changes
+
+- <kbd>s</kbd>: Stash changes. Asks for confirmation and an optional name for the stash.
 
 ---
 
