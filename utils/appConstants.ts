@@ -1,4 +1,4 @@
-const APP_URLS = {
+export const APP_URLS = {
   docs: {
     programming: { index: '/docs/programming' },
   },
@@ -6,5 +6,3 @@ const APP_URLS = {
   gitRepositoryURL: 'https://github.com/talkohavy/guides/',
   productionURL: 'https://talkohavy.github.io/guides/',
 };
-
-export { APP_URLS };

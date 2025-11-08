@@ -1,8 +1,8 @@
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
-import { APP_URLS } from './utils/appConstants.js';
-import { IMAGES } from './utils/images/index.js';
+import { APP_URLS } from './utils/appConstants';
+import { IMAGES } from './utils/images';
 
 const config: Config = {
   // -------------------------
