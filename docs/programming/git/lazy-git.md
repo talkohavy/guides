@@ -131,6 +131,17 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 - <kbd>t</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
 
+### Moving Code Between Commits
+
+To move specific changes from one commit to another:
+
+1. Select a commit and press <kbd>Enter</kbd> on a file to view all changes made to that file
+2. Use <kbd>Space</kbd> to extract specific diffs and create a "custom patch" (visible on the right side)
+3. Press <kbd>Esc</kbd> twice to return to the commits list
+4. Navigate to the target commit where you want to move the patch
+5. Press <kbd>Ctrl</kbd>+<kbd>P</kbd> to open the patch menu
+6. Select "move the patch into the selected commit"
+
 ---
 
 ## 6. Quick Reference Table
