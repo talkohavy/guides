@@ -106,6 +106,10 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 4. <kbd>Shift</kbd>+<kbd>A</kbd>: Request to amend the commit with your changes
 5. <kbd>Enter</kbd>: Confirm and apply the amendment
 
+### Squashing Commits
+
+- <kbd>s</kbd> (on a commit): Squash the commit with the commit below it. Asks for confirmation before executing.
+
 ---
 
 ## 6. Quick Reference Table
