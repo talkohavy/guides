@@ -21,6 +21,10 @@
 
 - <kbd>:</kbd>: Opens a command prompt that allows for quickly executing shell commands without having to quit lazygit or switch to a different terminal
 
+### Help Menu
+
+- <kbd>?</kbd>: Opens a menu with all available keybindings and actions. The menu is context-specific, and changes based on the current active panel.
+
 ---
 
 ## 2. Files Panel

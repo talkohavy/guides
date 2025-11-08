@@ -282,7 +282,8 @@
   // CSS Rules:
   // ----------
   "css.lint.unknownProperties": "ignore",
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "cSpell.words": ["lazygit"]
   // "[css]": {
   //   "editor.defaultFormatter": "aeschli.vscode-css-formatter" // <--- i'm using prettier formatter instead of this, but also does an ok job.
   // },
