@@ -1,9 +1,5 @@
 # Lazygit
 
-A practical guide to navigating and using [lazygit](https://github.com/jesseduffield/lazygit) with keyboard shortcuts.
-
----
-
 ## 1. Basics
 
 ### Panel Navigation
@@ -46,9 +42,14 @@ A practical guide to navigating and using [lazygit](https://github.com/jesseduff
   - Left side: unstaged changes
   - Right side: staged changes
 
+### Stashing Changes
+
+- <kbd>s</kbd>: Stash changes. Asks for confirmation and an optional name for the stash.
+- <kbd>Shift</kbd>+<kbd>S</kbd>: Opens a stash options menu where you can choose to stash only staged changes.
+
 ---
 
-## 3. Diff View
+## 3. Files --> Diff View Sub-Panel
 
 When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can stage individual lines or hunks.
 
@@ -82,9 +83,20 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 - <kbd>Space</kbd> (on a branch): Check out to that branch
 
+### Fetching a Branch
+
+- <kbd>f</kbd> (on a branch): Fetch the selected branch
+
 ### Rebasing
 
 - <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
+
+### Creating Pull Requests
+
+- <kbd>o</kbd>: Create a pull request from the currently selected branch
+  - The pull request will target the default branch (e.g., `main` or `master`)
+- <kbd>Shift</kbd>+<kbd>O</kbd>: Create a pull request with a target branch selection
+  - Opens a searchable dropdown allowing you to choose which branch to merge into
 
 ---
 
@@ -119,6 +131,21 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 ### Squashing Commits
 
 - <kbd>s</kbd> (on a commit): Squash the commit with the commit below it. Asks for confirmation before executing.
+
+### Reverting Commits
+
+- <kbd>t</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
+
+### Moving Code Between Commits
+
+To move specific changes from one commit to another:
+
+1. Select a commit and press <kbd>Enter</kbd> on a file to view all changes made to that file
+2. Use <kbd>Space</kbd> to extract specific diffs and create a "custom patch" (visible on the right side)
+3. Press <kbd>Esc</kbd> twice to return to the commits list
+4. Navigate to the target commit where you want to move the patch
+5. Press <kbd>Ctrl</kbd>+<kbd>P</kbd> to open the patch menu
+6. Select "move the patch into the selected commit"
 
 ---
 
