@@ -85,6 +85,9 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 ### Rebasing
 
 - <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
+### Creating Pull Requests
+
+- <kbd>o</kbd>: Create a pull request
 
 ---
 
