@@ -389,7 +389,7 @@ outer:
   inner: value
 ```
 
-Lists can be expressed by enclosing values in { and }. For example, `--set name={a, b, c}` translates to:
+Lists can be expressed by enclosing values in `{ and }`. For example, `--set name={a, b, c}` translates to:
 
 ```yaml
 name:
