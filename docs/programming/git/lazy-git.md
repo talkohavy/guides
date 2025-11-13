@@ -128,7 +128,8 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 4. <kbd>Shift</kbd>+<kbd>C</kbd>: Copy the selected commit hashes
 5. Navigate to the **Branches panel**
 6. <kbd>Space</kbd>: Check out to the target branch
-7. <kbd>Shift</kbd>+<kbd>V</kbd>: Paste and apply the copied commits (cherry pick)
+7. Move to **Commits Panel**
+8. Hit <kbd>Shift</kbd>+<kbd>V</kbd> to paste and apply the copied commits (cherry pick)
 
 ### Amending Commits
 
