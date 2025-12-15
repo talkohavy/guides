@@ -70,6 +70,10 @@ const sidebars: SidebarsConfig = {
         //     },
         //     {
         //       type: 'doc',
+        //       id: 'programming/job-interview/csrf-attack',
+        //     },
+        //     {
+        //       type: 'doc',
         //       id: 'programming/job-interview/post-vs-get-login',
         //     },
         //   ],
