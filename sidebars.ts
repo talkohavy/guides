@@ -53,6 +53,27 @@ const sidebars: SidebarsConfig = {
         image: '/img/undraw_docusaurus_react.svg',
       },
       items: [
+        // {
+        //   type: 'category',
+        //   label: '- Job Interview',
+        //   link: {
+        //     type: 'generated-index',
+        //     title: 'Job Interview Q&A',
+        //     description: 'Job Interview Q&A',
+        //     slug: '/job-interview',
+        //     keywords: ['job-interview'],
+        //   },
+        //   items: [
+        //     {
+        //       type: 'doc',
+        //       id: 'programming/job-interview/my-background',
+        //     },
+        //     {
+        //       type: 'doc',
+        //       id: 'programming/job-interview/post-vs-get-login',
+        //     },
+        //   ],
+        // },
         {
           type: 'doc',
           id: 'programming/aws-kubernetes',
@@ -732,17 +753,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'video-editing/subtitles-encoding',
           label: '- Subs Encoding',
-        },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'MISC',
-      items: [
-        {
-          type: 'doc',
-          id: 'job-interview',
-          label: '- Job Interview',
         },
       ],
     },
