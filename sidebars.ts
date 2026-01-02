@@ -342,6 +342,37 @@ const sidebars: SidebarsConfig = {
                 },
               ],
             },
+            {
+              type: 'category',
+              label: '- Prometheus',
+              link: {
+                type: 'generated-index',
+                title: 'Kubernetes Guides',
+                description: 'All about Prometheus',
+                slug: '/prometheus',
+                keywords: ['prometheus'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/devops/prometheus/getting-started',
+                  label: '- Getting Started',
+                  key: 'prometheus-getting-started',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/prometheus/named-volume',
+                  label: '- Named Volume',
+                  key: 'prometheus-named-volume',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/devops/prometheus/custom-configuration',
+                  label: '- Custom Configuration',
+                  key: 'prometheus-custom-configuration',
+                },
+              ],
+            },
           ],
         },
         {
