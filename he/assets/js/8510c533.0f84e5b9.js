@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocusaurus_guides=self.webpackChunkdocusaurus_guides||[]).push([[9467],{866:s=>{s.exports=JSON.parse('{"tags":[{"label":"database","permalink":"/guides/he/docs/tags/database","count":1},{"label":"pagination","permalink":"/guides/he/docs/tags/pagination","count":1},{"label":"offset","permalink":"/guides/he/docs/tags/offset","count":1}]}')}}]);
