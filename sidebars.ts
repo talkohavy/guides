@@ -19,23 +19,49 @@ const sidebars: SidebarsConfig = {
   mySidebar: [
     {
       type: 'category',
-      label: 'Photoshop',
-      description: 'this is so wrong',
+      label: 'Knowledge Base',
+      description: 'Things I will surely forget',
       collapsible: true, // Set the category to be collapsible
       collapsed: true, // Set the category to be initially collapsed or open by default
       link: {
         type: 'generated-index',
-        title: 'Photoshop Guides',
-        description: 'Learn about photoshop concepts!',
-        slug: '/category/photoshop-guides',
-        keywords: ['photoshop'],
+        title: 'Knowledge Base',
+        description: 'Things to remember',
+        slug: '/category/knowledge-base',
+        keywords: ['knowledge'],
         image: '/img/undraw_docusaurus_react.svg',
       },
       items: [
+        // {
+        //   type: 'doc',
+        //   id: 'knowledge/my-background',
+        // },
         {
           type: 'doc',
-          id: 'photoshop/index',
-          label: '- Photoshop',
+          id: 'knowledge/csrf-attack',
+        },
+        {
+          type: 'doc',
+          id: 'knowledge/design-by-contract',
+          label: '-- Design By Contract',
+        },
+        {
+          type: 'doc',
+          id: 'knowledge/design-patterns',
+          label: '- Design Patterns',
+        },
+        {
+          type: 'doc',
+          id: 'knowledge/offset-and-cursor-based-pagination',
+        },
+        {
+          type: 'doc',
+          id: 'knowledge/post-vs-get-login',
+        },
+        {
+          type: 'doc',
+          id: 'knowledge/solid',
+          label: '-- SOLID',
         },
       ],
     },
@@ -53,31 +79,6 @@ const sidebars: SidebarsConfig = {
         image: '/img/undraw_docusaurus_react.svg',
       },
       items: [
-        // {
-        //   type: 'category',
-        //   label: '- Job Interview',
-        //   link: {
-        //     type: 'generated-index',
-        //     title: 'Job Interview Q&A',
-        //     description: 'Job Interview Q&A',
-        //     slug: '/job-interview',
-        //     keywords: ['job-interview'],
-        //   },
-        //   items: [
-        //     {
-        //       type: 'doc',
-        //       id: 'programming/job-interview/my-background',
-        //     },
-        //     {
-        //       type: 'doc',
-        //       id: 'programming/job-interview/csrf-attack',
-        //     },
-        //     {
-        //       type: 'doc',
-        //       id: 'programming/job-interview/post-vs-get-login',
-        //     },
-        //   ],
-        // },
         {
           type: 'doc',
           id: 'programming/aws-kubernetes',
@@ -377,11 +378,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'programming/design-patterns',
-          label: '- Design Patterns',
-        },
-        {
-          type: 'doc',
           id: 'programming/elk',
           label: '- ELK Stack',
         },
@@ -569,30 +565,6 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'programming/socket-io/q-n-a',
               label: '- Q & A',
-            },
-          ],
-        },
-        {
-          type: 'category',
-          label: '- Software Concepts',
-          link: {
-            type: 'generated-index',
-            title: 'Software Concepts Guides',
-            description: 'Software development concepts',
-            slug: '/software-concepts', // defaults to: '/category/[categoryName]'
-            keywords: ['software'],
-            image: '/img/heart.svg',
-          },
-          items: [
-            {
-              type: 'doc',
-              id: 'programming/concepts/solid',
-              label: '-- SOLID',
-            },
-            {
-              type: 'doc',
-              id: 'programming/concepts/design-by-contract',
-              label: '-- Design By Contract',
             },
           ],
         },
