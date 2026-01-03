@@ -39,11 +39,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'doc',
           id: 'knowledge/csrf-attack',
-        },
-        {
-          type: 'doc',
-          id: 'knowledge/design-by-contract',
-          label: '-- Design By Contract',
+          label: '- CSRF Attack',
         },
         {
           type: 'doc',
@@ -52,16 +48,23 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/long-polling',
+          label: '- Long-Polling',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/offset-and-cursor-based-pagination',
+          label: '- Offset and Cursor Pagination',
         },
         {
           type: 'doc',
           id: 'knowledge/post-vs-get-login',
+          label: '- Post vs Get Login',
         },
         {
           type: 'doc',
           id: 'knowledge/solid',
-          label: '-- SOLID',
+          label: '- SOLID Principles',
         },
       ],
     },
@@ -739,11 +742,6 @@ const sidebars: SidebarsConfig = {
               label: '- Window',
             },
           ],
-        },
-        {
-          type: 'doc',
-          id: 'programming/what-is-long-polling',
-          label: '- What is Long-Polling',
         },
       ],
     },
