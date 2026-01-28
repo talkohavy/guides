@@ -607,6 +607,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/terminal-god/journalctl',
+              label: '- JournalCtl',
+            },
+            {
+              type: 'doc',
               id: 'programming/terminal-god/vi',
               label: '- VI',
             },
