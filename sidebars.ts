@@ -63,6 +63,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/oauth2',
+          label: '- OAuth2',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/solid',
           label: '- SOLID Principles',
         },
