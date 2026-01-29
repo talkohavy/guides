@@ -632,6 +632,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/terminal-god/tar',
+              label: '- Tar',
+            },
+            {
+              type: 'doc',
               id: 'programming/terminal-god/debug-a-running-node-server',
               label: '- Debug Node server',
             },
