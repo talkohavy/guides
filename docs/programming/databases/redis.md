@@ -609,3 +609,166 @@ Examples:
    3) "email"
    4) "john@example.com"
 ```
+
+---
+
+## 4. Redis Sets
+
+A **Redis Set** is an unordered collection of unique strings. No duplicate members are allowed. Sets are useful for membership tracking, tags, unique visitors, and more.
+
+<br/>
+
+### - Command 14: SMEMBERS
+
+**Syntax**
+
+```bash
+SMEMBERS key
+```
+
+**Description**
+
+Returns all members of the set stored at key. The order of elements is not guaranteed—Redis sets are unordered.
+
+If the key does not exist, an empty array is returned. If the key holds a value that is not a set, an error is returned.
+
+**Time complexity:** O(N) where N is the number of members in the set
+
+**Use Cases:**
+
+- Retrieve all members of a set (tags, group members, IDs)
+- Inspect or export the contents of a set
+- Display all items in a collection
+
+Examples:
+
+```bash
+> SADD myset "one" "two" "three" "four"
+(integer) 4
+> SMEMBERS myset
+1) "one"
+2) "two"
+3) "three"
+4) "four"
+> SMEMBERS nonexistent
+(empty array)
+```
+
+:::warning
+For large sets in production, consider using `SSCAN` instead of `SMEMBERS` to avoid blocking the server. `SMEMBERS` returns the entire set at once, which can be slow for big collections.
+:::
+
+<br/>
+
+### - Command 15: SADD
+
+**Syntax**
+
+```bash
+SADD key member [member ...]
+```
+
+**Description**
+
+Adds one or more members to the set stored at key. If the key does not exist, a new set is created before adding the members. If the key exists but holds a value that is not a set, an error is returned.
+
+Duplicate members are ignored—Redis sets only store unique values. The return value is the number of members that were **added** to the set (not including duplicates that were already present).
+
+**Time complexity:** O(1) per member added
+
+**Use Cases:**
+
+- Create a set and add members in one command
+- Build collections of tags, categories, or IDs
+- Track unique users, items, or events
+- Store group memberships or permissions
+
+Examples:
+
+```bash
+> SADD myset "one" "two" "three"
+(integer) 3
+> SADD myset "one" "four"
+(integer) 1
+> SADD myset "five"
+(integer) 1
+```
+
+In the first `SADD`, we create the set and add three members. In the second, `"one"` is already in the set so it's ignored; only `"four"` is added. The third adds `"five"`.
+
+<br/>
+
+### - Command 16: SREM
+
+**Syntax**
+
+```bash
+SREM key member [member ...]
+```
+
+**Description**
+
+Removes the specified members from the set stored at key. Members that do not exist in the set are ignored. If the key does not exist, it is treated as an empty set and the command returns 0.
+
+The return value is the number of members that were **removed** from the set (not including non-existing members).
+
+**Time complexity:** O(1) per member removed
+
+**Use Cases:**
+
+- Remove a user from a group
+- Revoke permissions or tags
+- Maintain a dynamic list of unique items
+
+Examples:
+
+```bash
+> SADD myset "one" "two" "three" "four"
+(integer) 4
+> SREM myset "two" "four"
+(integer) 2
+> SREM myset "nonexistent"
+(integer) 0
+```
+
+<br/>
+
+### - Command 17: SISMEMBER
+
+**Syntax**
+
+```bash
+SISMEMBER key member
+```
+
+**Description**
+
+Determines whether a member belongs to the set stored at key. Returns `1` if the element is a member of the set, or `0` if the element is not a member of the set, or when the key does not exist.
+
+**Time complexity:** O(1)
+
+**Use Cases:**
+
+- Check if a user is in a group or has a specific permission
+- Verify membership before performing set operations
+- Data deduplication checks
+- Rate limiting or feature flag lookups
+
+Examples:
+
+```bash
+> SADD myset "one" "two" "three"
+(integer) 3
+> SISMEMBER myset "one"
+(integer) 1
+> SISMEMBER myset "two"
+(integer) 1
+> SISMEMBER myset "four"
+(integer) 0
+> SISMEMBER nonexistent "one"
+(integer) 0
+```
+
+:::info
+For checking multiple members at once, use `SMISMEMBER` (available since Redis 6.2).
+:::
