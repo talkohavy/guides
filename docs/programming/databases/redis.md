@@ -422,6 +422,14 @@ DEL no-exist-key
 (integer) 2
 ```
 
+---
+
+## 4. Redis Hashes
+
+A **Redis Hash** is a map of field-value pairs stored under a single key. Think of it like an object: `user:1000` holds `username`, `email`, `age`—each field has a name and a value. Commands like `HSET`, `HGET`, and `HGETALL` work with this structure.
+
+**Hashes vs Sets:** A **Hash** stores named fields with values (e.g., `username` → `"Tal Kohavy"`). A **Set** stores an unordered collection of unique strings with no field names—just members (e.g., `"one"`, `"two"`, `"three"`). Use Hashes for objects/records; use Sets for membership lists, tags, or unique items.
+
 <br/>
 
 ### - Command 10: HSET
@@ -612,7 +620,7 @@ Examples:
 
 ---
 
-## 4. Redis Sets
+## 5. Redis Sets
 
 A **Redis Set** is an unordered collection of unique strings. No duplicate members are allowed. Sets are useful for membership tracking, tags, unique visitors, and more.
 
