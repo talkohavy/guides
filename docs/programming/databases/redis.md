@@ -668,7 +668,67 @@ For large sets in production, consider using `SSCAN` instead of `SMEMBERS` to av
 
 <br/>
 
-### - Command 15: SADD
+### - Command 15: SSCAN
+
+**Syntax**
+
+```bash
+SSCAN key cursor [MATCH pattern] [COUNT count]
+```
+
+**Description**
+
+Incrementally iterates over the members of the set stored at key. This command is the set-specific version of `SCAN` and is designed to handle large sets without blocking the Redis server.
+
+The `SSCAN` command returns:
+
+1. A new cursor value (to be used in the next call)
+2. An array of set members
+
+Like `SCAN`, the iteration starts with cursor 0 and ends when the returned cursor is 0.
+
+**Options:**
+
+- `MATCH pattern` - Only return members that match the given pattern (supports glob-style patterns, e.g., `user:*`)
+- `COUNT count` - Hint about how many elements to return per call (default is usually around 10)
+
+**Use Cases:**
+
+- Safely iterate through large sets in production
+- Search for specific members using pattern matching
+- Process set data in chunks to avoid memory issues
+- Alternative to `SMEMBERS` when the set is large
+
+**When to use SSCAN vs SMEMBERS:**
+
+- Use `SSCAN` for large sets (>1000 members) or in production environments
+- Use `SMEMBERS` for small sets or development/debugging
+
+Examples:
+
+```bash
+> SADD myset "one" "two" "three" "four" "five"
+(integer) 5
+> SSCAN myset 0
+1) "0"
+2) 1) "one"
+   2) "two"
+   3) "three"
+   4) "four"
+   5) "five"
+> SSCAN myset 0 MATCH t*
+1) "0"
+2) 1) "two"
+   2) "three"
+> SSCAN myset 0 COUNT 2
+1) "0"
+2) 1) "one"
+   2) "two"
+```
+
+<br/>
+
+### - Command 16: SADD
 
 **Syntax**
 
@@ -706,7 +766,7 @@ In the first `SADD`, we create the set and add three members. In the second, `"o
 
 <br/>
 
-### - Command 16: SREM
+### - Command 17: SREM
 
 **Syntax**
 
@@ -741,7 +801,7 @@ Examples:
 
 <br/>
 
-### - Command 17: SISMEMBER
+### - Command 18: SISMEMBER
 
 **Syntax**
 
