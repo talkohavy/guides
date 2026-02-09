@@ -840,3 +840,40 @@ Examples:
 :::info
 For checking multiple members at once, use `SMISMEMBER` (available since Redis 6.2).
 :::
+
+<br/>
+
+### - Command 19: SCARD
+
+**Syntax**
+
+```bash
+SCARD key
+```
+
+**Description**
+
+Returns the number of members (cardinality) of the set stored at key. If the key does not exist, `0` is returned. If the key exists but holds a value that is not a set, an error is returned.
+
+**Time complexity:** O(1)
+
+**Use Cases:**
+
+- Get the size of a set (e.g., number of unique visitors, tags, or group members)
+- Check if a set is empty before processing
+- Display counts or statistics
+
+Examples:
+
+```bash
+> SADD myset "one" "two" "three"
+(integer) 3
+> SCARD myset
+(integer) 3
+> SADD myset "four"
+(integer) 1
+> SCARD myset
+(integer) 4
+> SCARD nonexistent
+(integer) 0
+```
