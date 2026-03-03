@@ -64,13 +64,13 @@ openssl x509 -in server.crt -text -noout
 ### - Step 5: Create PEM file
 
 ```bash
-cat server.crt server.key > server.pem
+cat server.crt rootCA.crt > fullchain.pem
 ```
 
 The server settings will most likely require 2 files:
 
--- `server.pem` (which includes `server.crt` & `server.key`)
--- `rootCA.crt`
+-- `fullchain.pem` (which includes `server.crt` & `rootCA.crt`)
+-- `server.key`
 
 ---
 
@@ -121,7 +121,6 @@ If the certificate is invalid (e.g., expired, not signed by the CA, or the CN do
 If the server is configured to require mutual authentication, the client sends over its `client.crt` to be examined, and now the server performs a similar process:
 
 - 1. The server examines the client's certificate (`client.crt`) using the `rootCA.crt` to verify that:
-
   - It's signed by the trusted `CA` (from the server's configuration).
   - It hasn't expired.
 
@@ -384,12 +383,15 @@ Other formats are: **DER** and **PFX/PKCS#12**.
 - Use Base64 encoding to store binary data.
 - Contain special header and footer lines, such as:
   - For a certificate:
+
   ```bash
   -----BEGIN CERTIFICATE-----
   (Base64-encoded certificate data)
   -----END CERTIFICATE-----
   ```
+
   - For a private key:
+
   ```bash
   -----BEGIN PRIVATE KEY-----
   (Base64-encoded private key data)
