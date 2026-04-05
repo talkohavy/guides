@@ -120,6 +120,13 @@ html[data-theme='dark'] {
   outline: none;
 }
 
+/* Fixes Horizontal alignment */
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /* Apply improved typography globally */
 html {
   font-size: var(--ifm-font-size-base);

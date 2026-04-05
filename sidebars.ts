@@ -402,7 +402,19 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'programming/git/git',
+              id: 'programming/git/git-url',
+            },
+            {
+              type: 'doc',
+              id: 'programming/git/git-branch',
+            },
+            {
+              type: 'doc',
+              id: 'programming/git/git-alias',
+            },
+            {
+              type: 'doc',
+              id: 'programming/git/git-config',
             },
             {
               type: 'doc',
