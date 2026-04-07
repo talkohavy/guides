@@ -414,6 +414,10 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/git/git-tags',
+            },
+            {
+              type: 'doc',
               id: 'programming/git/git-config',
             },
             {
