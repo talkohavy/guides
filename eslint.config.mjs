@@ -1,6 +1,8 @@
 import pluginJs from '@eslint/js';
+import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
 import pluginCompiler from 'eslint-plugin-react-compiler';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -9,21 +11,23 @@ export default [
     // when an `ignores` key is used without any other keys in the configuration object, then it acts as global `ignores`.
     ignores: ['build', '.docusaurus', 'babel.config.js'],
   },
-  { languageOptions: { globals: globals.browser } },
+  { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    name: 'react-compiler/recommended',
     plugins: {
       'react-compiler': pluginCompiler,
+      'react-hooks': pluginReactHooks,
       perfectionist,
-    },
-    rules: {
-      'react-compiler/react-compiler': 'error',
+      import: importPlugin,
     },
   },
   {
     rules: {
+      // Error Rules
+      // -----------
+      'react-compiler/react-compiler': 'error',
+      'import/no-duplicates': ['error', { 'prefer-inline': false }],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -37,39 +41,58 @@ export default [
           varsIgnorePattern: '^React$',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      'no-debugger': 'warn',
       'perfectionist/sort-imports': [
         'error',
         {
           type: 'alphabetical',
           order: 'asc',
+          sortBy: 'path', // <--- defaults to 'path'. Options are: 'path' | 'specifier'
           ignoreCase: true,
           specialCharacters: 'keep',
-          internalPattern: ['^~/.+'],
+          internalPattern: ['^@src/.+', '^~/.+'], // <--- defaults to default: ['^~/.+', '^@/.+']. Specifies a pattern for identifying internal imports. This is useful for distinguishing your own modules from external dependencies.
           partitionByComment: false,
-          partitionByNewLine: false,
-          newlinesBetween: 'never', // <--- 'always' | 'never' | 'ignore'
+          newlinesBetween: 0, // <--- number | 'ignore' (0 = no newlines, 1 = one newline, etc.)
           maxLineLength: undefined,
           groups: [
             'react',
-            'type',
-            ['builtin', 'external'],
-            'internal-type',
-            'internal',
-            ['parent-type', 'sibling-type', 'index-type'],
+            'builtin', // <--- import fs from 'fs';
+            'external', // <--- import express from 'express';
+            'internal', // <--- import myUtil from '@src/myUtil';
             ['parent', 'sibling', 'index'],
-            'object',
+            'type-internal',
+            'type',
+            ['type-parent', 'type-sibling', 'type-index'],
             'unknown',
           ],
-          customGroups: {
-            value: { react: ['^react$', '^react-.+'] },
-            type: { react: ['^react$', '^react-.+'] },
-          },
+          customGroups: [
+            {
+              groupName: 'react',
+              selector: 'type',
+              elementNamePattern: ['^react$', '^react-.+'],
+            },
+            {
+              groupName: 'react',
+              elementNamePattern: ['^react$', '^react-.+'],
+            },
+          ],
           environment: 'node', // <--- Possible Options: 'node' | 'bun'
         },
       ],
+
+      // Warning Rules
+      // -------------
+      'no-debugger': 'warn',
+      'react-hooks/rules-of-hooks': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // Off Rules
+      // -------------
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      'preserve-caught-error': 'off',
+
+      // Notes
+      // -----
       // 'sort-imports': [ <--- DO NOT ENABLE! Collides with perfectionist/sort-imports
       //   'error',
       //   {
