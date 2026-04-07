@@ -27,7 +27,7 @@ git init
 ```
 
 ```bash
-git remote add origin git@github.com:talkohavy/<name>.git
+git remote add origin git@github.com:talkohavy/NAME.git
 git push -u origin master
 ```
 
@@ -36,7 +36,7 @@ git push -u origin master
 Here are some good options:
 
 - An `src` folder with an `index.js`
-- A README.md file
+- A `README.md` file
 
 ### - D. Create an .npmrc file
 
@@ -55,291 +55,7 @@ You'll of course need to create an **access token** on npm's website, under your
 You **can commit** the `.npmrc` file, since it doesn't include any sensitive information.
 :::
 
-### - E. create an .npmignore
-
-At the root of your project create am `.npmignore` file.  
-Inside it put:
-
-```
-node_modules
-dist
-```
-
-:::info
-When we'll create a `dist` folder, we will cd into it, and run the publish command from there. When we do, we will use `lvlup`'s publish command.
-:::
-
-### - F. Development kit
-
-Install these packages:
-
-```bash
-p add -D @eslint/js @types/node globals eslint-plugin-react-compiler eslint-plugin-perfectionist eslint husky prettier typescript-eslint typescript
-```
-
-And add these files:
-
-**Eslint:**
-
-```js title="eslint.config.js"
-import pluginJs from '@eslint/js';
-import perfectionist from 'eslint-plugin-perfectionist';
-import pluginCompiler from 'eslint-plugin-react-compiler';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
-
-export default [
-  {
-    // when an `ignores` key is used without any other keys in the configuration object, then it acts as global `ignores`.
-    ignores: ['dist'],
-  },
-  { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    name: 'react-compiler/recommended',
-    plugins: {
-      'react-compiler': pluginCompiler,
-      perfectionist,
-    },
-    rules: {
-      'react-compiler/react-compiler': 'error',
-    },
-  },
-  {
-    rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          vars: 'all',
-          args: 'all',
-          argsIgnorePattern: '(^_|^req$|^res$|^next$)',
-          caughtErrors: 'all',
-          caughtErrorsIgnorePattern: '^_',
-          destructuredArrayIgnorePattern: '^_',
-          ignoreRestSiblings: false,
-          varsIgnorePattern: '^React$',
-        },
-      ],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      'no-debugger': 'warn',
-      'perfectionist/sort-imports': [
-        'error',
-        {
-          type: 'alphabetical',
-          order: 'asc',
-          ignoreCase: true,
-          specialCharacters: 'keep',
-          internalPattern: ['^~/.+'],
-          partitionByComment: false,
-          partitionByNewLine: false,
-          newlinesBetween: 'never', // <--- 'always' | 'never' | 'ignore'
-          maxLineLength: undefined,
-          groups: [
-            'react',
-            'type',
-            ['builtin', 'external'],
-            'internal-type',
-            'internal',
-            ['parent-type', 'sibling-type', 'index-type'],
-            ['parent', 'sibling', 'index'],
-            'object',
-            'unknown',
-          ],
-          customGroups: {
-            value: { react: ['^react$', '^react-.+'] },
-            type: { react: ['^react$', '^react-.+'] },
-          },
-          environment: 'node', // <--- Possible Options: 'node' | 'bun'
-        },
-      ],
-      // 'sort-imports': [ <--- DO NOT ENABLE! Collides with perfectionist/sort-imports
-      //   'error',
-      //   {
-      //     ignoreCase: false,
-      //     ignoreDeclarationSort: false,
-      //     ignoreMemberSort: false,
-      //     memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-      //     allowSeparatedGroups: false,
-      //   },
-      // ],
-      // 'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false, minKeys: 2 }], <--- DO NOT ENABLE! Collides with perfectionist/sort-imports
-    },
-  },
-];
-```
-
-**Prettier:**
-
-```js
-// prettier.config.js, .prettierrc.js, prettier.config.mjs, or .prettierrc.mjs
-
-const config = {
-  useTabs: false,
-  tabWidth: 2, // <--- indent tab is 2 spaces worth
-  trailingComma: 'all', // <--- Options are: all | es5 | none. Should it add trailing commas on last items? es5 is just for Object keys & Array members. All is also for function parameters.
-  semi: true, // <--- prints semi-colons at the ends of statements
-  singleQuote: true, // <--- turns this " into '
-  jsxSingleQuote: true, // <--- turns this " into ' in JSX
-  bracketSameLine: false, // <--- This is for an HTML file. if true, puts the closing of an opening tag on the last line instead of on a new line.
-  bracketSpacing: true, // turns this {foo: bar} into this { foo: bar }
-  arrowParens: 'always', // WARNING!!! Leave it on "always"! turns this x => x into this (x) => x. This rule MUST stay on "always"! Otherwise it would collide with the "prefer-arrow-callback" & "arrow-body-style" combo from eslint.
-  endOfLine: 'auto',
-  printWidth: 120, // <--- must match the value stated in eslint config. Defaults to 80.
-  proseWrap: 'preserve', // <--- This is relevant for markdown file. "always" creates a line break when line exceeds the amount of allowed characters. "preserve" wraps the text, but remembers that it's a single line. "never" keeps that text in a single line and doesn't wrap at all; text will be kept as a very long one-liner.
-  htmlWhitespaceSensitivity: 'css',
-  embeddedLanguageFormatting: 'off',
-  quoteProps: 'as-needed', // only add quotes around object properties where required
-  overrides: [
-    {
-      files: ['*.mts', '*.cts', '*.ts', '*.d.ts', '*.js', '*.jsx'],
-      options: { parser: 'typescript' },
-    },
-    {
-      files: ['*.json'],
-      options: { parser: 'json' },
-    },
-  ],
-};
-
-export default config;
-```
-
-**Typescript:**
-
-```json title="tsconfig.json"
-{
-  "compilerOptions": {
-    // -------------------
-    // Section 1: Projects
-    // -------------------
-    // "composite": true, // Enable constraints that allow a TypeScript project to be used with project references.
-    // "incremental": true, // Save .tsbuildinfo files to allow for incremental compilation of projects.
-    // "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo", // Specify the path to .tsbuildinfo incremental compilation file.
-    // "disableSourceOfProjectReferenceRedirect": true,  // Disable preferring source files instead of declaration files when referencing composite projects.
-    // "disableSolutionSearching": true,                 // Opt a project out of multi-project reference checking when editing.
-    // "disableReferencedProjectLoad": true,             // Reduce the number of projects loaded automatically by TypeScript.
-
-    // -----------------------------------
-    // Section 2: Language and Environment
-    // -----------------------------------
-    "target": "ESNext", // <--- defaults to "ES3"
-    "jsx": "react-jsx", // Specify what JSX code is generated.
-    "lib": ["ESNext"], // adding the "DOM" library helps vs-code to recognize the window & document objects. Specify a set of bundled library declaration files that describe the target runtime environment.
-    "useDefineForClassFields": true, // Emit ECMAScript-standard-compliant class fields.
-    "moduleDetection": "force", // <--- defaults to `auto`. Control what method is used to detect module-format JS files.
-    // "experimentalDecorators": true,                   // Enable experimental support for legacy experimental decorators.
-    // "emitDecoratorMetadata": true,                    // Emit design-type metadata for decorated declarations in source files.
-    // "jsxFactory": "",                                 // Specify the JSX factory function used when targeting React JSX emit, e.g. 'React.createElement' or 'h'.
-    // "jsxFragmentFactory": "",                         // Specify the JSX Fragment reference used for fragments when targeting React JSX emit e.g. 'React.Fragment' or 'Fragment'.
-    // "jsxImportSource": "",                            // Specify module specifier used to import the JSX factory functions when using 'jsx: react-jsx*'.
-    // "reactNamespace": "",                             // Specify the object invoked for 'createElement'. This only applies when targeting 'react' JSX emit.
-    // "noLib": true,                                    // Disable including any library files, including the default lib.d.ts.
-
-    // ------------------
-    // Section 3: Modules
-    // ------------------
-    "module": "ESNext", // <--- defaults to `commonjs`. Specify what module code is generated.
-    "moduleResolution": "Bundler", // Specify how TypeScript looks up a file from a given module specifier.
-    "resolveJsonModule": true,
-    "baseUrl": "./", // Specify the base directory to resolve non-relative module names.
-    "typeRoots": ["node_modules/@types"], // Specify multiple folders that act like './node_modules/@types'.
-    "paths": {
-      "@src/*": ["src/*"]
-    },
-    // "allowImportingTsExtensions": true,
-    // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
-    // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
-    // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
-    // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
-    // "allowImportingTsExtensions": true,               /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */
-    // "resolvePackageJsonExports": true,                /* Use the package.json 'exports' field when resolving package imports. */
-    // "resolvePackageJsonImports": true,                /* Use the package.json 'imports' field when resolving imports. */
-    // "customConditions": [],                           /* Conditions to set in addition to the resolver-specific defaults when resolving imports. */
-    // "resolveJsonModule": true,                        /* Enable importing .json files. */
-    // "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
-    // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
-
-    // -----------------------------
-    // Section 4: JavaScript Support
-    // -----------------------------
-    "checkJs": true, // without it? this config file would not apply to js/jsx files. Enable error reporting in type-checked JavaScript files.
-    "maxNodeModuleJsDepth": 0, // Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'.
-    // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
-
-    // ---------------
-    // Section 5: Emit
-    // ---------------
-    "noEmit": false, // Disable emitting files from a compilation.
-    "declaration": true, // Generate .d.ts files from TypeScript and JavaScript files in your project.
-    "sourceMap": true, // defaults to `false`. Create source map files for emitted JavaScript files.
-    "outDir": "dist", // Specify an output folder for all emitted files.
-    "noEmitOnError": true, // Disable emitting files if any type checking errors are reported.
-    "removeComments": false, // Disable emitting comments.
-    "emitDeclarationOnly": true /* Only output d.ts files and not JavaScript files. */,
-    // "declarationMap": true,                           /* Create sourcemaps for d.ts files. */
-    // "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
-    // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
-    // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
-    // "downlevelIteration": true,                       /* Emit more compliant, but verbose and less performant JavaScript for iteration. */
-    // "sourceRoot": "",                                 /* Specify the root path for debuggers to find the reference source code. */
-    // "mapRoot": "",                                    /* Specify the location where debugger should locate map files instead of generated locations. */
-    // "inlineSources": true,                            /* Include source code in the sourcemaps inside the emitted JavaScript. */
-    // "emitBOM": true,                                  /* Emit a UTF-8 Byte Order Mark (BOM) in the beginning of output files. */
-    // "newLine": "crlf",                                /* Set the newline character for emitting files. */
-    // "stripInternal": true,                            /* Disable emitting declarations that have '@internal' in their JSDoc comments. */
-    // "noEmitHelpers": true,                            /* Disable generating custom helper functions like '__extends' in compiled output. */
-    // "preserveConstEnums": true,                       /* Disable erasing 'const enum' declarations in generated code. */
-
-    // ------------------------------
-    // Section 6: Interop Constraints
-    // ------------------------------
-    "isolatedModules": true, // <--- Setting to `true` tells TypeScript to warn you if you write certain code that can't be correctly interpreted by a single-file transpilation process. Ensure that each file can be safely transpiled without relying on other imports.
-    "esModuleInterop": true, // Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.
-    "allowSyntheticDefaultImports": true, // Allow 'import x from y' when a module doesn't have a default export.
-    "forceConsistentCasingInFileNames": true, // Ensure that casing is correct in imports.
-    "verbatimModuleSyntax": true, // Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the 'module' setting.
-    // "preserveSymlinks": true, // <--- Solved being redirected to node_modules/.pnpm symlink all the time! Disable resolving symlinks to their realpath. This correlates to the same flag in node. But on the other-hand, I wasn't able to import Page as type from playwright in jsdoc. Disable resolving symlinks to their realpath. This correlates to the same flag in node.
-    // "isolatedDeclarations": true,                     /* Require sufficient annotation on exports so other tools can trivially generate declaration files. */
-
-    // ------------------------
-    // Section 7: Type Checking
-    // ------------------------
-    /* Linting */
-    "strict": true, // <--- Enable all strict type-checking options.
-    "noImplicitAny": true, // <--- Enable error reporting for expressions and declarations with an implied 'any' type.
-    "noImplicitThis": true, // <---Enable error reporting when 'this' is given the type 'any'.
-    "useUnknownInCatchVariables": true, // <--- Default catch clause variables as 'unknown' instead of 'any'.
-    "alwaysStrict": true, // <--- Ensure 'use strict' is always emitted.
-    "noUnusedLocals": true, // <--- Enable error reporting when local variables aren't read.
-    "noUnusedParameters": true, // <--- Raise an error when a function parameter isn't read.
-    "exactOptionalPropertyTypes": false, // <--- Interpret optional property types as written, rather than adding 'undefined'.
-    "noImplicitReturns": true, // <--- Enable error reporting for codepaths that do not explicitly return in a function.
-    "noFallthroughCasesInSwitch": true, // <--- Enable error reporting for fallthrough cases in switch statements.
-    "noUncheckedIndexedAccess": true, // <--- Add 'undefined' to a type when accessed using an index.
-    "noImplicitOverride": true, // <--- Ensure overriding members in derived classes are marked with an override modifier.
-    "noPropertyAccessFromIndexSignature": false, // <--- settings this to true marks obj['firstName'] as an error, and recommends obj.firstName instead. Enforces using indexed accessors for keys declared using an indexed type.
-    "allowUnusedLabels": false, // <--- Disable error reporting for unused labels.
-    // "allowUnreachableCode": true,                     // <--- Disable error reporting for unreachable code.
-    // "strictNullChecks": true,                         // <--- When type checking, take into account 'null' and 'undefined'.
-    // "strictFunctionTypes": true,                      // <--- When assigning functions, check to ensure parameters and the return values are subtype-compatible.
-    // "strictBindCallApply": true,                      // <--- Check that the arguments for 'bind', 'call', and 'apply' methods match the original function.
-    // "strictPropertyInitialization": true,             // <--- Check for class properties that are declared but not set in the constructor.
-
-    // -----------------------
-    // Section 8: Completeness
-    // -----------------------
-    "skipLibCheck": false // Skip type checking all .d.ts files.
-    // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-  },
-  "compileOnSave": true,
-  "exclude": ["node_modules"],
-  "include": ["src/index.ts"]
-}
-```
-
-### - G. package.json script
+### - E. package.json script
 
 Add these scripts:
 
@@ -356,7 +72,7 @@ Add these scripts:
 }
 ```
 
-### - H. Create a build.config.mjs file
+### - F. Create a build.config.mjs file
 
 This fil will serve as your `build` script.
 At the root of your project, create a `build.config.mjs` file:
@@ -387,9 +103,9 @@ const mode = process.env.NODE_ENV;
 const isProd = mode === 'production';
 const outDirName = 'dist';
 const COLORS = {
-  green: '[32m',
-  blue: '[34m',
-  stop: '[39m',
+  green: '\x1b[32m',
+  blue: '\x1b[34m',
+  stop: '\x1b[39m',
 };
 
 buildPackageConfig();
@@ -443,14 +159,19 @@ function copyStaticFiles() {
 
   const filesToCopyArr = [
     { filename: 'package.json', sourceDirPath: [], destinationDirPath: [] },
-    { filename: '.npmignore', sourceDirPath: [], destinationDirPath: [] },
+    { filename: 'README.md', sourceDirPath: [], destinationDirPath: [] },
+    {
+      filename: '.npmignore',
+      sourceDirPath: [],
+      destinationDirPath: [],
+      isAllowedToFail: true,
+    },
     {
       filename: '.npmrc',
       sourceDirPath: [],
       destinationDirPath: [],
       isAllowedToFail: true,
     },
-    { filename: 'README.md', sourceDirPath: [], destinationDirPath: [] },
   ];
 
   filesToCopyArr.forEach(({ filename, sourceDirPath, destinationDirPath, isAllowedToFail }) => {
@@ -492,7 +213,7 @@ function manipulatePackageJsonFile() {
 }
 ```
 
-### - I. install `lvlup`
+### - G. install `lvlup`
 
 The flow of versioning is made easy with a tool like `lvlup`.
 
@@ -520,7 +241,7 @@ Change the content of `.lvlup/config.json` file:
 }
 ```
 
-### - J. Edit your package.json
+### - H. Edit your package.json
 
 Change these keys in your `package.json` file:
 
@@ -529,7 +250,6 @@ Change these keys in your `package.json` file:
   "name": "@talkohavy/dashboard",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "scripts": {},
@@ -541,7 +261,7 @@ Change these keys in your `package.json` file:
 }
 ```
 
-### - K. Your new workflow
+### - I. Your new workflow
 
 • Step 1: Open a `side-branch`, and make some changes (do not commit them yet).
 • Step 2: Run the command `lvlup add`, choose a semver, and add a short description.
@@ -552,61 +272,7 @@ Change these keys in your `package.json` file:
 
 ---
 
-## 1. Init a project package.json
-
-Create a new folder, and init a git project (Give it a meaningful name).
-
-```bash
-npm init
-```
-
-You can prefix your packages, just like @redux-toolkit or @babel did, with @some-name at the beginning.  
-If you wish to _prefix_ your package, you can do so manually _post_ initialization, or you can do so _during_ the init process, using the `scope` flag:
-
-```bash
-npm init --scope=talkohavy
-```
-
-This will have your package scoped.  
-For example, the above package would get a prefix of "@talkohavy/" added to its name.
-
----
-
-## 2. Connect project to GitHub
-
-This step is mandatory. Every npm package needs to be connected to a remote git repo.
-
-```
-git init
-git add .
-git commit -m 'first commit'
-git remote add origin git@github.com:talkohavy/<name>.git
-git push -u origin master
-```
-
----
-
-## 3. Add some content to the Package
-
-Create the following structure:
-
-- An `src` directory with an `index.js`
-- A **\_test\_** folder
-- A README.md file
-
-And later on:
-
-- build.config.js
-- jsconfig.json
-- .npmrc
-- Changesets-cli
-- Eslint
-- Prettier
-- Husky
-
----
-
-## 4. Develop a build process
+## 1. Divide & Conquer Methodology
 
 While you _can_ serve the root of the project as the package itself, it is not recommended. There are a lot of things you'll need to blacklist from ending up in the final output being packaged up and be published to npm.
 
@@ -634,7 +300,7 @@ The name `divide & conquer` isn't an industry term, rather than a name I gave to
 
 ---
 
-## 5. npm login, npm logout, .npmrc & .npmignore
+## 2. npm login, npm logout, .npmrc & .npmignore
 
 ### - A. npm login & .npmrc
 
@@ -669,11 +335,6 @@ registry=https://registry.example.com/
 
 You'll of course need to create an **access token** on npm's website, under your profile. The token always starts with "npm\_", so it's easy to recognize.
 
-:::danger
-Make sure to NOT commit the `.npmrc` file! The token is highly sensitive!  
-You must add it to your `.gitignore`!
-:::
-
 ### - B. npm logout
 
 Just as there is a command of `npm login` to get you logged in, there's also a command to logout:
@@ -698,7 +359,7 @@ To sum it up, npm logout does 2 things:
 
 You can use the `.npmignore` to blacklist files and folders from getting to the final package output that'll be published on npm.
 
-However, since we'll be using the `divide & conquer` approach, the use of `.npmignore` will be minimal, if any.
+However, since we'll be using the `divide & conquer` approach, the use of `.npmignore` will most likely not be needed.
 
 ### - D. npm login Deep Dive
 
@@ -706,14 +367,19 @@ When you run `npm login`, an `.npmrc` file is created (or is being updated if it
 
 ---
 
-## 6. Versioning
+## 3. Versioning: `lvlup` v.s. `npm`
 
-A common error you'll bump into is when you'll try to re-publish a package using the same version already registered on npm.
+Generally speaking, in order to publish an npm package, all you need is a `package.json` with a version that is higher than the version of the currently same-named package.
 
-Before running the `publish` command, you'll need to bump the version.  
-In fact, that's the _only_ change that's required by npm in order to be able to publish a new release.
+Nothing is stopping you from doing it manually, however you can see why it's not optimal.
 
-To bump a version there are 3 commands ou can use:
+`lvlup` is doing it "manually" - it just hides it behind sub-commands.
+
+`npm` also has sub-commands for this exact task. `npm` has 3 commands you can use to help you bump a version:
+
+- `npm version patch`
+- `npm version minor`
+- `npm version major`
 
 When doing a bugfix:
 
@@ -735,9 +401,11 @@ npm version major -m 'Upgrade to %s: some-message'
 
 In order to run either one of these, your git tree must be clean. If it's not, you'll get an error telling you to stash your changes and then try again.
 
+Each of these command simply upgrade the version that's inside your `package.json`, and makes a commit out of it. That's it! Nothing fancy.
+
 ---
 
-## 7. The role of package.json
+## 4. The role of package.json
 
 The `package.json` file plays a huge role when it comes to publishing a package on npm.
 
