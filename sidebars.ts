@@ -494,9 +494,27 @@ const sidebars: SidebarsConfig = {
           label: '- Node',
         },
         {
-          type: 'doc',
-          id: 'programming/npm',
-          label: '- Npm publish a package',
+          type: 'category',
+          label: '- Npm',
+          link: {
+            type: 'generated-index',
+            title: 'Npm Guides',
+            description: 'Advanced concepts of Npm',
+            slug: '/npm',
+            keywords: ['npm'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/npm/publish-a-package',
+              label: '- Publish a package',
+            },
+            {
+              type: 'doc',
+              id: 'programming/npm/link-a-package',
+              label: '- Link a package',
+            },
+          ],
         },
         {
           type: 'doc',
