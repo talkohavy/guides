@@ -3,7 +3,7 @@
 ## All in one:
 
 ```bash
-journalctl -u SERVICE_NAME --since "1 hour ago -f -n 100
+journalctl -u SERVICE_NAME --since "1 hour ago" -f -n 100
 ```
 
 ## List by service name `-u`:
