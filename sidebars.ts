@@ -385,11 +385,6 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'doc',
-          id: 'programming/elk',
-          label: '- ELK Stack',
-        },
-        {
           type: 'category',
           label: '- Git',
           link: {
