@@ -161,7 +161,7 @@ cat ~/.ssh/id_rsa.pub
 ## 5. Create a second key-pair of public/private keys
 
 **<font size="6">TLDR;</font>**  
-**Two different `accounts`, on the same git provider, CANNOT share the same `public key`!!!**
+**Two different `accounts`, on the same git provider, CANNOT share the same `public key`!**
 
 ### - The background story
 
@@ -178,7 +178,7 @@ A single `account` may have _many_ `projects` in it (i.e. `repositories`), and a
 So why do I need a second `key-pair` of public/private keys?
 
 There's a harsh rule that goes for all git providers, which says:  
-**Two different `accounts`, on the same git provider, CANNOT share the same `public key`!!!**
+**Two different `accounts`, on the same git provider, CANNOT share the same `public key`!**
 
 Two questions which you can ask:
 
@@ -194,7 +194,7 @@ Answer to 2: Technically, yes, that would solve my problem, because the pairing 
 Run this command:
 
 ```bash
-ssh-keygen -t rsa -b 4096 -C tal_home_2 -f id_rsa_2
+ssh-keygen -t rsa -b 4096 -C tal.mac.home -f id_rsa_2
 ```
 
 What this command did was generate 2 more files (another key-pair) inside your `.ssh` folder, `id_rsa_2` & `id_rsa_2.pub`.
@@ -221,13 +221,13 @@ Fill the `config` file with this:
 
 ```bash
 # Account 1
-Host bitbucket.org
- Hostname bitbucket.org
+Host github.com
+ Hostname github.com
  IdentityFile ~/.ssh/id_rsa
 
 # Account 2
-Host bitbucket.org_2
- Hostname bitbucket.org
+Host github.com_2
+ Hostname github.com
  IdentityFile ~/.ssh/id_rsa_2
 ```
 
@@ -251,11 +251,11 @@ Let's do a git clone as you normally would, only now add the '\_2' to the host.
 So instead of doing this:
 
 ```bash
-git clone git@bitbucket.org:talkohavy/email-builder.git
+git clone git@github.com:talkohavy/email-builder.git
 ```
 
 ```bash
-git clone git@bitbucket.org_2:talkohavy/email-builder.git
+git clone git@github.com_2:talkohavy/email-builder.git
 ```
 
 Press Enter and... Cross fingers!
