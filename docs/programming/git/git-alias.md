@@ -35,3 +35,13 @@ git config --global alias.pop "stash pop"
 ```bash
 git config --global alias.pop "stash apply"
 ```
+
+---
+
+## - Alias 6: `git amend`
+
+Amends the last commit, keeping the same message and author.
+
+```bash
+git config --global alias.amend "commit --amend --no-edit"
+```
