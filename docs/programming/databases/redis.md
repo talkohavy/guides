@@ -422,17 +422,66 @@ DEL no-exist-key
 (integer) 2
 ```
 
+<br/>
+
+### - Command 10: TYPE
+
+**Syntax**
+
+```bash
+TYPE key
+```
+
+**Description**
+
+Returns the string representation of the type of value stored at `key`.  
+Use this when you discover a key via `KEYS *` or `SCAN`, and don't know its type.
+
+Returns `none` if the key does not exist.
+
+| Type stored at key | `TYPE` returns | Commands to read it              |
+| ------------------ | -------------- | -------------------------------- |
+| String             | `string`       | `GET`, `MGET`                    |
+| Hash               | `hash`         | `HGET`, `HSCAN`                  |
+| Set                | `set`          | `SMEMBERS`, `SSCAN`, `SISMEMBER` |
+| List               | `list`         | `LRANGE`, `LINDEX`, `LPOP`       |
+| Sorted Set         | `zset`         | `ZRANGE`, `ZSCORE`, `ZRANK`      |
+| Stream             | `stream`       | `XREAD`, `XRANGE`                |
+| Key does not exist | `none`         | —                                |
+
+Examples:
+
+```bash
+> SET mystring "hello"
+"OK"
+> TYPE mystring
+"string"
+
+> HSET myhash field1 "value1"
+(integer) 1
+> TYPE myhash
+"hash"
+
+> SADD myset "one" "two"
+(integer) 2
+> TYPE myset
+"set"
+
+> TYPE nonexistent
+"none"
+```
+
 ---
 
 ## 4. Redis Hashes
 
-A **Redis Hash** is a map of field-value pairs stored under a single key. Think of it like an object: `user:1000` holds `username`, `email`, `age`—each field has a name and a value. Commands like `HSET`, `HGET`, and `HGETALL` work with this structure.
+A **Redis Hash** is a map of field-value pairs stored under a single key. Think of it like an object: `user:1000` holds `username`, `email`, `age`—each field has a name and a value. Commands like `HSET`, `HGET`, and `HGETALL` work with this structure. The `TYPE` command returns **`"hash"`** for keys holding a Hash.
 
 **Hashes vs Sets:** A **Hash** stores named fields with values (e.g., `username` → `"Tal Kohavy"`). A **Set** stores an unordered collection of unique strings with no field names—just members (e.g., `"one"`, `"two"`, `"three"`). Use Hashes for objects/records; use Sets for membership lists, tags, or unique items.
 
 <br/>
 
-### - Command 10: HSET
+### - Command 11: HSET
 
 **Syntax**
 
@@ -466,7 +515,7 @@ Examples:
 
 <br/>
 
-### - Command 11: HGET
+### - Command 12: HGET
 
 **Syntax**
 
@@ -503,7 +552,7 @@ Examples:
 
 <br/>
 
-### - Command 12: HGETALL
+### - Command 13: HGETALL
 
 **Syntax**
 
@@ -547,7 +596,7 @@ Examples:
 
 <br/>
 
-### - Command 13: HSCAN
+### - Command 14: HSCAN
 
 **Syntax**
 
@@ -622,11 +671,11 @@ Examples:
 
 ## 5. Redis Sets
 
-A **Redis Set** is an unordered collection of unique strings. No duplicate members are allowed. Sets are useful for membership tracking, tags, unique visitors, and more.
+A **Redis Set** is an unordered collection of unique strings. No duplicate members are allowed. Sets are useful for membership tracking, tags, unique visitors, and more. The `TYPE` command returns **`"set"`** for keys holding a Set.
 
 <br/>
 
-### - Command 14: SMEMBERS
+### - Command 15: SMEMBERS
 
 **Syntax**
 
@@ -668,7 +717,7 @@ For large sets in production, consider using `SSCAN` instead of `SMEMBERS` to av
 
 <br/>
 
-### - Command 15: SSCAN
+### - Command 16: SSCAN
 
 **Syntax**
 
@@ -728,7 +777,7 @@ Examples:
 
 <br/>
 
-### - Command 16: SADD
+### - Command 17: SADD
 
 **Syntax**
 
@@ -766,7 +815,7 @@ In the first `SADD`, we create the set and add three members. In the second, `"o
 
 <br/>
 
-### - Command 17: SREM
+### - Command 18: SREM
 
 **Syntax**
 
@@ -801,7 +850,7 @@ Examples:
 
 <br/>
 
-### - Command 18: SISMEMBER
+### - Command 19: SISMEMBER
 
 **Syntax**
 
@@ -843,7 +892,7 @@ For checking multiple members at once, use `SMISMEMBER` (available since Redis 6
 
 <br/>
 
-### - Command 19: SCARD
+### - Command 20: SCARD
 
 **Syntax**
 
