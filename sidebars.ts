@@ -88,6 +88,31 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         {
+          type: 'category',
+          label: '- Init Project',
+          link: {
+            type: 'doc',
+            id: 'programming/init-project/index',
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/init-project/eslint-config',
+              label: '- eslint.config.mjs',
+            },
+            {
+              type: 'doc',
+              id: 'programming/init-project/biome-json',
+              label: '- biome.json',
+            },
+            {
+              type: 'doc',
+              id: 'programming/init-project/prettier-config',
+              label: '- .prettierrc.mjs',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: 'programming/aws-kubernetes',
           label: '- AWS Kubernetes',
