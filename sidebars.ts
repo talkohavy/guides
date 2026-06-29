@@ -102,13 +102,18 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/init-project/prettier-config',
+              label: '- .prettierrc.mjs',
+            },
+            {
+              type: 'doc',
               id: 'programming/init-project/biome-json',
               label: '- biome.json',
             },
             {
               type: 'doc',
-              id: 'programming/init-project/prettier-config',
-              label: '- .prettierrc.mjs',
+              id: 'programming/init-project/npm-scripts',
+              label: '- npm scripts',
             },
           ],
         },
