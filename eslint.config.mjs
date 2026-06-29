@@ -27,6 +27,7 @@ export default [
       // Error Rules
       // -----------
       'react-compiler/react-compiler': 'error',
+      'import/newline-after-import': ['error', { count: 1 }],
       'import/no-duplicates': ['error', { 'prefer-inline': false }],
       '@typescript-eslint/no-unused-vars': [
         'error',
