@@ -547,6 +547,24 @@ const sidebars: SidebarsConfig = {
           label: '- Python Server',
         },
         {
+          type: 'category',
+          label: '- React Native',
+          link: {
+            type: 'generated-index',
+            title: 'React Native Guides',
+            description: 'All about React Native',
+            slug: '/react-native',
+            keywords: ['react-native', 'expo', 'ios', 'android'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/react-native/deploying-to-a-device',
+              label: '- Deploying to a Device',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: 'programming/regex',
           label: '- Regex',
