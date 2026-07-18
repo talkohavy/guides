@@ -49,3 +49,30 @@ git push origin :REMOTE_BRANCH_NAME
 **Description**
 
 Delete a remote branch.
+
+---
+
+## - Command 4: Create a new branch
+
+```bash
+git branch SIDE [ref:-HEAD]
+```
+
+**Description**
+
+Create a new branch, without checking out to it.  
+If branch with that name already exists, the command fails.
+
+Example:
+
+```bash
+git branch bugWork HEAD~1^2~2
+```
+
+If your goal is to move the existing branch to the current commit:
+
+```bash
+git branch -f bugWork HEAD~1^2~2
+```
+
+The `-f` (force) flag updates my-branch to point to `HEAD~1^2~2`, even if it already exists.
