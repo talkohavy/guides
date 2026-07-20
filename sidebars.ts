@@ -427,6 +427,11 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'programming/git/git-push',
+              label: 'Git Push',
+            },
+            {
+              type: 'doc',
               id: 'programming/git/git-url',
             },
             {
@@ -451,11 +456,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/git/lazy-git',
+              id: 'programming/git/git-hooks-with-husky',
             },
             {
               type: 'doc',
-              id: 'programming/git/git-hooks-with-husky',
+              id: 'programming/git/lazy-git',
             },
           ],
         },
