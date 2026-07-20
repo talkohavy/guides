@@ -47,3 +47,13 @@ git branch -u o/main
 ```bash
 git checkout -b totallyNotMain o/main
 ```
+
+## - Command 5: Go to second parent
+
+Use the `^2` to go to the second parent of a ref:
+
+```bash
+git branch -f bugWork HEAD~1^2~2
+```
+
+Translation: Go 1 commit before `HEAD`, from there go the second parent, then go 2 commits backwards from there.
