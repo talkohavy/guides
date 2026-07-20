@@ -32,6 +32,7 @@ Note! `main` would stay in its place!
 git branch -u o/main foo
 ```
 
+For this command to work, `foo` must initially exist!  
 This command will set the `foo` branch to track `o/main`.  
 If `foo` is currently checked out you can even leave it off:
 
