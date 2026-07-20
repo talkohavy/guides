@@ -45,3 +45,11 @@ Amends the last commit, keeping the same message and author.
 ```bash
 git config --global alias.amend "commit --amend --no-edit"
 ```
+
+## - Alias 7: `git track`
+
+Tells you the name of the remote branch being tracked:
+
+```bash
+git config --global alias.track "rev-parse --abbrev-ref --symbolic-full-name @{u}"
+```
