@@ -26,7 +26,7 @@ Note! `main` would stay in its place!
 
 <br/>
 
-## - Command 3: Change branch remote tracking
+## - Command 3: Change remote tracking of a branch
 
 ```bash
 git branch -u o/main foo
@@ -42,7 +42,7 @@ git branch -u o/main
 
 <br/>
 
-## - Command 4: Move to second parent
+## - Command 4: Create a new branch that is tracking o/main
 
 ```bash
 git checkout -b totallyNotMain o/main
