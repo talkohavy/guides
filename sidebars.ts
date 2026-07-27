@@ -462,6 +462,11 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'programming/git/lazy-git',
             },
+            {
+              type: 'doc',
+              id: 'programming/git/git-special',
+              label: '- Git Special',
+            },
           ],
         },
         {
