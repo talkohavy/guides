@@ -98,12 +98,17 @@ set autoindent
 - `F(` - Moves **backwards** to, and on, the specified character (in this case, to `(` )
 - `T(` - Moves **backwards** to, but not on, the specified character (in this case, to `(` )
 - `;` & `,` - Repeat the actions of either `f(` or `t(`, meaning next result, or previous result.
+
+<br/>
+
+## 5. Go into Insert Mode
+
+- `i` - Goes to insert mode before the current position.
+- `a` - Goes to insert mode after the current position.
 - `I` - Go to the beginning of the line, but in insert mode.
 - `A` - Go to the end of the line, but in insert mode.
 - `o` - Creates a new line **below** your cursor, moves to it, and goes to insert mode.
 - `O` - Creates a new line **above** your cursor, moves to it, and goes to insert mode.
-
-<br/>
 
 ## 5. Commands
 
