@@ -1,31 +1,77 @@
-# VI
+# Vim
+
+:::tip
+💡 Pro Tip: Use `.` to repeat your last editing command
+:::
+
+## 1. Vim Structure
+
+Everything in `vim` can be considered as a combination of:
 
 **Command + Count + Motion**
 
-## 1. Install neovim
+For example, `d3↓` means to delete 3 lines down from the cursor.
+
+<br/>
+
+## 2. Install neovim
+
+In MacOS:
 
 ```bash
 brew install neovim
 ```
 
+In Linux:
+
 ```bash
 sudo apt-get install neovim
 ```
 
-## 2. Create the configuration file
+<br/>
+
+## 3. Create the configuration file
 
 ```bash
 vi ~/.vimrc
 ```
 
-it's contents should be:
+It's contents should be:
 
-```vi
+```
 " Show line numbers
 set number
 
+" Convert tab into spaces
+set expandtab
+
+" Tabs are 2 spaces
+set tabstop=2
+
+" Defines the number of spaces used for auto-indenting and shift commands (>> or <<).
+set shiftwidth=2
+
+" Makes searches case-insensitive.
+set ignorecase
+
+" Switches search to case-sensitive if you type an uppercase letter.
+set smartcase
+
+" Keeps a padding of 5 lines visible above and below the
+set scrolloff=5
+
+" Copies indentation from the previous line on new
+set autoindent
+
+" --------------
+" Commented out:
+" --------------
+
+" Show underline where cursor is
+" set cursorline
+
 " Wrap around text
-set wrap
+" set wrap
 
 " Encoding
 " set encoding=utf-8
@@ -34,7 +80,9 @@ set wrap
 " set laststatus=2
 ```
 
-## 1. Motion
+<br/>
+
+## 4. Motion
 
 - `0`: Moves to the start of the line
 - `$`: Moves to the end of the line
@@ -54,9 +102,9 @@ set wrap
 - `o` - Creates a new line **below** your cursor, moves to it, and goes to insert mode.
 - `O` - Creates a new line **above** your cursor, moves to it, and goes to insert mode.
 
----
+<br/>
 
-## 2. Commands
+## 5. Commands
 
 - `x`: Deletes 1 letter (like Del in windows)
 - `u` – Undo last change
@@ -67,9 +115,9 @@ set wrap
 - `Shift + >>` - Indent line to the right
 - `Shift + <<` - Indent line to the left
 
----
+<br/>
 
-## 3. Deleting Combinations
+## 6. Deleting Combinations
 
 - `d$` – Deletes from cursor all the way to the end of the line
 - `d0` – Deletes from cursor all the way to the beginning of the line
@@ -90,9 +138,9 @@ set wrap
 - `Shift + p` – Paste before cursor
 - `cw` – Change word (deletes the word from where the cursor is and to the right and puts you in insert mode)
 
----
+<br/>
 
-### 3. Visual Mode
+## 7. Visual Mode
 
 Visual mode allows you to select text before performing operations on it. This is useful for deleting, copying, or modifying multiple lines or blocks of text.
 
@@ -122,16 +170,12 @@ Visual mode allows you to select text before performing operations on it. This i
 - `u` – Make selected text lowercase
 - `U` – Make selected text uppercase
 
----
+<br/>
 
-### 4. Search and Replace
+## 8. Search and Replace
 
 - `/word` – Search forward for "word"
 - `?word` – Search backward for "word"
 - `n` – Go to next match
 - `Shift + n` – Go to previous match
 - `:%s/foo/bar/g` – Replace all occurrences of "foo" with "bar" in the file
-
----
-
-- 💡 Pro Tip: Use `.` to repeat your last editing command
