@@ -113,11 +113,17 @@ set autoindent
 - `o` - Creates a new line **below** your cursor, moves to it, and goes to insert mode.
 - `O` - Creates a new line **above** your cursor, moves to it, and goes to insert mode.
 
-## 5. Commands
+## 6. Commands
 
-- `x`: Deletes 1 letter (like Del in windows)
+- `d` – delete.
+- `y` – Yank (copy).
+- `p` – Paste **after** cursor.
+- `x` - Deletes 1 letter (like Del in windows).
+- `D` - Delete from cursor, including, until the end of the line.
+- `Y` - same as `yy`
+- `P` – Paste **before** cursor.
+- `X` - Deletes 1 letter (like backspace in windows).
 - `u` – Undo last change
-- `p` – Paste after cursor
 - `yy` – Yank (copy) the current line
 - `dd` – Deletes (cut) the current line
 - `Ctrl + r` – Redo last change
@@ -126,7 +132,7 @@ set autoindent
 
 <br/>
 
-## 6. Deleting Combinations
+## 7. Deleting Combinations
 
 - `d$` – Deletes from cursor all the way to the end of the line
 - `d0` – Deletes from cursor all the way to the beginning of the line
@@ -150,24 +156,24 @@ set autoindent
 
 <br/>
 
-## 7. Visual Mode
+## 8. Copying Combinations
 
-Visual mode allows you to select text before performing operations on it. This is useful for deleting, copying, or modifying multiple lines or blocks of text.
+- `yy3p` - duplicate line 3 times, **below** cursor.
+- `yy3P` - duplicate line 3 times, **above** cursor.
+- `6yyp` - copy 6 lines **below** cursor, then paste (can move anywhere) **below** cursor.
+- `6yyP` - copy 6 lines **below** cursor, then paste (can move anywhere) **above** cursor.
 
-**Entering Visual Mode:**
+## 9. Visual Mode
 
-- `v` – Start visual selection (characterwise) - selects character by character
+Visual mode allows you to select text, and show you what you've selected in a visual way.  
+Can you manage without ever using visual mode? Yes. Do you want to? No.  
+Visual mode is great for safely performing operations, in such a way that you have assurance of what is going to happen when you execute the action.
+
+- `v` – Start visual character selection - selects character by character
 - `V` – Start visual line selection - selects entire lines
 - `Ctrl + v` – Start visual block selection (column mode) - very powerful for column editing
 
-- **Visual Mode**: Press `V` to enter visual line mode, then use the arrow keys to select multiple lines, then press `d` to delete them
-
-**Navigation in Visual Mode:**
-
-- Use arrow keys to extend your selection
-- Use `$` to select to end of line, `0` to select to start of line
-- Use `gg` or `G` to select to top/bottom of file
-- Use `w`, `e`, `b` to select by words
+When i visual mode, use the arrow keys to select multiple lines.
 
 **Operations on Selected Text:**
 
@@ -182,7 +188,7 @@ Visual mode allows you to select text before performing operations on it. This i
 
 <br/>
 
-## 8. Search and Replace
+## 10. Search and Replace
 
 - `/word` – Search forward for "word"
 - `?word` – Search backward for "word"
@@ -190,7 +196,7 @@ Visual mode allows you to select text before performing operations on it. This i
 - `Shift + n` – Go to previous match
 - `:%s/foo/bar/g` – Replace all occurrences of "foo" with "bar" in the file
 
-## 9. Legend
+## 11. Legend
 
 1. word - hello-world is 2 words
 2. WORD - a non-whitespace sequence of characters
