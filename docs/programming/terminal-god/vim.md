@@ -93,6 +93,7 @@ set autoindent
 - `e`: Move to the end of the current word
 - `b`: Moves back to the beginning of the previous word
 - `f(` - Moves **forward** to, and on, the specified character (in this case, to `(` )
+- `2f(` - Moves **forward** to, and on, the 2nd appearance of the specified character (in this case, to `(` )
 - `t(` - Moves **forward** to, but not on, the specified character (in this case, to `(` )
 - `F(` - Moves **backwards** to, and on, the specified character (in this case, to `(` )
 - `T(` - Moves **backwards** to, but not on, the specified character (in this case, to `(` )
@@ -131,6 +132,8 @@ set autoindent
 - `df(` – Delete content between my cursor all the way up to, and including, the character `(`.
 - `dt(` – Delete content between my cursor all the way up to, not including, the character `(`.
 - `d2f(` – Delete content between my cursor all the way up to, and including, the 2nd appearance of the character `(`.
+- `di{` - Deletes all the contents between the confining curly braces.
+- `di[` - Deletes all the contents between the confining brackets.
 
 - `Shift + c` – Deletes everything to rhe right, and puts you in insert mode
 - `Shift + j` – Join the current line with the next one
