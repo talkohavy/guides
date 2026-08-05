@@ -708,8 +708,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/terminal-god/vi',
-              label: '- VI',
+              id: 'programming/terminal-god/vim',
+              label: '- Vim',
             },
             {
               type: 'doc',
