@@ -104,7 +104,7 @@ set autoindent
 
 <br/>
 
-## 5. Go into Insert Mode
+## 5. Go into Insert / Replace Mode
 
 - `i` - Goes to insert mode before the current position.
 - `a` - Goes to insert mode after the current position.
@@ -112,6 +112,7 @@ set autoindent
 - `A` - Go to the end of the line, but in insert mode.
 - `o` - Creates a new line **below** your cursor, moves to it, and goes to insert mode.
 - `O` - Creates a new line **above** your cursor, moves to it, and goes to insert mode.
+- `R` - Goes to replace mode, overwriting characters as you type, until you press `Esc`.
 
 ## 6. Commands
 
@@ -123,6 +124,7 @@ set autoindent
 - `Y` - same as `yy`
 - `P` – Paste **before** cursor.
 - `X` - Deletes 1 letter (like backspace in windows).
+- `r` - Replaces the letter under the cursor with the next letter you type, and stays in normal mode.
 - `u` – Undo last change
 - `yy` – Yank (copy) the current line
 - `dd` – Deletes (cut) the current line
