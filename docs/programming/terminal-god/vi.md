@@ -64,6 +64,8 @@ set wrap
 - `yy` – Yank (copy) the current line
 - `dd` – Deletes (cut) the current line
 - `Ctrl + r` – Redo last change
+- `Shift + >>` - Indent line to the right
+- `Shift + <<` - Indent line to the left
 
 ---
 
