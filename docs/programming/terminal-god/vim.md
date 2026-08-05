@@ -121,7 +121,6 @@ set autoindent
 
 - `d$` – Deletes from cursor all the way to the end of the line
 - `d0` – Deletes from cursor all the way to the beginning of the line
-- `d0` – Deletes from cursor all the way to the beginning of the line
 - `dw` – Deletes 1 word forward from where your cursor is
 - `db` – Deletes 1 word backwards from where your cursor is forward
 - `d3w` – Deletes 3 word forward from where your cursor is
