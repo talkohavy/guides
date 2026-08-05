@@ -90,13 +90,16 @@ set autoindent
 - `gg`: Jump to the top of the file
 - `G`: Jump to the bottom of the file
 - `w`: Move to the start of the next word
+- `W`: Move to the start of the next WORD
 - `e`: Move to the end of the current word
+- `E`: Move to the end of the current WORD
 - `b`: Moves back to the beginning of the previous word
-- `f(` - Moves **forward** to, and on, the specified character (in this case, to `(` )
-- `2f(` - Moves **forward** to, and on, the 2nd appearance of the specified character (in this case, to `(` )
-- `t(` - Moves **forward** to, but not on, the specified character (in this case, to `(` )
-- `F(` - Moves **backwards** to, and on, the specified character (in this case, to `(` )
-- `T(` - Moves **backwards** to, but not on, the specified character (in this case, to `(` )
+- `B`: Moves back to the beginning of the previous word
+- `f(` - Moves **forward** to, and on, the specified character
+- `2f(` - Moves **forward** to, and on, the 2nd appearance of the specified character
+- `t(` - Moves **forward** to, but not on, the specified character
+- `F(` - Moves **backwards** to, and on, the specified character
+- `T(` - Moves **backwards** to, but not on, the specified character
 - `;` & `,` - Repeat the actions of either `f(` or `t(`, meaning next result, or previous result.
 
 <br/>
@@ -186,3 +189,9 @@ Visual mode allows you to select text before performing operations on it. This i
 - `n` – Go to next match
 - `Shift + n` – Go to previous match
 - `:%s/foo/bar/g` – Replace all occurrences of "foo" with "bar" in the file
+
+## 9. Legend
+
+1. word - hello-world is 2 words
+2. WORD - a non-whitespace sequence of characters
+3. `(` - whenever I need to use an example character, I will use `(`
