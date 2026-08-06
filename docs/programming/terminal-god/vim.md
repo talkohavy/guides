@@ -138,6 +138,8 @@ set autoindent
 
 ## 7. Deleting Combinations
 
+### - A. Give it a name
+
 - `d$` – Deletes from cursor all the way to the end of the line.
 - `d0` – Deletes from cursor all the way to the beginning of the line.
 - `dw` – Deletes 1 word forward from where your cursor is.
@@ -150,8 +152,23 @@ set autoindent
 - `df(` – Delete content between my cursor all the way up to, and including, the character `(`.
 - `dt(` – Delete content between my cursor all the way up to, not including, the character `(`.
 - `d2f(` – Delete content between my cursor all the way up to, and including, the 2nd appearance of the character `(`.
+
+### - B. In / Around
+
+In:
+
+- `diw` - Deletes word, even if cursor is inside the word.
+- `diW` - Deletes a WORD, even if cursor is inside the WORD.
 - `di{` - Deletes all the contents between the confining curly braces.
 - `di[` - Deletes all the contents between the confining brackets.
+- `di[` - Deletes all the contents between the confining brackets.
+
+Around:
+
+- `daw` - Deletes a word, and surrounding spaces, even if cursor is inside the word/space.
+- `daW` - Deletes a WORD, even if cursor is inside the word.
+
+### - C. Special
 
 - `Shift + c` – Deletes everything to rhe right, and puts you in insert mode.
 - `Shift + j` – Join the current line with the next one.
