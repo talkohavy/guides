@@ -84,23 +84,25 @@ set autoindent
 
 ## 4. Motion
 
-- `0`: Moves to the start of the line
-- `$`: Moves to the end of the line
-- `_`: Moves to the beginning of the first word in the line
-- `gg`: Jump to the top of the file
-- `G`: Jump to the bottom of the file
-- `w`: Move to the start of the next word
-- `W`: Move to the start of the next WORD
-- `e`: Move to the end of the current word
-- `E`: Move to the end of the current WORD
-- `b`: Moves back to the beginning of the previous word
-- `B`: Moves back to the beginning of the previous word
-- `f(` - Moves **forward** to, and on, the specified character
-- `2f(` - Moves **forward** to, and on, the 2nd appearance of the specified character
-- `t(` - Moves **forward** to, but not on, the specified character
-- `F(` - Moves **backwards** to, and on, the specified character
-- `T(` - Moves **backwards** to, but not on, the specified character
+- `0`: Moves to the start of the line.
+- `$`: Moves to the end of the line.
+- `_`: Moves to the beginning of the first word in the line.
+- `gg`: Jump to the top of the file.
+- `G`: Jump to the bottom of the file.
+- `w`: Move to the start of the next word.
+- `W`: Move to the start of the next WORD.
+- `e`: Move to the end of the current word.
+- `E`: Move to the end of the current WORD.
+- `b`: Moves back to the beginning of the previous word.
+- `B`: Moves back to the beginning of the previous word.
+- `f(` - Moves **forward** to, and on, the specified character.
+- `2f(` - Moves **forward** to, and on, the 2nd appearance of the specified character.
+- `t(` - Moves **forward** to, but not on, the specified character.
+- `F(` - Moves **backwards** to, and on, the specified character.
+- `T(` - Moves **backwards** to, but not on, the specified character.
 - `;` & `,` - Repeat the actions of either `f(` or `t(`, meaning next result, or previous result.
+- `{` - Moves the cursor **backward** by one paragraph (mostly new lines).
+- `}` - Moves the cursor **forward** by one paragraph.
 
 <br/>
 
@@ -121,40 +123,40 @@ set autoindent
 - `p` – Paste **after** cursor.
 - `x` - Deletes 1 letter (like Del in windows).
 - `D` - Delete from cursor, including, until the end of the line.
-- `Y` - same as `yy`
+- `Y` - same as `yy`.
 - `P` – Paste **before** cursor.
 - `X` - Deletes 1 letter (like backspace in windows).
 - `r` - Replaces the letter under the cursor with the next letter you type, and stays in normal mode.
-- `u` – Undo last change
-- `yy` – Yank (copy) the current line
-- `dd` – Deletes (cut) the current line
-- `Ctrl + r` – Redo last change
-- `Shift + >>` - Indent line to the right
-- `Shift + <<` - Indent line to the left
+- `u` – Undo last change.
+- `yy` – Yank (copy) the current line.
+- `dd` – Deletes (cut) the current line.
+- `Ctrl + r` – Redo last change.
+- `Shift + >>` - Indent line to the right.
+- `Shift + <<` - Indent line to the left.
 
 <br/>
 
 ## 7. Deleting Combinations
 
-- `d$` – Deletes from cursor all the way to the end of the line
-- `d0` – Deletes from cursor all the way to the beginning of the line
-- `dw` – Deletes 1 word forward from where your cursor is
-- `db` – Deletes 1 word backwards from where your cursor is forward
-- `d3w` – Deletes 3 word forward from where your cursor is
-- `d3→` – Deletes 3 letters to the right
-- `dG` – Deletes from the current line to the end of the file
-- `dgg` – Deletes from the current line to the beginning of the file
-- `10dd` – Deletes n lines (e.g., `10dd` deletes 10 lines from the current line downward)
+- `d$` – Deletes from cursor all the way to the end of the line.
+- `d0` – Deletes from cursor all the way to the beginning of the line.
+- `dw` – Deletes 1 word forward from where your cursor is.
+- `db` – Deletes 1 word backwards from where your cursor is forward.
+- `d3w` – Deletes 3 word forward from where your cursor is.
+- `d3→` – Deletes 3 letters to the right.
+- `dG` – Deletes from the current line to the end of the file.
+- `dgg` – Deletes from the current line to the beginning of the file.
+- `10dd` – Deletes n lines (e.g., `10dd` deletes 10 lines from the current line downward).
 - `df(` – Delete content between my cursor all the way up to, and including, the character `(`.
 - `dt(` – Delete content between my cursor all the way up to, not including, the character `(`.
 - `d2f(` – Delete content between my cursor all the way up to, and including, the 2nd appearance of the character `(`.
 - `di{` - Deletes all the contents between the confining curly braces.
 - `di[` - Deletes all the contents between the confining brackets.
 
-- `Shift + c` – Deletes everything to rhe right, and puts you in insert mode
-- `Shift + j` – Join the current line with the next one
-- `Shift + p` – Paste before cursor
-- `cw` – Change word (deletes the word from where the cursor is and to the right and puts you in insert mode)
+- `Shift + c` – Deletes everything to rhe right, and puts you in insert mode.
+- `Shift + j` – Join the current line with the next one.
+- `Shift + p` – Paste before cursor.
+- `cw` – Change word (deletes the word from where the cursor is and to the right and puts you in insert mode).
 
 <br/>
 
