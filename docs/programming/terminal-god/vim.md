@@ -148,6 +148,7 @@ set scrolloff=5
 - `Shift + >>` - Indent line to the right.
 - `Shift + <<` - Indent line to the left.
 - `J` – Join the current line with the next one.
+- `ZZ` – Save and quit (same as `:wq`). Very useful.
 
 <br/>
 
