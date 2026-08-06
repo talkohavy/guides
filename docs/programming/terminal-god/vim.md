@@ -1,7 +1,9 @@
 # Vim
 
 :::tip
-💡 Pro Tip: Use `.` to repeat your last editing command
+💡 Pro Tip: Use `.` to repeat your last editing command.
+
+Plus, if you were in insert mode, type something, then went to normal mode, hitting `.` would copy all that you wrote in a new line below the cursor.
 :::
 
 ## 1. Vim Structure
@@ -42,6 +44,12 @@ It's contents should be:
 " Show line numbers
 set number
 
+" Relative line numbers
+set rnu
+
+" Highlight search results
+set hlsearch
+
 " Convert tab into spaces
 set expandtab
 
@@ -57,11 +65,12 @@ set ignorecase
 " Switches search to case-sensitive if you type an uppercase letter.
 set smartcase
 
-" Keeps a padding of 5 lines visible above and below the
-set scrolloff=5
 
 " Copies indentation from the previous line on new
 set autoindent
+
+" Keeps a padding of 5 lines visible above and below the
+set scrolloff=5
 
 " --------------
 " Commented out:
@@ -119,18 +128,20 @@ set autoindent
 ## 6. Commands
 
 - `d` – delete.
-- `y` – Yank (copy).
-- `p` – Paste **after** cursor.
-- `x` - Deletes 1 letter (like Del in windows).
 - `D` - Delete from cursor, including, until the end of the line.
-- `Y` - same as `yy`.
-- `P` – Paste **before** cursor.
-- `X` - Deletes 1 letter (like backspace in windows).
-- `r` - Replaces the letter under the cursor with the next letter you type, and stays in normal mode.
-- `u` – Undo last change.
-- `yy` – Yank (copy) the current line.
 - `dd` – Deletes (cut) the current line.
+- `c` – deletes, and puts you in insert mode.
+- `C` – Deletes everything to rhe right, and puts you in insert mode.
+- `y` – Yank (copy).
+- `Y` - same as `yy`.
+- `yy` – Yank (copy) the current line.
+- `p` – Paste **after** cursor.
+- `P` – Paste **before** cursor.
+- `x` - immediately delete from cursor **onwards** (like Del in windows).
+- `X` - immediately delete from cursor **backwards** (like backspace in windows).
+- `u` – Undo last change.
 - `Ctrl + r` – Redo last change.
+- `r` - Replaces the letter under the cursor with the next letter you type, and stays in normal mode.
 - `Shift + >>` - Indent line to the right.
 - `Shift + <<` - Indent line to the left.
 
@@ -153,26 +164,35 @@ set autoindent
 - `dt(` – Delete content between my cursor all the way up to, not including, the character `(`.
 - `d2f(` – Delete content between my cursor all the way up to, and including, the 2nd appearance of the character `(`.
 
-### - B. In / Around
+### - B. In / Around / Insert mode
 
 In:
 
-- `diw` - Deletes word, even if cursor is inside the word.
+- `diw` - Deletes a word, even if cursor is inside the word.
 - `diW` - Deletes a WORD, even if cursor is inside the WORD.
-- `di{` - Deletes all the contents between the confining curly braces.
-- `di[` - Deletes all the contents between the confining brackets.
-- `di[` - Deletes all the contents between the confining brackets.
+- `di{` - Deletes all the contents between the confining **curly braces**.
+- `di[` - Deletes all the contents between the confining **brackets**.
+- `di"` - Deletes all the contents between the confining **quotes**.
 
 Around:
 
 - `daw` - Deletes a word, and surrounding spaces, even if cursor is inside the word/space.
 - `daW` - Deletes a WORD, even if cursor is inside the word.
+- `da{` - Deletes all the contents between the confining **curly braces**.
+- `da[` - Deletes all the contents between the confining **brackets**.
+- `da"` - Deletes all the contents between the confining **quotes**.
+
+Insert mode:
+
+- `ciw` - Deletes a word, even if cursor is inside the word, and puts you in insert mode.
+- `ciW` - Deletes a WORD, even if cursor is inside the WORD, and puts you in insert mode.
+- `ci{` - Deletes all the contents between the confining **curly braces**, and puts you in insert mode.
+- `ci[` - Deletes all the contents between the confining **brackets**, and puts you in insert mode.
+- `ci"` - Deletes all the contents between the confining **quotes**, and puts you in insert mode.
 
 ### - C. Special
 
-- `Shift + c` – Deletes everything to rhe right, and puts you in insert mode.
-- `Shift + j` – Join the current line with the next one.
-- `Shift + p` – Paste before cursor.
+- `J` – Join the current line with the next one.
 - `cw` – Change word (deletes the word from where the cursor is and to the right and puts you in insert mode).
 
 <br/>
