@@ -144,6 +144,7 @@ set scrolloff=5
 - `r` - Replaces the letter under the cursor with the next letter you type, and stays in normal mode.
 - `Shift + >>` - Indent line to the right.
 - `Shift + <<` - Indent line to the left.
+- `J` – Join the current line with the next one.
 
 <br/>
 
@@ -189,11 +190,6 @@ Insert mode:
 - `ci{` - Deletes all the contents between the confining **curly braces**, and puts you in insert mode.
 - `ci[` - Deletes all the contents between the confining **brackets**, and puts you in insert mode.
 - `ci"` - Deletes all the contents between the confining **quotes**, and puts you in insert mode.
-
-### - C. Special
-
-- `J` – Join the current line with the next one.
-- `cw` – Change word (deletes the word from where the cursor is and to the right and puts you in insert mode).
 
 <br/>
 
