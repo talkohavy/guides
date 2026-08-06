@@ -84,25 +84,25 @@ set autoindent
 
 ## 4. Motion
 
-- `0`: Moves to the start of the line.
-- `$`: Moves to the end of the line.
-- `_`: Moves to the beginning of the first word in the line.
-- `gg`: Jump to the top of the file.
-- `G`: Jump to the bottom of the file.
-- `w`: Move to the start of the next word.
-- `W`: Move to the start of the next WORD.
-- `e`: Move to the end of the current word.
-- `E`: Move to the end of the current WORD.
-- `b`: Moves back to the beginning of the previous word.
-- `B`: Moves back to the beginning of the previous word.
+- `0`: Moves to the **beginning** of the line.
+- `$`: Moves to the **beginning** of the line.
+- `_`: Moves to the **beginning** of the first word in the line.
+- `gg`: Jump to the **top** of the file.
+- `G`: Jump to the **bottom** of the file.
+- `w`: Move to the **beginning** of the next word.
+- `W`: Move to the **beginning** of the next WORD.
+- `e`: Move to the **end** of the current word.
+- `E`: Move to the **end** of the current WORD.
+- `b`: Moves back to the **beginning** of the previous word.
+- `B`: Moves back to the **beginning** of the previous WORD.
 - `f(` - Moves **forward** to, and on, the specified character.
 - `2f(` - Moves **forward** to, and on, the 2nd appearance of the specified character.
 - `t(` - Moves **forward** to, but not on, the specified character.
 - `F(` - Moves **backwards** to, and on, the specified character.
 - `T(` - Moves **backwards** to, but not on, the specified character.
 - `;` & `,` - Repeat the actions of either `f(` or `t(`, meaning next result, or previous result.
-- `{` - Moves the cursor **backward** by one paragraph (mostly new lines).
-- `}` - Moves the cursor **forward** by one paragraph.
+- `{` or `}` - Moves the cursor **backward/forward** by one paragraph (mostly new lines).
+- `%` - Move the cursor to the **matching braces**.
 
 <br/>
 
