@@ -227,11 +227,30 @@ When i visual mode, use the arrow keys to select multiple lines.
 
 ## 10. Search and Replace
 
+### Search
+
 - `/word` – Search forward for "word"
 - `?word` – Search backward for "word"
 - `n` – Go to next match
-- `Shift + n` – Go to previous match
-- `:%s/foo/bar/g` – Replace all occurrences of "foo" with "bar" in the file
+- `N` – Go to previous match
+
+### Find and Replace
+
+**Manual (search + change + repeat):**
+
+1. `/word` – Search for the word
+2. `cw` – Change the word (deletes it, enters insert mode)
+3. Type the replacement, then `Esc`
+4. `n` – Jump to the next match
+5. `.` – Repeat the last change on that match (skip unwanted ones with another `n`)
+
+**Command (on a selection or the whole file):**
+
+1. Select text with `v` or `V` (or skip selection to operate on the whole file)
+2. Hit `:` — if you selected, Vim auto-fills `:'<,'>`
+3. Type `s/word-to-find/replace-with/g` and hit Enter
+   - `g` is optional: with it, every match on each line is replaced; without it, only the first match per line
+   - Whole file: `:%s/word-to-find/replace-with/g`
 
 ## 11. Legend
 
