@@ -112,6 +112,9 @@ set scrolloff=5
 - `;` & `,` - Repeat the actions of either `f(` or `t(`, meaning next result, or previous result.
 - `{` or `}` - Moves the cursor **backward/forward** by one paragraph (mostly new lines).
 - `%` - Move the cursor to the **matching braces**.
+- `zz` - Scroll so the **current line** is centered on the screen.
+- `H` - Move the cursor to the **top** of the visible screen (High).
+- `M` - Move the cursor to the **middle** of the visible screen (Middle).
 
 <br/>
 
