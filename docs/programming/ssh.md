@@ -1,5 +1,11 @@
 # Guide for SSH
 
+**Quick copy:**
+
+```bash
+ssh-keygen -t rsa -b 4096 -C tal-kohavy.personal.mac
+```
+
 ## 1. Private/Public Key Cryptography
 
 The basic idea of how it works is such a clever, and dare I say cool, idea.
