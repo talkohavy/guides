@@ -15,6 +15,9 @@ journalctl -u SERVICE_NAME
 ## You can use `--since` flag:
 
 ```bash
+journalctl -u SERVICE_NAME --since "30 seconds ago"
+journalctl -u SERVICE_NAME --since "2 minutes ago"
+journalctl -u SERVICE_NAME --since "1 minute ago"
 journalctl -u SERVICE_NAME --since "1 hour ago"
 journalctl -u SERVICE_NAME --since yesterday
 journalctl -u SERVICE_NAME --since today
