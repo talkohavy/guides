@@ -118,7 +118,10 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### Resetting to a Commit
 
-- <kbd>g</kbd> (on a commit): Reset to that commit. Opens a menu asking what to do with the changes between HEAD and that commit (discard them or keep them).
+<kbd>g</kbd> on its own does nothing — it starts a reset, you then need to immediately hit the reset type. Hit them in a row:
+
+- <kbd>g</kbd><kbd>s</kbd> (on a commit): Soft reset to that commit (keep the changes)
+- <kbd>g</kbd><kbd>h</kbd> (on a commit): Hard reset to that commit (discard the changes)
 
 ### Cherry Picking
 
