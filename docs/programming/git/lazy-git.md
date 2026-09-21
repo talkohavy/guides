@@ -31,28 +31,28 @@
 
 ## 2. Files Panel
 
-### Basic File Staging
+### - Action 1: Stage a file / all files
 
-- <kbd>Space</kbd>: Toggle staging/unstaging of the selected file
+- <kbd>Space</kbd>: (on a file name) Toggle staging/unstaging of the selected file
 - <kbd>a</kbd>: Toggle between staging all files or resetting all files
 
-### Committing Changes
+### - Action 2: Commit staged changes
 
 - <kbd>c</kbd>: Open the commit message editor to write your commit message
 
-### Discarding Changes
+### - Action 3: Discard file changes
 
 - <kbd>d</kbd>: Discard changes on the selected file (shows confirmation box)
 - <kbd>Shift</kbd>+<kbd>D</kbd>: Open a menu with multiple discard options
   - **Nuke working tree**: Clears all changes and deletes all new files (most commonly used)
 
-### Viewing File Changes
+### - Action 4: View file changes
 
 - <kbd>Enter</kbd>: Navigate to the split view showing file changes
   - Left side: unstaged changes
   - Right side: staged changes
 
-### Stashing Changes
+### - Action 5: Stash changes
 
 - <kbd>s</kbd>: Stash changes. Asks for confirmation and an optional name for the stash.
 - <kbd>Shift</kbd>+<kbd>S</kbd>: Opens a stash options menu where you can choose to stash only staged changes.
@@ -63,45 +63,45 @@
 
 When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can stage individual lines or hunks.
 
-### Staging Modes
+### - Action 1: Switch between staging modes
 
 - <kbd>a</kbd>: Toggle between two staging modes:
   - **Hunk mode**: Stage entire hunks (like VS Code's diff viewer)
   - **Line mode**: Stage individual lines
 - <kbd>Space</kbd>: Add or remove the current line/hunk (toggles between staged/unstaged)
 
-### Range Selection
+### - Action 2: Select range of changes
 
 - <kbd>v</kbd>: Start selecting a range of lines
 - <kbd>↑</kbd> / <kbd>↓</kbd> (Arrow Keys Up/Down): Extend the selection range
 - <kbd>Space</kbd>: Stage or unstage the selected range
 
-### Navigation Between Panes
+### - Action 3: Navigate between diff panes
 
 - <kbd>Tab</kbd>: Switch from the left pane (unstaged) to the right pane (staged)
 
-### Removing Changes
+### - Action 4: Remove changes from file
 
-- <kbd>d</kbd> (left pane): Delete the line/change
+- <kbd>d</kbd> (left pane): Delete the line/change or selected range
 - <kbd>d</kbd> (right pane): Unstage the change
 
 ---
 
 ## 4. Branches Panel
 
-### Switching Branches
+### - Action 1: Switch to branch
 
 - <kbd>Space</kbd> (on a branch): Check out to that branch
 
-### Fetching a Branch
+### - Action 2: Fetch a Branch
 
 - <kbd>f</kbd> (on a branch): Fetch the selected branch
 
-### Rebasing
+### - Action 3: Rebase
 
 - <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
 
-### Creating Pull Requests
+### - Action 4: Create a pull request
 
 - <kbd>o</kbd>: Create a pull request from the currently selected branch
   - The pull request will target the default branch (e.g., `main` or `master`)
@@ -112,18 +112,18 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ## 5. Commits Panel
 
-### Viewing Commit Files
+### - Action 1: View commit files
 
 - <kbd>Enter</kbd> (on a commit): View the actual files that were involved in that commit. By hitting <kbd>Esc</kbd>, you can go back to the list of commits.
 
-### Resetting to a Commit
+### - Action 2: Reset to a commit
 
 <kbd>g</kbd> on its own does nothing — it starts a reset, you then need to immediately hit the reset type. Hit them in a row:
 
 - <kbd>g</kbd><kbd>s</kbd> (on a commit): Soft reset to that commit (keep the changes)
 - <kbd>g</kbd><kbd>h</kbd> (on a commit): Hard reset to that commit (discard the changes)
 
-### Cherry Picking
+### - Action 3: Cherry Picking
 
 1. Navigate to the **Commits panel**
 2. <kbd>v</kbd>: Start range selection mode
@@ -134,7 +134,7 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 7. Move to **Commits Panel**
 8. Hit <kbd>Shift</kbd>+<kbd>V</kbd> to paste and apply the copied commits (cherry pick)
 
-### Amending Commits
+### - Action 3: Amending a commit
 
 1. Make changes to your file(s)
 2. Navigate to the **Commits panel**
@@ -142,15 +142,15 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 4. <kbd>Shift</kbd>+<kbd>A</kbd>: Request to amend the commit with your changes
 5. <kbd>Enter</kbd>: Confirm and apply the amendment
 
-### Squashing Commits
+### - Action 4: Squash a commit with the commit below it
 
 - <kbd>s</kbd> (on a commit): Squash the commit with the commit below it. Asks for confirmation before executing.
 
-### Reverting Commits
+### - Action 5: Revert a commit
 
 - <kbd>t</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
 
-### Moving Code Between Commits
+### - Action 6: Move code between commits
 
 To move specific changes from one commit to another:
 
