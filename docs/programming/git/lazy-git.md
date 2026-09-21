@@ -102,7 +102,7 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### - Action 3: Rebase
 
-- <kbd>r</kbd> (on a branch): Rebase the current branch (marked with `*`) onto the selected branch
+- <kbd>rs</kbd> You want to rebase `side-branch` on top of `develop`. Check out to `side-branch` (will be marked with `*`), stand on `develop` using Up/Down arrow keys (<kbd>↑</kbd> / <kbd>↓</kbd>), and hit `rs`, for a simple rebase.
 
 ### - Action 4: Create a pull request
 
