@@ -160,28 +160,3 @@ To move specific changes from one commit to another:
 4. Navigate to the target commit where you want to move the patch
 5. Press <kbd>Ctrl</kbd>+<kbd>P</kbd> to open the patch menu
 6. Select "move the patch into the selected commit"
-
----
-
-## 6. Quick Reference Table
-
-| Key                           | Context           | Action                               |
-| ----------------------------- | ----------------- | ------------------------------------ |
-| <kbd>←</kbd> <kbd>→</kbd>     | Any panel         | Navigate between panels              |
-| <kbd>Space</kbd>              | Files panel       | Toggle file staging                  |
-| <kbd>Space</kbd>              | Diff view         | Stage/unstage line or hunk           |
-| <kbd>Space</kbd>              | Branches panel    | Check out branch                     |
-| <kbd>a</kbd>                  | Files panel       | Toggle stage/unstage all files       |
-| <kbd>a</kbd>                  | Diff view         | Toggle hunk/line mode                |
-| <kbd>c</kbd>                  | Files panel       | Open commit message editor           |
-| <kbd>d</kbd>                  | Files panel       | Discard file changes                 |
-| <kbd>d</kbd>                  | Diff view (left)  | Delete line                          |
-| <kbd>d</kbd>                  | Diff view (right) | Unstage change                       |
-| <kbd>Shift</kbd>+<kbd>D</kbd> | Files panel       | Open discard menu                    |
-| <kbd>Enter</kbd>              | Files panel       | View file diff                       |
-| <kbd>Tab</kbd>                | Diff view         | Switch between unstaged/staged panes |
-| <kbd>v</kbd>                  | Diff view         | Start range selection                |
-| <kbd>v</kbd>                  | Commits panel     | Start commit range selection         |
-| <kbd>Shift</kbd>+<kbd>C</kbd> | Commits panel     | Copy selected commits                |
-| <kbd>Shift</kbd>+<kbd>V</kbd> | Commits panel     | Paste/cherry-pick commits            |
-| <kbd>Shift</kbd>+<kbd>A</kbd> | Commits panel     | Amend commit                         |
