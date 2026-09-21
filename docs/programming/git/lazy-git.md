@@ -121,45 +121,46 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### - Action 2: Reset to a commit
 
-<kbd>g</kbd> on its own does nothing — it starts a reset, you then need to immediately hit the reset type. Hit them in a row:
-
-- <kbd>g</kbd><kbd>s</kbd> (on a commit): Soft reset to that commit (keep the changes)
-- <kbd>g</kbd><kbd>h</kbd> (on a commit): Hard reset to that commit (discard the changes)
-
-### - Action 3: Cherry Picking
-
-1. Navigate to the **Commits panel**
-2. <kbd>v</kbd>: Start range selection mode
-3. <kbd>↑</kbd> / <kbd>↓</kbd> (Arrow Keys Up/Down): Extend the range to select multiple commits
-4. <kbd>Shift</kbd>+<kbd>C</kbd>: Copy the selected commit hashes
-5. Navigate to the **Branches panel**
-6. <kbd>Space</kbd>: Check out to the target branch
-7. Move to **Commits Panel**
-8. Hit <kbd>Shift</kbd>+<kbd>V</kbd> to paste and apply the copied commits (cherry pick)
+- <kbd>g</kbd><kbd>s</kbd> (on a commit): Soft reset to that commit (keep the changes).
+- <kbd>g</kbd><kbd>h</kbd> (on a commit): Hard reset to that commit (discard the changes).
 
 ### - Action 3: Amending a commit
 
-1. Make changes to your file(s)
-2. Navigate to the **Commits panel**
-3. Select the last commit (the one you want to amend)
-4. <kbd>Shift</kbd>+<kbd>A</kbd>: Request to amend the commit with your changes
-5. <kbd>Enter</kbd>: Confirm and apply the amendment
+1. Make changes to a file(s), and **stage** them.
+2. Navigate to the **Commits panel**.
+3. Stand on the **commit** you want to amend.
+4. <kbd>Shift</kbd>+<kbd>A</kbd>+<kbd>Enter</kbd>: Request to amend, confirm and apply, the commit with your changes.
+
+### - Action 4: Cherry pick commits on a branch
+
+You want to cherry pick commits from branch **A** to branch **B**.
+
+When on branch **A**:
+
+1. Navigate to the **Commits panel**.
+2. <kbd>v</kbd>: Start **range selection mode**.
+3. <kbd>↑</kbd> / <kbd>↓</kbd> Using the Up/Down arrow keys, **select a range of multiple commits**.
+4. <kbd>Shift</kbd>+<kbd>C</kbd>: Copy the **selected** commit hashes.
+5. Navigate to the **Branches panel**.
+6. Hit <kbd>Space</kbd> on the **target branch (B)** to check out to it.
+7. Navigate to **Commits Panel**.
+8. Hit <kbd>Shift</kbd>+<kbd>V</kbd> to paste and apply the copied commits (cherry pick).
 
 ### - Action 4: Squash a commit with the commit below it
 
-- <kbd>s</kbd> (on a commit): Squash the commit with the commit below it. Asks for confirmation before executing.
+- <kbd>s+Enter</kbd> (on a commit): Squash the commit with the commit below it. Asks for confirmation before executing.
 
 ### - Action 5: Revert a commit
 
-- <kbd>t</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
+- <kbd>t+Enter</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
 
 ### - Action 6: Move code between commits
 
 To move specific changes from one commit to another:
 
-1. Select a commit and press <kbd>Enter</kbd> on a file to view all changes made to that file
-2. Use <kbd>Space</kbd> to extract specific diffs and create a "custom patch" (visible on the right side)
-3. Press <kbd>Esc</kbd> twice to return to the commits list
-4. Navigate to the target commit where you want to move the patch
-5. Press <kbd>Ctrl</kbd>+<kbd>P</kbd> to open the patch menu
-6. Select "move the patch into the selected commit"
+1. Select a commit and press <kbd>Enter</kbd> on a file to view all changes made to that file.
+2. Use <kbd>Space</kbd> to extract specific diffs and create a "custom patch" (visible on the right side).
+3. Press <kbd>Esc</kbd> twice to return to the commits list.
+4. Navigate to the target commit where you want to move the patch.
+5. Press <kbd>Ctrl</kbd>+<kbd>P</kbd> to open the patch menu.
+6. Select "move the patch into the selected commit".
