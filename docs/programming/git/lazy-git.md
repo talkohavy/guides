@@ -33,7 +33,7 @@
 
 ### - Action 1: Stage a file / all files
 
-- <kbd>Space</kbd>: (on a file name) Toggle staging/unstaging of the selected file
+- <kbd>Space</kbd>: (on a file name): Toggle staging/unstaging of the selected file
 - <kbd>a</kbd>: Toggle between staging all files or resetting all files
 
 ### - Action 2: Commit staged changes
@@ -42,20 +42,23 @@
 
 ### - Action 3: Discard file changes
 
-- <kbd>d</kbd>: Discard changes on the selected file (shows confirmation box)
+- <kbd>d</kbd>: (on a file name): Discard changes on the selected file (shows confirmation box)
 - <kbd>Shift</kbd>+<kbd>D</kbd>: Open a menu with multiple discard options
   - **Nuke working tree**: Clears all changes and deletes all new files (most commonly used)
 
 ### - Action 4: View file changes
 
-- <kbd>Enter</kbd>: Navigate to the split view showing file changes
+- <kbd>Enter</kbd>: (on a file name): Navigate to the split view showing file changes
   - Left side: unstaged changes
   - Right side: staged changes
 
 ### - Action 5: Stash changes
 
 - <kbd>s</kbd>: Stash changes. Asks for confirmation and an optional name for the stash.
-- <kbd>Shift</kbd>+<kbd>S</kbd>: Opens a stash options menu where you can choose to stash only staged changes.
+- <kbd>Shift</kbd>+<kbd>s</kbd>: Opens a stash options menu:
+  - <kbd>S+a+Enter</kbd>: Stash all changes
+  - <kbd>S+s+Enter</kbd>: Stash staged changes
+  - <kbd>S+u+Enter</kbd>: Stash unstaged changes
 
 ---
 
@@ -65,10 +68,10 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### - Action 1: Switch between staging modes
 
+- <kbd>Space</kbd>: (on a line/hunk): Add or remove the current line/hunk (toggles between staged/unstaged)
 - <kbd>a</kbd>: Toggle between two staging modes:
   - **Hunk mode**: Stage entire hunks (like VS Code's diff viewer)
   - **Line mode**: Stage individual lines
-- <kbd>Space</kbd>: Add or remove the current line/hunk (toggles between staged/unstaged)
 
 ### - Action 2: Select range of changes
 
@@ -82,8 +85,8 @@ When you press <kbd>Enter</kbd> on a file, you enter the diff view where you can
 
 ### - Action 4: Remove changes from file
 
-- <kbd>d</kbd> (left pane): Delete the line/change or selected range
-- <kbd>d</kbd> (right pane): Unstage the change
+- <kbd>d</kbd> (on a line/hunk in the left pane): Delete the line/change or selected range
+- <kbd>d</kbd> (on a line/hunk in the right pane): Unstage the change
 
 ---
 
