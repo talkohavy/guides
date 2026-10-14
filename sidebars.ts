@@ -232,6 +232,25 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'category',
+              label: '- Kafka',
+              link: {
+                type: 'generated-index',
+                title: 'Kafka Guides',
+                description: 'All about Kafka',
+                slug: '/kafka',
+                keywords: ['kafka'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/devops/kafka/getting-started',
+                  label: '- Getting Started',
+                  key: 'kafka-getting-started',
+                },
+              ],
+            },
+            {
+              type: 'category',
               label: '- Kubernetes',
               link: {
                 type: 'generated-index',
