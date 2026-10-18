@@ -243,9 +243,135 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'doc',
-                  id: 'programming/devops/kafka/getting-started',
-                  label: '- Getting Started',
-                  key: 'kafka-getting-started',
+                  id: 'programming/devops/kafka/introduction',
+                  label: '- Introduction',
+                  key: 'kafka-introduction',
+                },
+                {
+                  type: 'category',
+                  label: '- Fundamentals',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/core-concepts',
+                      label: '- Core Concepts',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/keys-partitioning-and-ordering',
+                      label: '- Keys, Partitioning & Ordering',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/delivery-guarantees',
+                      label: '- Delivery Guarantees',
+                      key: 'kafka-delivery-guarantees',
+                    },
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: '- Hands-On',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/running-kafka-locally',
+                      label: '- Running Kafka Locally',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/nodejs-setup',
+                      label: '- Node.js Setup',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/producing-messages',
+                      label: '- Producing Messages',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/consuming-messages',
+                      label: '- Consuming Messages',
+                    },
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: '- Reliability',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/retries-and-dead-letter-queues',
+                      label: '- Retries & Dead Letter Queues',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/idempotent-consumers',
+                      label: '- Idempotent Consumers',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/transactional-outbox',
+                      label: '- Transactional Outbox',
+                    },
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: '- Advanced',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/message-schemas-and-evolution',
+                      label: '- Schemas & Evolution',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/topic-design',
+                      label: '- Topic Design',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/consumer-lag-and-throughput',
+                      label: '- Consumer Lag & Throughput',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/replaying-messages',
+                      label: '- Replaying Messages',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/exactly-once',
+                      label: '- Exactly-Once',
+                    },
+                  ],
+                },
+                {
+                  type: 'category',
+                  label: '- Production',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/testing',
+                      label: '- Testing',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/common-pitfalls',
+                      label: '- Common Pitfalls',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/production-checklist',
+                      label: '- Production Checklist',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/devops/kafka/cheat-sheet',
+                      label: '- Cheat Sheet',
+                    },
+                  ],
                 },
               ],
             },
