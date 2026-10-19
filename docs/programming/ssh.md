@@ -12,7 +12,7 @@ ssh-keygen -t rsa -b 4096 -C tal-kohavy.personal.mac
 
 SSH, also known as `Secure Shell` or `Secure Socket Shell`, is a network protocol that gives users, particularly system administrators, a secure way to access a computer over an unsecured network.
 
-`Secure Shell` provides an **authentication mechanism** either by a strong password or by a `public key` (preferred), as well as **an encrypted data communication system** between two computers connecting over an open network, such as the internet.
+`Secure Shell` provides an **authentication mechanism** either by a strong password or by a **public key** (preferred), as well as **an encrypted data communication system** between two computers connecting over an open network, such as the internet.
 
 An SSH server (sshd), listens on port 22 of a TCP connection by default.
 
@@ -156,24 +156,24 @@ cat ~/.ssh/id_rsa.pub
 ## 5. Create a second key-pair of public/private keys
 
 **<font size="6">TLDR;</font>**  
-**Two different `accounts`, on the same git provider, CANNOT share the same `public key`!**
+**Two different `accounts`, on the same git provider, CANNOT share the same **public key**!**
 
 ### - The background story
 
 You have an `account` on a git provider (Bitbucket / Github / etc. ).  
 You want to clone a project from that `account`, to your `computer`.  
-The clone operation asks that you verify yourself (authenticate), and nowadays the only way to do that is with an SSH call, in which your computer both sends a `public key`, and receives a `public key` from the other person (in which case - the git provider).  
-Today, all git providers ask that on your `account` you set/provide a **unique** `public key`.
+The clone operation asks that you verify yourself (authenticate), and nowadays the only way to do that is with an SSH call, in which your computer both sends a **public key**, and receives a **public key** from the other person (in which case - the git provider).  
+Today, all git providers ask that on your `account` you set/provide a **unique** **public key**.
 
-When you clone a project, you essentially send an SSH request behind the scenes, which uses your `default private key`. You did not tell it which key to pick from! it took picked the default one automatically! Your git provider will then use the `public key`, which you uploaded to it before hand, to try and decipher the message.
+When you clone a project, you essentially send an SSH request behind the scenes, which uses your `default private key`. You did not tell it which key to pick from! it took picked the default one automatically! Your git provider will then use the **public key**, which you uploaded to it before hand, to try and decipher the message.
 
 Now here's the kicker:  
-A single `account` may have _many_ `projects` in it (i.e. `repositories`), and all those `projects` may use the same `account` level `public key`. This is great! I can create as many `projects` as I like, and use the same `public key`! I can share my `public key` across different `projects`.
+A single `account` may have _many_ `projects` in it (i.e. `repositories`), and all those `projects` may use the same `account` level **public key**. This is great! I can create as many `projects` as I like, and use the same **public key**! I can share my **public key** across different `projects`.
 
 So why do I need a second `key-pair` of public/private keys?
 
 There's a harsh rule that goes for all git providers, which says:  
-**Two different `accounts`, on the same git provider, CANNOT share the same `public key`!**
+**Two different `accounts`, on the same git provider, CANNOT share the same **public key**!**
 
 Two questions which you can ask:
 
@@ -256,3 +256,278 @@ git clone git@github.com_2:talkohavy/email-builder.git
 Press Enter and... Cross fingers!
 
 **Enjoy! :-)**
+
+---
+
+## 6. SSH from one Mac into another
+
+**<font size="6">TLDR;</font>**
+
+```bash
+# On the client Mac (the one you type on):
+ssh-copy-id -i ~/.ssh/id_ecdsa.pub tal@Tals-MacBook-Air.local
+ssh tal@Tals-MacBook-Air.local
+```
+
+### - The setup
+
+You have two Macs. Each one already has its own key-pair inside `~/.ssh`, but neither one knows about the other's **public key** yet.
+
+In every SSH connection there are two roles:
+
+- **client**: the Mac you're sitting at, the one running the `ssh` command.
+- **server**: the Mac you're connecting _into_. It runs an SSH daemon (`sshd`) that listens on port 22.
+
+In this section, **Mac A is the client** and **Mac B is the server**. Once it works in one direction, you repeat the same steps the other way around.
+
+The goal: Mac B should hold Mac A's **public key** in a file called `~/.ssh/authorized_keys`.
+
+```bash
+cat ~/.ssh/authorized_keys
+```
+
+### - Step 1: enable Remote Login on the server (Mac B)
+
+**macOS** ships with an **SSH server**, but it **is turned off by default**.
+
+Go to **System Settings → General → Sharing**, and turn on **Remote Login**.  
+Click the ⓘ next to it to choose which users are allowed to log in. "Only these users" with your own user is a good choice.
+
+Or, from the terminal:
+
+```bash
+sudo systemsetup -setremotelogin on
+sudo systemsetup -getremotelogin   # should print: Remote Login: On
+```
+
+:::info
+On newer macOS versions, `systemsetup` might complain that it needs **Full Disk Access**. If that happens, either grant your terminal app Full Disk Access (System Settings → Privacy & Security), or use the GUI instead.
+:::
+
+### - Step 2: find the server's address and username (on Mac B)
+
+To connect, you need two things: **who** you log in as, and **where** the machine is.
+
+The username:
+
+```bash
+whoami
+```
+
+The address can be either the local hostname or the IP address.
+
+- **Local hostname** (recommended, it doesn't change when the router hands out a new IP):
+
+```bash
+scutil --get LocalHostName   # e.g. Tals-MacBook-Air
+```
+
+You use it with a `.local` suffix: `Tals-MacBook-Air.local`. This works as long as both Macs are on the same local network.
+
+- **IP address** (`en0` is usually the Wi-Fi interface):
+
+```bash
+ipconfig getifaddr en0   # e.g. 192.168.1.23
+```
+
+### - Step 3: make sure a password login works (from Mac A)
+
+Before involving keys, check with a password:
+
+```bash
+ssh tal@Tals-MacBook-Air.local
+```
+
+First time you'll see a prompt, type `yes`, to store Mac B's host key inside `~/.ssh/known_hosts`.  
+Then you'll be **prompted for a password**. Once in, type `exit` to go back.
+
+So far you're logging in with a password. Next, you'll switch to keys.
+
+### - Step 4: copy your public key with `ssh-copy-id` (from Mac A)
+
+`ssh-copy-id` is a small helper script that installs your public key on a remote machine so you can log in with keys from then on. It comes from `OpenSSH`, the same project that provides `ssh`, `sshd` and `ssh-keygen`.
+This tool ships with macOS, but isn't specific to macOS. In Linux, for example, it is included on almost every distribution. For windows, it is not included.
+
+```bash
+ssh-copy-id -i ~/.ssh/id_ecdsa.pub tal@Tals-MacBook-Air.local
+```
+
+It asks for Mac B's password one last time, and then prints something like:
+
+```bash
+Number of key(s) added:        1
+
+Now try logging into the machine, with:   "ssh 'tal@Tals-MacBook-Air.local'"
+and check to make sure that only the key(s) you wanted were added.
+```
+
+**What did it do behind the scenes?**
+
+1. It connected to Mac B with SSH, using your password.
+2. It created `~/.ssh` on Mac B if it didn't exist, with `700` permissions (only the owner can read, write, or enter it).
+3. It **appended** the contents of `id_ecdsa.pub` to `~/.ssh/authorized_keys` on Mac B, and created that file with `600` permissions if needed.
+4. It skipped any key that was already in there, so running it twice won't add duplicates.
+
+It never touches your **private key**. Only the `.pub` file is sent.
+
+**Useful flags:**
+
+- `-i <file>`: which public key to send. If you leave it out, `ssh-copy-id` picks keys on its own (from your `ssh-agent`, or the default `~/.ssh/id_*.pub` files), which might not be the key you meant. **Always pass `-i`**.
+- `-n`: dry run. It prints which keys _would_ be installed, without installing anything.
+- `-p <port>`: if the server listens on a port other than 22.
+
+:::info
+`ssh-copy-id` is just a convenience. Doing it by hand comes down to the same thing:
+
+```bash
+cat ~/.ssh/id_ecdsa.pub | ssh tal@Tals-MacBook-Air.local \
+  'mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
+```
+
+:::
+
+### - Step 5: verify where the key ended up (on Mac B)
+
+The key lives in the **home folder of the user you logged in as**, in a file called `authorized_keys`:
+
+```bash
+ls -la ~/.ssh
+cat ~/.ssh/authorized_keys
+```
+
+Every line in `authorized_keys` is one allowed public key. It looks like this:
+
+```bash
+ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAI... my-main-key
+```
+
+The last part (`my-main-key`) is the comment you set with `-C` when you created the key (section 4). That's how you tell which line belongs to which machine. It's one more reason to give each key a clear comment like `tal.macbook-pro`.
+
+To be completely sure it's the same key, compare **fingerprints**. On Mac A:
+
+```bash
+ssh-keygen -lf ~/.ssh/id_ecdsa.pub
+```
+
+On Mac B:
+
+```bash
+ssh-keygen -lf ~/.ssh/authorized_keys
+```
+
+The second command prints one fingerprint per line in the file. One of them should match Mac A's fingerprint exactly.
+
+:::caution
+SSH is strict about permissions. If `~/.ssh` or `authorized_keys` can be written by anyone other than you, `sshd` **silently ignores** the file and falls back to asking for a password. If key login doesn't work, check these first:
+
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+:::
+
+### - Step 6: log in with your key (from Mac A)
+
+```bash
+ssh tal@Tals-MacBook-Air.local
+```
+
+This time you shouldn't be asked for Mac B's password. If your private key has a passphrase, you'll be asked for **that** instead. That's your key's passphrase, which is a different thing from Mac B's password.
+
+To prove you really logged in with the key and didn't fall back to a password, turn password login off for this one attempt:
+
+```bash
+ssh -o PasswordAuthentication=no tal@Tals-MacBook-Air.local
+```
+
+Enjoy! ✅ 🙂
+
+### - Step 7: give it a short name (client-side `~/.ssh/config`)
+
+This is the same client `config` file from section 5. Add a block for the other Mac on each client:
+
+```bash
+Host tal
+  HostName talmac.local
+  User tal
+  IdentityFile ~/.ssh/id_rsa
+  AddKeysToAgent yes
+  UseKeychain yes
+```
+
+Now this is enough:
+
+```bash
+ssh tal
+```
+
+### - Step 9: the server-side config file (`sshd_config`)
+
+So far, every config file we've touched was a **client** config. It controls how _your_ `ssh` command behaves when it connects somewhere.  
+The **server** has its own config, which controls who `sshd` lets in, and how. Don't mix them up:
+
+| File                      | Side   | Controls                                       |
+| ------------------------- | ------ | ---------------------------------------------- |
+| `~/.ssh/config`           | client | your outgoing connections (your user only)     |
+| `/etc/ssh/ssh_config`     | client | outgoing connections, for all users            |
+| `/etc/ssh/sshd_config`    | server | incoming connections (note the **d**, daemon)  |
+| `/etc/ssh/sshd_config.d/` | server | extra server config files, loaded by the above |
+
+On macOS, the top of `/etc/ssh/sshd_config` contains this line:
+
+```bash
+Include /etc/ssh/sshd_config.d/*
+```
+
+So instead of editing `sshd_config` itself, which a macOS update might overwrite, put your own settings in a separate file inside `sshd_config.d/`:
+
+```bash
+ls /etc/ssh/sshd_config.d/                     # see what's already there
+sudo nano /etc/ssh/sshd_config.d/010-custom.conf
+```
+
+:::info
+In `sshd_config`, **the first value set for a setting wins**. Later lines for the same setting are ignored. The included files are read in alphabetical order, before the rest of `sshd_config`. Giving your file a low number like `010-` makes sure it's read before anything else.
+:::
+
+**Example: allow keys only, no passwords**
+
+Once key login works (Step 6), you can lock the server down:
+
+```bash
+# /etc/ssh/sshd_config.d/010-custom.conf
+PubkeyAuthentication yes
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+```
+
+- `PasswordAuthentication no`: rejects plain password logins.
+- `KbdInteractiveAuthentication no`: macOS runs `sshd` with `UsePAM yes`, and PAM can still show a password prompt through "keyboard-interactive" login. This closes that door too. (Older OpenSSH versions call it `ChallengeResponseAuthentication`.)
+- `PermitRootLogin no`: nobody can SSH in directly as `root`.
+
+Other settings you might add later:
+
+- `AllowUsers tal.kohavy`: only these server users may log in
+- `Port 2222`: listen on a different port.
+
+**Validate and apply:**
+
+checks the syntax, prints nothing if it's OK:
+
+```bash
+sudo sshd -t
+```
+
+shows the setting sshd will actually use:
+
+```bash
+sudo sshd -T | grep -i passwordauthentication  # shows the setting sshd will actually use
+```
+
+Final enjoy! ✅✅✅
+
+:::caution
+Make sure key login works **before** you turn off password login, and keep an existing SSH session open while you test. With Macs you can always fix things at the physical keyboard. On a remote server, you can lock yourself out for good.
+:::
