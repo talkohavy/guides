@@ -6,71 +6,26 @@
 ssh-keygen -t rsa -b 4096 -C tal-kohavy.personal.mac
 ```
 
-## 1. Private/Public Key Cryptography
-
-The basic idea of how it works is such a clever, and dare I say cool, idea.
-
-### - What we want to achieve
-
-You have a `secret key`. You use that to `encode` some information, which converts it from a readable form to an un-readable form, effectively garbage, which looks like random noise. You then transfer that garbage to somebody else, and they are then able to `decrypt` it and get the message out. And anyone who's listening on your communication is unable to find out anything about the information that you are communicating.
-
-### - Solution 1: Symmetric System (BAD)
-
-The simplest way of thinking about it is to say, well there's a `message`, like _"hello"_, which I want to `encrypt`, and so I do some process on it, using a `secret key`, which then converts the `message` into nonsense (i.e. _xyz123_), and then you send it to the other person, and they `decrypt` it, with a process which is kind of the same but in reverse, using... the same `secret key`, and then I get _"hello"_ back on the other end.  
-And that's nice and simple, and it works.  
-But it has a problem which is you both need to know what this `secret key` is.  
-So, if it's two people, and they want to communicate with one another privately, they'd have to agree on a `secret key`, and then somehow share it with one another.  
-So they might meet in the park late at night in secret and exchange envelops, or whatever. And this is the kind of things spies used to do.  
-And the problem with that is... first it's very inconvenient, and secondly & most importantly - sometimes you physically can't do it.  
-Like the case of two gentleman that have never met, yet they want to do something over the internet.  
-So the problem becomes, how do I send this `secret key` to you, without just sending it in plain-text, unencrypted.  
-In order for us to share the key safely we need a secure encrypted connection, but we can't establish a secure encrypted connection without key!  
-There's a way of solving this problem, which is with **Asymmetric Encryption**.
-
-### - Solution 2: Asymmetric System (Good !)
-
-What you do is you generate 2 keys. key*A & key_B.
-And basically? It's the same as before. You got your `message` that says *"Hello"\_, you encrypt it with key_A, get garbage, send the garbage over to the other person, and then the other person uses key_B to decrypt it, and get out the `message`.  
-Now,
-you can't guess one key from the other, but they are linked in such a way, that anything you encrypt with key_A, can only be decrypted with key_B.  
-And anything that you encrypt with key_B, can only be decrypted with key_A.  
-And what you do is you generate a pair of these keys, which is also known as a key-pair, and you just pick one of them and you say "This is my `public key`", which makes the other one as your private. Now, the `public key` is public. You publish it everywhere. You put it on email, you upload it to git provider server, to a GCP ubuntu machine, whatever. Basically the idea is it's everywhere out there in the world with your name on it.  
-The private key, the other key of this pair, that one you keep absolutely secret.  
-And you can do some really cool things with it once this system is set up.  
-Consider a case where I generate a key-pair, and also you generate a key-pair.  
-We both have one another's `public keys`, so now... if you want to send me a message, I don't have to share anything with you. You just know my public key, encrypt something with my public key, send it to me, and you know that I can decrypt it, right? Because you know I have my private key.  
-And then, there's another thing you can do with this, which is... if I encrypt something with my private key, and then publish it... now on the surface of it you think: well, what's the point of encrypting it with your `private key`? Because if your `public key` is out there, then anyone can decrypt it, so why bother encrypting it?
-
-But! The fact that it can be `decrypted` with your `public key`, means that it must have been `encrypted` with your `private key`. Which means that it must have been you who sent it, because only you have your `private key`. Cryptographically, you can be certain that it's an authentic message really from that person.
-
-So the best thing happens when I do both!  
-Where I `encrypt` something with my `private key`, and then with your `public key`. And only then I send it to you.  
-And if we communicate like this, I know nobody else can read the message. You know nobody else can read the message. You know that the message came from me, and not an imposter, and you also know that the message hasn't been modified, because any modification to the message also requires the keys.  
-That's a great secure system, in which we didn't have to meet up in a park in shifty way and exchange envelopes. We in fact have never met.
-
----
-
-## 2. What is SSH?
+## 1. What is SSH?
 
 ### - About SSH
 
 SSH, also known as `Secure Shell` or `Secure Socket Shell`, is a network protocol that gives users, particularly system administrators, a secure way to access a computer over an unsecured network.
 
-SSH also refers to the suite of utilities that implement the SSH protocol. `Secure Shell` provides an **authentication mechanism** either by a strong password or by a `public key`, as well as **an encrypted data communication system** between two computers connecting over an open network, such as the internet.
+`Secure Shell` provides an **authentication mechanism** either by a strong password or by a `public key` (preferred), as well as **an encrypted data communication system** between two computers connecting over an open network, such as the internet.
 
-In addition to providing strong encryption, SSH is widely used by network administrators to manage systems and applications remotely, enabling them to log in to another computer over a network, execute commands and move files from one computer to another.
+An SSH server (sshd), listens on port 22 of a TCP connection by default.
 
-SSH refers both to the cryptographic network protocol and to the suite of utilities that implement that protocol. SSH uses the client-server model. An SSH server, by default, listens on the standard Transmission Control Protocol (TCP) port 22.
+### - How does it work?
 
-### - How does SSH work?
-
-The most basic use of SSH is to connect to a remote host for a terminal session. The form of that command is the following:
+You type a command:
 
 ```bash
 ssh UserName@SSHserver.example.com
 ```
 
-This command will cause the client to attempt to connect to the server named server.example.com, using the user ID UserName. If this is the first time negotiating a connection between the local host and the server, the user will be prompted with the remote host's public key fingerprint and prompted to connect, despite there having been no prior connection:
+The client will **attempt to connect** the server named server.example.com, using the specified user.  
+If this is their **first time negotiating**, the **client will be prompted** with the remote's public key fingerprint and prompted to connect:
 
 ```bash
 The authenticity of host 'sample.ssh.com' cannot be established.
@@ -78,7 +33,41 @@ The authenticity of host 'sample.ssh.com' cannot be established.
  Are you sure you want to continue connecting (yes/no)?
 ```
 
-Answering yes to the prompt will cause the session to continue, and the host key is stored in the local system's known_hosts file. This is a hidden file, stored by default in a hidden directory, called /.ssh/known_hosts, in the user's home directory. Once the host key has been stored in the known_hosts file, the client system can connect directly to that server again without need for any approvals; the host key authenticates the connection.
+Answer `yes` to continue.  
+Then, the host's public key is stored in inside a hidden file called `~/.ssh/known_hosts`. Once the host key has been stored, the client can connect directly to that server again without need for any approvals; the host key authenticates the connection.
+
+---
+
+## 2. Private/Public Key Cryptography
+
+The basic idea of how it works is such a clever, and dare I say cool, idea.
+
+### - What we want to achieve
+
+You have a **secret key**. You use that to **encode** some information, which converts it from a readable form to an un-readable form, effectively garbage, which looks like random noise. You then transfer that garbage to somebody else, and they are then able to **decrypt** it and get the message out. And anyone who's listening on your communication is unable to find out anything about the information that you are communicating.
+
+### - Solution: Asymmetric System
+
+What you do is **you generate a pair of keys**, also known as key-pair. key A & key B.  
+**You can't guess one key from the other**, but **they are linked in a special way** such that:
+
+- **Anything you encrypt with key A, can only be decrypted with key B**.
+- **Anything that you encrypt with key B, can only be decrypted with key A**.
+
+So you generate a pair of these keys, and you just pick one of them and you say "This is my public key", which makes the other one as your private. Now, the public key is public. You publish it everywhere. You put it on email, you upload it to git provider server, to a GCP ubuntu machine, whatever. Basically the idea is it's everywhere out there in the world with your name on it.
+
+**The private key**, the other key of this pair, that one **you keep absolutely secret**. And you can do some really cool things with it once this system is set up. Consider a case where I generate a key-pair, and also you generate a key-pair. We both have one another's public keys, so now... if you want to send me a message, I don't have to share anything with you. You just know my public key, encrypt something with my public key, send it to me, and you know that I can decrypt it, right? Because you know I have my private key. And then, there's another thing you can do with this, which is... **if I encrypt something with my private key**, and then publish it... now on the surface of it you think: well, what's the point of encrypting it with your private key? Because if your public key is out there, then anyone can decrypt it, so why bother encrypting it?
+
+But! **The fact that it can be decrypted with your public key, means that it must have been encrypted with your private key**. Which means that **it must have been you who sent the message**, because only you have your private key. Cryptographically, you can be certain that it's an authentic message really from that person.
+
+So now the best thing happens when I do both, where **I encrypt something with my private key, and then encrypt it again with your public key**. And only then I send it to you. And if we communicate like this:
+
+1. I know nobody else can read the message.
+2. You know nobody else can read the message.
+3. You know that the message came from me, and not an imposter.
+4. You also know that the message hasn't been modified, because any modification to the message also requires the keys.
+
+That's a great secure system, in which we didn't have to meet up in a park in shifty way and exchange envelopes. In fact, we've never even met. And **that's how two sides can generate and exchange a symmetric session key**.
 
 ---
 
