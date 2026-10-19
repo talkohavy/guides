@@ -219,11 +219,13 @@ Fill the `config` file with this:
 Host github.com
  Hostname github.com
  IdentityFile ~/.ssh/id_rsa
+ IdentitiesOnly yes
 
 # Account 2
 Host github.com_2
  Hostname github.com
  IdentityFile ~/.ssh/id_rsa_2
+ IdentitiesOnly yes
 ```
 
 You see here 2 blocks.  
@@ -235,12 +237,54 @@ It states the:
 - **host**: The URL provided by us.
 - **hostname**: The ACTUAL URL of the remote server (in our case it's the git provider – bitbucket).
 - **IdentityFile**: A `relative path` to the `private-key` file to be used for the encryption of the message that would be sent over using the SSH API call.
+- **IdentitiesOnly**: Use **only** the key from `IdentityFile`. Don't skip this one! See the caution below.
 
 Account 2 will be the **UNIQUE** case.  
 This is where it gets interesting.  
 In the host part, the URL which we provide, we're adding a "\_2" (could be anything we want), and in the `IdentityFile` we mention the path to the second `private-key` file.
 
-### - Step 3: do a git clone
+:::caution
+`IdentityFile` alone does **not** mean "use only this key". It only adds the key to the list of keys SSH will try. Keys loaded in your `ssh-agent` are tried **first**.
+
+So if `id_rsa` is already in the agent (for example, because some other `Host` block has `AddKeysToAgent yes`, like the one in section 6), SSH offers `id_rsa` to GitHub even when you connect to `github.com_2`. GitHub accepts it, and logs you in as **account 1**. Then you get an error like this, even though the config looks right:
+
+```bash
+ERROR: Permission to talkohavy/guides.git denied to <account-1-username>.
+```
+
+`IdentitiesOnly yes` fixes this. It tells SSH to offer only the keys listed in `IdentityFile` for that host, and ignore everything else in the agent.
+
+To see which keys are currently loaded in the agent:
+
+```bash
+ssh-add -l
+```
+
+:::
+
+### - Step 3: check which account you're logged in as
+
+Before cloning, ask GitHub who it thinks you are:
+
+```bash
+ssh -T git@github.com_2
+```
+
+You should see the username of **account 2**:
+
+```bash
+Hi talkohavy! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+If you see the wrong username, add `-v` to see which key SSH actually offered:
+
+```bash
+ssh -vT git@github.com_2 2>&1 | grep -E "Offering|Hi "
+```
+
+The `Offering public key` line shows the key's comment (the `-C` value) and where it came from: `explicit` means it came from your `IdentityFile`, and `agent` means it came from the `ssh-agent`.
+
+### - Step 4: do a git clone
 
 Let's do a git clone as you normally would, only now add the '\_2' to the host.  
 So instead of doing this:
