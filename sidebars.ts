@@ -165,7 +165,7 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/databases/postgres-sql',
+              id: 'programming/databases/postgresql',
               label: '- Postgres',
             },
             {
