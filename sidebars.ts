@@ -164,9 +164,55 @@ const sidebars: SidebarsConfig = {
               label: '- MongoDB',
             },
             {
-              type: 'doc',
-              id: 'programming/databases/postgresql',
+              type: 'category',
               label: '- Postgres',
+              link: {
+                type: 'generated-index',
+                title: 'PostgreSQL Guides',
+                description: 'All about PostgreSQL',
+                slug: '/postgresql',
+                keywords: ['postgresql', 'postgres'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/getting-started',
+                  label: '- Getting Started',
+                  key: 'postgresql-getting-started',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/add-connection-password',
+                  label: '- Add Role & Password',
+                  key: 'postgresql-add-connection-password',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/cli-commands',
+                  label: '- CLI Commands',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/connection-flow',
+                  label: '- Connection Flow',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/create-table',
+                  label: '- Create Table',
+                  key: 'postgresql-create-table',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/client-authentication',
+                  label: '- Client Authentication',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/databases/postgresql/interactive-shell-commands',
+                  label: '- Interactive Shell Commands',
+                },
+              ],
             },
             {
               type: 'doc',
