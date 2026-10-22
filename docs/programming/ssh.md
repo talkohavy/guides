@@ -301,6 +301,90 @@ Press Enter and... Cross fingers!
 
 **Enjoy! :-)**
 
+### - Gotcha: the `ssh-agent` remembers keys in memory
+
+**<font size="6">TLDR;</font>**  
+**Renaming, replacing or deleting key files in `~/.ssh` does NOT change what the `ssh-agent` holds.**
+
+Show which keys does the agent hold right now:
+
+```bash
+ssh-add -l
+```
+
+Clear all ssh keys from memory:
+
+```bash
+ssh-add -D
+```
+
+Show who does GitHub think I am:
+
+```bash
+ssh -T git@github.com
+```
+
+**The story:**
+
+Once a key is added to the agent (for example by a `Host` block with `AddKeysToAgent yes`), the agent keeps a copy of it **in memory**. From that point on, it no longer cares about the file on disk.
+
+Say you swap your keys around:
+
+```bash
+mv ~/.ssh/id_rsa   ~/.ssh/id_rsa_work.bak   # the old work key
+mv ~/.ssh/id_rsa_2 ~/.ssh/id_rsa            # the personal key is now the "default"
+```
+
+You'd expect `git push` to use the new `id_rsa`. It doesn't. The agent still holds the **old work key**, agent keys are offered **first**, and GitHub accepts it, logging you in as the work account:
+
+```bash
+ERROR: Permission to talkohavy/guides.git denied to <work-account-username>.
+```
+
+**How to diagnose it:**
+
+1. Ask GitHub who you are. The username in the reply is the account it matched your key to:
+
+```bash
+ssh -T git@github.com
+# Hi <work-account-username>! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+2. List the keys the agent is holding. Each line shows the key's **fingerprint** and its **comment** (the `-C` value from when you created it):
+
+```bash
+ssh-add -l
+# 4096 SHA256:sdaBct8z+l1W5Kyz9FEs3F2XlHmpkBH0nGb+m00leE4 tal.mac.work (RSA)
+```
+
+3. Compare it with the fingerprints of the files on disk, to see which file that agent key really is:
+
+```bash
+ssh-keygen -lf ~/.ssh/id_rsa
+ssh-keygen -lf ~/.ssh/id_rsa_work.bak
+```
+
+**How to fix it:**
+
+Clear the agent, then check again:
+
+```bash
+ssh-add -D               # remove all keys from the agent
+ssh -T git@github.com    # should now greet the right account
+```
+
+To remove only one key, and keep the rest, use `-d` with the key file:
+
+```bash
+ssh-add -d ~/.ssh/id_rsa_work.bak
+```
+
+:::caution
+`ssh-add -D` is not permanent. Restarting the Mac also empties the agent, but any `Host` block with `AddKeysToAgent yes` will load its key back the next time you use it.
+
+The permanent fix is the one from Step 2: a `Host` block for each account, with `IdentitiesOnly yes`. Then it doesn't matter what's in the agent, because SSH offers only the key from that block's `IdentityFile`.
+:::
+
 ---
 
 ## 6. SSH from one Mac into another
