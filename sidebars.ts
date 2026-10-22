@@ -890,9 +890,57 @@ const sidebars: SidebarsConfig = {
           label: '- Software Architecture',
         },
         {
-          type: 'doc',
-          id: 'programming/ssh',
+          type: 'category',
           label: '- SSH',
+          link: {
+            type: 'generated-index',
+            title: 'SSH Guides',
+            description: 'Keys, the agent, and logging in from one machine to another',
+            slug: '/ssh',
+            keywords: ['ssh', 'sshd', 'ssh-agent'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/ssh/what-is-ssh',
+              label: '- What is SSH',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/key-cryptography',
+              label: '- Key Cryptography',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/public-key-algorithms',
+              label: '- Public Key Algorithms',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/generate-a-key-pair',
+              label: '- Generate a Key-Pair',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/second-key-pair',
+              label: '- A Second Key-Pair',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/ssh-agent',
+              label: '- The ssh-agent',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/ssh-between-macs',
+              label: '- SSH Between Macs',
+            },
+            {
+              type: 'doc',
+              id: 'programming/ssh/server-config',
+              label: '- Server Config',
+            },
+          ],
         },
         {
           type: 'doc',
