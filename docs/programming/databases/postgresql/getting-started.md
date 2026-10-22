@@ -50,7 +50,7 @@ postgres=#
 You can login like this:
 
 ```bash
-psql "postgresql://username:passsword@localhost:5432/db_name"
+psql "postgresql://username:password@localhost:5432/db_name"
 ```
 
 for example: `psql "postgresql://postgres:1234@localhost:5432/postgres"`

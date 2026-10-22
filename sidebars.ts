@@ -212,6 +212,32 @@ const sidebars: SidebarsConfig = {
                   id: 'programming/databases/postgresql/interactive-shell-commands',
                   label: '- Interactive Shell Commands',
                 },
+                {
+                  type: 'category',
+                  label: '- Spatial Data',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/spatial-databases',
+                      label: '- Spatial Databases',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/postgis',
+                      label: '- PostGIS',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/r-trees',
+                      label: '- R-Trees',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/gist',
+                      label: '- GiST',
+                    },
+                  ],
+                },
               ],
             },
             {
