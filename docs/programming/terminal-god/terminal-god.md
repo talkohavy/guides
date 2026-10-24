@@ -34,13 +34,7 @@ Use it like so:
 netstat -nav
 ```
 
-## - Tip Number 3: ps
-
-```bash
-ps
-```
-
-## - Tip Number 4: jq
+## - Tip Number 3: jq
 
 ```bash
 echo '{ "a": true, "name": "tal kohavy", "age": 28, "hobbies": ["computers", "sports"], "agent": null }' | jq

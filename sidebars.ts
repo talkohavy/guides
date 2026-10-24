@@ -958,13 +958,13 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'programming/terminal-god/linux-install',
-              label: '- Linux Install',
+              id: 'programming/terminal-god/debug-a-running-node-server',
+              label: '- Debug Node server',
             },
             {
               type: 'doc',
-              id: 'programming/terminal-god/terminal-god',
-              label: '- Terminal God',
+              id: 'programming/terminal-god/find',
+              label: '- Find',
             },
             {
               type: 'doc',
@@ -973,13 +973,13 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/terminal-god/vim',
-              label: '- Vim',
+              id: 'programming/terminal-god/linux-install',
+              label: '- Linux Install',
             },
             {
               type: 'doc',
-              id: 'programming/terminal-god/find',
-              label: '- Find',
+              id: 'programming/terminal-god/ps',
+              label: '- ps',
             },
             {
               type: 'doc',
@@ -993,8 +993,13 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'programming/terminal-god/debug-a-running-node-server',
-              label: '- Debug Node server',
+              id: 'programming/terminal-god/terminal-god',
+              label: '- Terminal God',
+            },
+            {
+              type: 'doc',
+              id: 'programming/terminal-god/vim',
+              label: '- Vim',
             },
           ],
         },
