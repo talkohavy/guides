@@ -741,6 +741,8 @@ Like `SCAN`, the iteration starts with cursor 0 and ends when the returned curso
 - `MATCH pattern` - Only return members that match the given pattern (supports glob-style patterns, e.g., `user:*`)
 - `COUNT count` - Hint about how many elements to return per call (default is usually around 10)
 
+**Time complexity:** O(1) for every call. O(N) for a complete iteration, where N is the number of members in the set
+
 **Use Cases:**
 
 - Safely iterate through large sets in production
@@ -925,4 +927,420 @@ Examples:
 (integer) 4
 > SCARD nonexistent
 (integer) 0
+```
+
+---
+
+## 6. Redis Sorted Sets (ZSET)
+
+A **Redis Sorted Set** is a collection of unique string members, where every member is associated with a **score** (a floating-point number). Members are always kept ordered by their score, from lowest to highest. The `TYPE` command returns **`"zset"`** for keys holding a Sorted Set.
+
+**Sets vs Sorted Sets:** Like a **Set**, a **Sorted Set** only holds unique members. The difference is that a Set is unordered, while a Sorted Set gives every member a score and keeps them sorted by it. This lets you ask questions like "who are the top 10?", "what is the rank of X?" or "give me everything with a score between 50 and 100", all of them fast.
+
+**How ordering works:**
+
+- Members are sorted by score, in ascending order.
+- If two members have the **same score**, they are sorted lexicographically (alphabetically) by the member string.
+- The same member can't appear twice. Adding an existing member again just updates its score.
+
+**Common use cases:**
+
+- Leaderboards (score = points)
+- Priority queues (score = priority)
+- Time-ordered data, like recent activity or scheduled jobs (score = Unix timestamp)
+- Rate limiting with a sliding window (score = request timestamp)
+
+**Time complexity: Sets vs Sorted Sets**
+
+Keeping members sorted has a cost. Most write operations on a Set are O(1), while the same operations on a Sorted Set are O(log N), because Redis has to find the right position for each member.
+
+| Operation                  | Set                     | Sorted Set                      |
+| -------------------------- | ----------------------- | ------------------------------- |
+| Add a member               | `SADD` - O(1)           | `ZADD` - O(log N)               |
+| Remove a member            | `SREM` - O(1)           | `ZREM` - O(log N)               |
+| Check / get a member       | `SISMEMBER` - O(1)      | `ZSCORE` - O(1)                 |
+| Count all members          | `SCARD` - O(1)          | `ZCARD` - O(1)                  |
+| Get all members            | `SMEMBERS` - O(N)       | `ZRANGE key 0 -1` - O(N)        |
+| Iterate incrementally      | `SSCAN` - O(1) per call | `ZSCAN` - O(1) per call         |
+| Get a range (top 10, etc.) | not possible            | `ZRANGE` - O(log N + M)         |
+| Get the rank of a member   | not possible            | `ZRANK` / `ZREVRANK` - O(log N) |
+| Count members in a range   | not possible            | `ZCOUNT` - O(log N)             |
+
+N = number of members in a collection. M = number of members returned.
+
+So if you only need membership checks ("is X in the group?"), a Set is cheaper. Pick a Sorted Set when you need ordering, ranks or ranges.
+
+<br/>
+
+### - Command 21: ZADD
+
+**Time complexity**
+
+O(log N) - per each member added.
+
+**Syntax**
+
+Simple form:
+
+```bash
+ZADD groupkey score member
+```
+
+Complex form:
+
+```bash
+ZADD key [NX | XX] [GT | LT] [CH] [INCR] score member [score member ...]
+```
+
+**Description**
+
+Adds one or more members with their scores to the sorted set stored at groupkey. If a member already exists, its score is updated and the member is re-positioned to keep the correct order. If the groupkey does not exist, a new sorted set is created.
+
+The return value is the number of members that were **added** (not updated) to the sorted set.
+
+The `ZADD` command supports a set of options that modify its behavior:
+
+- `NX` -- Only add new members. Never update existing ones.
+- `XX` -- Only update existing members. Never add new ones.
+- `GT` -- Only update an existing member if the new score is **greater** than the current score (Redis 6.2+).
+- `LT` -- Only update an existing member if the new score is **less** than the current score (Redis 6.2+).
+- `CH` -- Change the return value to the number of members **changed** (added + updated), instead of only added.
+- `INCR` -- Behave like `ZINCRBY`: increment the member's score instead of setting it. Only one score-member pair is allowed with this option.
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob" 120 "carol" 85 "dave"
+(integer) 4
+> ZADD leaderboard 110 "alice"
+(integer) 0
+> ZADD leaderboard CH 115 "alice"
+(integer) 1
+> ZADD leaderboard GT 90 "carol"
+(integer) 0
+> ZSCORE leaderboard "carol"
+"120"
+```
+
+- In the first `ZADD`, we create the sorted set with four members - alice, bob carol & dave.
+- In the second `ZADD`, when adding/updating alice with 110, `"alice"` already exists, so her score is updated from 100 to 110 but the return value is 0 (nothing new was added).
+- On the third `ZADD`, when adding/updating alice with 115 and `CH`, the update is counted, so we get 1.
+- On the fourth `ZADD`, when adding/updating carol with 90 and `GT`, the existing score 120 is higher, so no update.
+
+<br/>
+
+### - Command 22: ZRANGE
+
+**Time complexity**
+
+O(log N + M)
+
+N= number of members in set. M= number of members returned
+
+**Syntax**
+
+Simple form:
+
+```bash
+ZRANGE groupkey 0 -1
+```
+
+Complex form:
+
+```bash
+ZRANGE groupkey start stop [BYSCORE | BYLEX] [REV] [LIMIT offset count] [WITHSCORES]
+```
+
+**Description**
+
+Returns the members of the sorted set stored at key within the specified range. By default, `start` and `stop` are **indexes** (ranks), starting at 0. Negative indexes count from the end, so `-1` is the last member, `-2` is the one before it, and so on. `ZRANGE key 0 -1` returns the whole sorted set.
+
+The `ZRANGE` command supports a set of options that modify its behavior:
+
+- `WITHSCORES` -- Return the score of each member as well. The reply alternates between member and score.
+- `REV` -- Reverse the order. Desc instead of ASC. From highest score to lowest.
+- `BYSCORE` -- Treat `start` and `stop` as **scores** instead of indexes.
+  - Use `-inf` and `+inf` for "no lower bound" and "no upper bound".
+  - By default the bounds are inclusive. Prefix a bound with `(` to make it exclusive, for example `(85` means "greater than 85".
+- `BYLEX` -- Treat `start` and `stop` as lexicographical ranges of member names. Only useful when all members have the same score.
+- `LIMIT offset count` -- Skip `offset` members and return at most `count` members (similar to SQL's `OFFSET` / `LIMIT`). Only works together with `BYSCORE` or `BYLEX`.
+
+:::warning
+When using `REV` together with `BYSCORE`, the order of the bounds flips: you pass the **max first, then the min** (e.g., `ZRANGE key +inf -inf BYSCORE REV`).
+:::
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob" 120 "carol" 85 "dave"
+(integer) 4
+> ZRANGE leaderboard 0 -1 WITHSCORES
+1) "bob"
+2) "85"
+3) "dave"
+4) "85"
+5) "alice"
+6) "100"
+7) "carol"
+8) "120"
+> ZRANGE leaderboard 0 2 REV WITHSCORES
+1) "carol"
+2) "120"
+3) "alice"
+4) "100"
+5) "dave"
+6) "85"
+> ZRANGE leaderboard 90 +inf BYSCORE
+1) "alice"
+2) "carol"
+> ZRANGE leaderboard (85 120 BYSCORE
+1) "alice"
+2) "carol"
+> ZRANGE leaderboard +inf -inf BYSCORE REV LIMIT 0 2
+1) "carol"
+2) "alice"
+```
+
+Notice that `"bob"` and `"dave"` both have a score of 85, so they're ordered alphabetically (`"bob"` comes before `"dave"`). The second command (`0 2 REV`) is the classic "top 3" leaderboard query.
+
+:::info
+Before Redis 6.2, these operations had separate commands: `ZREVRANGE`, `ZRANGEBYSCORE`, `ZREVRANGEBYSCORE`, `ZRANGEBYLEX` and `ZREVRANGEBYLEX`. They still work, but are considered deprecated. Prefer `ZRANGE` with the matching options.
+:::
+
+<br/>
+
+### - Command 23: ZSCORE
+
+**Time complexity**
+
+O(1)
+
+**Syntax**
+
+```bash
+ZSCORE key member
+```
+
+**Description**
+
+Returns the score of member in the sorted set stored at key. If the member does not exist in the sorted set, or the key does not exist, `nil` is returned.
+
+The score is returned as a string, because Redis replies don't have a float type (in RESP2).
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob"
+(integer) 2
+> ZSCORE leaderboard "alice"
+"100"
+> ZSCORE leaderboard "zoe"
+(nil)
+```
+
+:::info
+For getting the scores of multiple members at once, use `ZMSCORE` (available since Redis 6.2).
+:::
+
+<br/>
+
+### - Command 24: ZRANK & ZREVRANK
+
+**Time complexity**
+
+O(log N)
+
+**Syntax**
+
+```bash
+ZRANK key member [WITHSCORE]
+ZREVRANK key member [WITHSCORE]
+```
+
+**Description**
+
+Returns the rank (position) of member in the sorted set stored at key. The rank is **0-based**, so the first member has rank 0.
+
+- `ZRANK` ranks members from the **lowest** score to the highest.
+- `ZREVRANK` ranks members from the **highest** score to the lowest. This is what you usually want for leaderboards, where rank 0 is first place.
+
+If the member does not exist, or the key does not exist, `nil` is returned. Since Redis 7.2, the `WITHSCORE` option returns the score together with the rank.
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob" 120 "carol" 85 "dave"
+(integer) 4
+> ZRANK leaderboard "alice"
+(integer) 2
+> ZREVRANK leaderboard "alice"
+(integer) 1
+> ZREVRANK leaderboard "carol"
+(integer) 0
+> ZRANK leaderboard "zoe"
+(nil)
+```
+
+<br/>
+
+### - Command 25: ZINCRBY
+
+**Time complexity**
+
+O(log N)
+
+**Syntax**
+
+```bash
+ZINCRBY key increment member
+```
+
+**Description**
+
+Increments the score of member in the sorted set stored at key by `increment`. If the member does not exist, it is added with `increment` as its score (as if its previous score was 0). If the key does not exist, a new sorted set is created.
+
+A negative `increment` decreases the score. The return value is the new score of the member, as a string.
+
+This is atomic, so it's safe to use from many clients at once (e.g., many game servers adding points to the same leaderboard).
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice"
+(integer) 1
+> ZINCRBY leaderboard 15 "alice"
+"115"
+> ZINCRBY leaderboard -5 "alice"
+"110"
+> ZINCRBY leaderboard 50 "zoe"
+"50"
+```
+
+<br/>
+
+### - Command 26: ZREM
+
+**Time complexity**
+
+O(M \* log N) - M= number of members removed. N= number of members in set.
+
+**Syntax**
+
+```bash
+ZREM key member [member ...]
+```
+
+**Description**
+
+Removes the specified members from the sorted set stored at key. Members that do not exist are ignored. If the key does not exist, it is treated as an empty sorted set and the command returns 0.
+
+The return value is the number of members that were **removed** (not including non-existing members).
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob" 120 "carol"
+(integer) 3
+> ZREM leaderboard "bob" "zoe"
+(integer) 1
+> ZRANGE leaderboard 0 -1
+1) "alice"
+2) "carol"
+```
+
+:::info
+To remove members by range instead of by name, use `ZREMRANGEBYSCORE` (by score), `ZREMRANGEBYRANK` (by index) or `ZREMRANGEBYLEX` (by member name).  
+For example, `ZREMRANGEBYRANK leaderboard 0 -101` keeps only the top 100 members.
+:::
+
+<br/>
+
+### - Command 27: ZCARD & ZCOUNT
+
+**Time complexity**
+
+`ZCARD` is O(1). `ZCOUNT` is O(log N).
+
+**Syntax**
+
+```bash
+ZCARD key
+ZCOUNT key min max
+```
+
+**Description**
+
+- `ZCARD` returns the number of members (cardinality) of the sorted set stored at key. This is the sorted set version of `SCARD`.
+- `ZCOUNT` returns the number of members with a score between `min` and `max`. Like `ZRANGE ... BYSCORE`, the bounds are inclusive by default, support `(` for exclusive bounds, and accept `-inf` / `+inf`.
+
+Both return `0` if the key does not exist.
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob" 120 "carol" 85 "dave"
+(integer) 4
+> ZCARD leaderboard
+(integer) 4
+> ZCOUNT leaderboard 90 120
+(integer) 2
+> ZCOUNT leaderboard (85 +inf
+(integer) 2
+> ZCOUNT leaderboard -inf +inf
+(integer) 4
+> ZCARD nonexistent
+(integer) 0
+```
+
+<br/>
+
+### - Command 28: ZSCAN
+
+**Syntax**
+
+```bash
+ZSCAN key cursor [MATCH pattern] [COUNT count]
+```
+
+**Description**
+
+Incrementally iterates over the members and scores of the sorted set stored at key. This command is the sorted-set-specific version of `SCAN` and is designed to handle large sorted sets without blocking the Redis server.
+
+The `ZSCAN` command returns:
+
+1. A new cursor value (to be used in the next call)
+2. An array of member-score pairs
+
+Like `SCAN`, the iteration starts with cursor 0 and ends when the returned cursor is 0.
+
+**Options:**
+
+- `MATCH pattern` - Only return members that match the given pattern (supports glob-style patterns)
+- `COUNT count` - Hint about how many elements to return per call (default is usually around 10)
+
+**Time complexity:** O(1) for every call. O(N) for a complete iteration, where N is the number of members in the sorted set
+
+:::warning
+Unlike `ZRANGE`, `ZSCAN` does **not** guarantee that members are returned in score order. Use it to go over every member (e.g., for exports or cleanups), not to get sorted results.
+:::
+
+Examples:
+
+```bash
+> ZADD leaderboard 100 "alice" 85 "bob" 120 "carol" 85 "dave"
+(integer) 4
+> ZSCAN leaderboard 0
+1) "0"
+2) 1) "bob"
+   2) "85"
+   3) "dave"
+   4) "85"
+   5) "alice"
+   6) "100"
+   7) "carol"
+   8) "120"
+> ZSCAN leaderboard 0 MATCH a*
+1) "0"
+2) 1) "alice"
+   2) "100"
 ```
