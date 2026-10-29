@@ -48,6 +48,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/dependency-injection',
+          label: '- Dependency Injection',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/design-patterns',
           label: '- Design Patterns',
         },
