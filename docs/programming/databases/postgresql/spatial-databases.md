@@ -7,6 +7,11 @@ This part of the guide introduces four ideas that build on top of each other:
 3. **R-Tree**: the algorithm. **A data structure for indexing shapes in space**.
 4. **GiST**: the framework. **PostgreSQL's general-purpose tree index system**. PostGIS uses it to build R-Tree-style indexes.
 
+Two acronyms show up constantly around this:
+
+- **GIS**: (**Geographic Information System**) is the broader field, and the software, for working with maps and location.
+- **OGC**: (**Open Geospatial Consortium**) is the standards body that defines how those systems describe shapes, so PostGIS and other GIS tools can speak the same language.
+
 We'll go in that order: first the problem, then the tool, then how the tool is fast.
 
 ## 1. The problem
