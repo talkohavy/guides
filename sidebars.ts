@@ -38,6 +38,11 @@ const sidebars: SidebarsConfig = {
         // },
         {
           type: 'doc',
+          id: 'knowledge/access-and-refresh-tokens',
+          label: '- Access & Refresh Tokens',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/csrf-attack',
           label: '- CSRF Attack',
         },
