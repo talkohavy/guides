@@ -58,6 +58,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/load-balancer',
+          label: '- How to design a load balancer?',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/access-and-refresh-tokens',
           label: '- How to use a refresh token?',
         },
