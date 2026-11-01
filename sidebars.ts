@@ -58,7 +58,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'knowledge/load-balancer',
+          id: 'knowledge/how-to-design-a-load-balancer',
           label: '- How to design a load balancer?',
         },
         {
