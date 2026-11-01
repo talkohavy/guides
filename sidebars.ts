@@ -43,6 +43,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/bloom-filter',
+          label: '- Bloom Filter',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/csrf-attack',
           label: '- CSRF Attack',
         },
