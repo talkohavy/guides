@@ -100,4 +100,4 @@ Now, a slightly harder interview case. Let's say server B dies, and comes back o
 
 <img src={require('@site/static/img/load-balancer/slow-start-burst-to-recovered-server.png').default} alt="load balancer - slow start burst to recovered server" width="400" />
 
-To solve this, we have to incorporate the logic that the load balancer raises B's share slowly. From 0 to normal load, over a period of time. This is called **slow start**.
+To solve this, we have to incorporate the logic that **the load balancer raises B's share slowly**. From 0 to normal load, over a period of time. This is called **slow start**.
