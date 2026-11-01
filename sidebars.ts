@@ -73,6 +73,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/jwt',
+          label: '- JWT',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/long-polling',
           label: '- Long-Polling',
         },
