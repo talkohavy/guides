@@ -63,7 +63,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: 'knowledge/access-and-refresh-tokens',
+          id: 'knowledge/how-to-use-a-refresh-token',
           label: '- How to use a refresh token?',
         },
         {
