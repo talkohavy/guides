@@ -38,11 +38,6 @@ const sidebars: SidebarsConfig = {
         // },
         {
           type: 'doc',
-          id: 'knowledge/access-and-refresh-tokens',
-          label: '- Access & Refresh Tokens',
-        },
-        {
-          type: 'doc',
           id: 'knowledge/bloom-filter',
           label: '- Bloom Filter',
         },
@@ -63,8 +58,18 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/access-and-refresh-tokens',
+          label: '- How to use a refresh token?',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/long-polling',
           label: '- Long-Polling',
+        },
+        {
+          type: 'doc',
+          id: 'knowledge/oauth2',
+          label: '- OAuth2',
         },
         {
           type: 'doc',
@@ -75,11 +80,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'knowledge/post-vs-get-login',
           label: '- Post vs Get Login',
-        },
-        {
-          type: 'doc',
-          id: 'knowledge/oauth2',
-          label: '- OAuth2',
         },
         {
           type: 'doc',

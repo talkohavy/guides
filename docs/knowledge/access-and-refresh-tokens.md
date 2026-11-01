@@ -1,4 +1,4 @@
-# Access Tokens and Refresh Tokens
+# How to use a refresh token?
 
 > **The access token is what you show on every request. The refresh token is what you show rarely, to get a new access token.**
 
