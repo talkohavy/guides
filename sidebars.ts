@@ -68,6 +68,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/http-1-http-2-http-3',
+          label: '- HTTP 1, HTTP 2, HTTP 3',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/long-polling',
           label: '- Long-Polling',
         },
