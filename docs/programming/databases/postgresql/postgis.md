@@ -1,6 +1,6 @@
 # What is PostGIS?
 
-**PostGIS** is an **extension** for PostgreSQL that turns it into a full spatial database. It's open source, has been around since 2001, and is the de facto standard for spatial SQL.
+**PostGIS** is an **extension** for PostgreSQL that turns it into a full [spatial database](../../../knowledge/geospatial/spatial-databases.md). It's open source, has been around since 2001, and is the de facto standard for spatial SQL.
 
 Recall that an extension is a package that plugs new capabilities into Postgres: new types, functions, operators, and index support. PostGIS adds:
 
@@ -119,7 +119,7 @@ Look at the data:
 SELECT name, location FROM places;
 ```
 
-You should see location results shows as unreadable hex (WKB).
+You should see location results shows as unreadable hex (EWKB, see [WKT & WKB](../../../knowledge/geospatial/wkt-and-wkb.md)).
 
 ```sql
 SELECT name, ST_AsText(location) FROM places;
@@ -206,6 +206,52 @@ Related functions you'll run into:
 
 As an answer, we got that only Dizengoff Square falls inside this box.  
 Now check out the `ON` part of the `JOIN`. Notice how we didn't match based on 2 IDs? What we did instead was a **spatial join**: we joined two tables on a spatial relationship.
+
+## Hands-on: GeoJSON in and out
+
+The frontend speaks [GeoJSON](../../../knowledge/geospatial/geojson.md). The database speaks **WKB**. **4326 is the same WGS 84 that GeoJSON already uses**, so a feature can go in and come out without a reprojection.
+
+On the way in, take the `geometry` member off the Feature and hand it over. PostGIS reads it as SRID 4326:
+
+```sql
+SELECT ST_GeomFromGeoJSON(
+    '{"type":"Point","coordinates":[34.7741,32.0779]}'
+);
+```
+
+On the way out, `ST_AsGeoJSON` on a geometry column returns the shape and nothing else:
+
+```json
+{"type":"Point","coordinates":[34.7741,32.0779]}
+```
+
+The name is still sitting in another column. That's a geometry, and the map asked for a Feature. Since PostGIS 3 you can pass the **row**. The geometry column becomes `geometry`, the other columns become `properties`, and `id_column` lifts the primary key into the Feature's `id`:
+
+```sql
+SELECT ST_AsGeoJSON(p.*, id_column => 'id')
+FROM places AS p;
+```
+
+```json
+{
+  "type": "Feature",
+  "id": 1,
+  "geometry": { "type": "Point", "coordinates": [34.7741, 32.0779] },
+  "properties": { "name": "Dizengoff Square" }
+}
+```
+
+The `AS p` matters. `ST_AsGeoJSON` needs a record, and `p.*` is how you hand it one. A map wants the whole list, so wrap the rows:
+
+```sql
+SELECT json_build_object(
+    'type', 'FeatureCollection',
+    'features', json_agg(ST_AsGeoJSON(p.*, id_column => 'id')::json)
+)
+FROM places AS p;
+```
+
+That document is what you send to the frontend. Leaflet, Mapbox, and the rest already know what to do with a FeatureCollection.
 
 ## The function families
 

@@ -107,7 +107,7 @@ Index Scan using places_location_gist on places
   Filter: st_dwithin(location, '0101...'::geography, '2000'::double precision, true)
 ```
 
-This is the [filter & refine](./r-trees.md#filter--refine-the-two-step-query) process from the R-Trees page, in real life:
+This is a two-step process called **filter & refine**:
 
 - **`Index Cond`** is the **filter** step. PostGIS expanded your point into a box 2 km in each direction, then used the `&&` operator ("bounding boxes overlap") to walk the GiST tree. This step is fast and approximate.
 - **`Filter`** is the **refine** step. The precise `st_dwithin` calculation runs only on the candidates the index returned.

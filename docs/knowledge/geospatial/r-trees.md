@@ -2,7 +2,7 @@
 
 ## 0. TLDR - What is an R-Tree?
 
-Ever wondered how your map app finds the closest Coffee shop in milliseconds, without checking every place on earth? Meet the **R-Tree**.
+Ever wondered how your map app finds the closest coffee shop in milliseconds, without checking every place on earth? Meet the **R-Tree**.
 
 An **R-Tree** is a **spatial data structure** that **organizes multi-dimensional information using Minimum Bounding Rectangles** (MBR).
 
@@ -108,25 +108,17 @@ It only drills down to the boxes that overlap, quickly finding your exact locati
 
 that's the power 💪🏼 of the R-Tree 🌳.
 
+---
+
 ## 1. Why Regular Indexes Fail at Spatial Data
 
 Before we get to R-Trees, it helps to see why the index you already know isn't enough.
 
-A **B-Tree** (PostgreSQL's default index) works by **sorting** values along **one dimension**. Numbers sort, strings sort, dates sort. Given a sorted list, "find everything between X and Y" is a quick binary search.
+A **B-Tree** (the default index in PostgreSQL and most other databases) works by **sorting** values along **one dimension**. Numbers sort, strings sort, dates sort. Given a sorted list, "find everything between X and Y" is a quick binary search.
 
-But space has **two dimensions** (at least). There's no way to sort points on a map into a single line so that points close in space are always close in the list.
+But space has **two dimensions** (or 3). There's no way to sort points on a map into a single line so that points close in space are always close in the list.
 
-Suppose you try anyway, with a composite B-Tree index on `(lat, lng)`. A query like "everything in this small box around me" turns into:
-
-```
-lat BETWEEN 32.07 AND 32.08  AND  lng BETWEEN 34.77 AND 34.78
-```
-
-The B-Tree can use the `lat` range well. That narrows things down to a **thin horizontal stripe that wraps around the entire planet**. Inside that stripe it then has to filter `lng` row by row. You wanted a small box, and you scanned a band across the whole globe.
-
-And that's the easy case, with points. With polygons and lines, which have an **extent** and not just a location, a B-Tree can't express "overlaps" at all.
-
-We need an index that is **spatial by nature**. That's the R-Tree.
+---
 
 ## 2. What is an R-Tree?
 
@@ -284,10 +276,10 @@ And here's an equally valid R-Tree over the **same four objects**, grouped as `{
 
 `a` and `d` are far apart, so R3 has to stretch across the whole area to cover both. R4 ends up **completely inside** R3. `Q` & `P` are arbitrary points that we want to query, and ask whether our polygon contains them. Now let's run the two queries against both trees:
 
-| Query                           | Good grouping                        | Bad grouping                                                                  |
-| ------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------- |
-| **Q**, a small box next to `c`  | Overlaps R4 only. **1 leaf** read.   | Overlaps R3 **and** R4. **2 leaves** read, overlaps R4, and R3 finds nothing. |
-| **P**, a box in an empty region | Overlaps nothing. **0 leaves** read. | Overlaps R3. **1 leaf** read, finds nothing.                                  |
+| Query                           | Good grouping                        | Bad grouping                                                     |
+| ------------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| **Q**, a small box next to `c`  | Overlaps R4 only. **1 leaf** read.   | Overlaps R3 **and** R4. **2 leaves** read, and R3 finds nothing. |
+| **P**, a box in an empty region | Overlaps nothing. **0 leaves** read. | Overlaps R3. **1 leaf** read, finds nothing.                     |
 
 Both trees return the **correct** answers. The bad one just does more work to get them, and that's the whole difference between a good R-Tree and a bad one: **how much useless searching it causes**.
 
@@ -312,7 +304,7 @@ Dead space also exists at the leaf level, because of the shapes themselves. A di
    Everything else in the box is dead space.
 ```
 
-Any query in the upper-right part of that box will match the road's bounding box without touching the road. The index can't tell the difference, so this becomes a **false positive** that the refine step (covered below) has to throw away.
+Any query in the upper-right part of that box will match the road's bounding box without touching the road. The index can't tell the difference, so this becomes a **false positive**: the box matches, but the road itself doesn't. Something after the index has to check the real shape and throw it away.
 
 So the two failure modes are:
 
@@ -334,38 +326,3 @@ Since you can't always avoid overlap and dead space, the tree tries to minimize 
 - **Square-ish boxes** rather than long thin ones. Long thin boxes tend to cross many neighbors and overlap them.
 
 These goals sometimes conflict, and the R-Tree variants exist because they trade them off differently. For example, the **R+-Tree** forbids overlap between sibling boxes entirely. The price is that an object that crosses the border between two boxes gets stored in **both** leaves.
-
-All of these decisions happen when entries are inserted and nodes split, which is the next section.
-
-### Inserting into an R-Tree
-
-When a new object arrives:
-
-1. **Choose a subtree.** Starting from the root, descend into the child whose bounding box would need to **grow the least** to fit the new object. That keeps boxes tight.
-2. **Insert into the leaf**, and enlarge the bounding boxes on the way back up, as needed.
-3. **Split if full.** If the leaf overflows, split its entries into two groups. Aim for two groups with small total area and little overlap. The split may cascade up to the parent, and if the root splits, the tree grows one level taller.
-
-Different R-Tree variants (R\*-Tree, R+-Tree, Hilbert R-Tree...) mostly differ in **how they choose the subtree and how they split**. That's where the quality of the index comes from.
-
-### Filter & refine: the two-step query
-
-Since the index only knows **bounding boxes**, its answers are **approximate**. Two shapes can have overlapping boxes without actually touching:
-
-```
-+--------------+
-|  ____        |
-| |    |    +--+-----------+
-| |____|    |  |    ____   |
-|           |  |   /    \  |
-+-----------+--+  /______\ |
-            |              |
-            +--------------+
-   The boxes overlap, but the shapes don't touch.
-```
-
-So every spatial query runs in two phases:
-
-1. **Filter** (cheap, uses the index): find all candidates whose **bounding boxes** match. This can return false positives, but never misses a real match.
-2. **Refine** (expensive, exact): run the real geometric test on just those few candidates, to throw out the false positives.
-
-Keep this in mind. You'll literally see both phases in `EXPLAIN` output on the next page, [What is GiST?](./gist.md).

@@ -62,9 +62,50 @@ const sidebars: SidebarsConfig = {
           label: '- Design Patterns',
         },
         {
-          type: 'doc',
-          id: 'knowledge/geojson',
-          label: '- GeoJSON',
+          type: 'category',
+          label: '- Geospatial',
+          items: [
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/simple-features',
+              label: '- Simple Features',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/geometry-types',
+              label: '- Geometry Types',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/coordinate-systems',
+              label: '- Coordinate Systems & SRID',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/spatial-databases',
+              label: '- Spatial Databases',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/wkt-and-wkb',
+              label: '- WKT & WKB',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/r-trees',
+              label: '- R-Trees',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/geojson',
+              label: '- GeoJSON',
+            },
+            {
+              type: 'doc',
+              id: 'knowledge/geospatial/ogc-api-features',
+              label: '- OGC API - Features',
+            },
+          ],
         },
         {
           type: 'doc',
@@ -253,18 +294,8 @@ const sidebars: SidebarsConfig = {
                   items: [
                     {
                       type: 'doc',
-                      id: 'programming/databases/postgresql/spatial-databases',
-                      label: '- Spatial Databases',
-                    },
-                    {
-                      type: 'doc',
                       id: 'programming/databases/postgresql/postgis',
                       label: '- PostGIS',
-                    },
-                    {
-                      type: 'doc',
-                      id: 'programming/databases/postgresql/r-trees',
-                      label: '- R-Trees',
                     },
                     {
                       type: 'doc',
