@@ -63,6 +63,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/geojson',
+          label: '- GeoJSON',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/how-to-design-a-load-balancer',
           label: '- How to design a load balancer?',
         },
