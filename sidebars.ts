@@ -43,6 +43,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'programming/cryptography-concepts',
+          label: '- Cryptography Concepts',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/csrf-attack',
           label: '- CSRF Attack',
         },
@@ -156,11 +161,6 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'programming/certificates',
           label: '- Certificates',
-        },
-        {
-          type: 'doc',
-          id: 'programming/crypto',
-          label: '- Crypto',
         },
         {
           type: 'doc',

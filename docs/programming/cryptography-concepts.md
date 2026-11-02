@@ -1,18 +1,8 @@
-# Crypto
+# Cryptography Concepts
 
-## 1. Introduction
+## 1. HASH
 
-Node comes with a built-in package called crypto.
-The node:crypto module provides cryptographic functionality that includes a set of wrappers for OpenSSL's hash, HMAC, cipher, decipher, sign, and verify functions.
-Before talking about crypto, we need to discuss 7 cryptography concepts.
-
----
-
-## 2. Cryptography Concepts
-
-### - Concept 1: HASH
-
-#### A. Description
+### A. Description
 
 A **hash** is simply applying a function on a certain content, and receiving back a mumbled string that looks like garbage. The important part is that - if we apply the same **hash function** on the same input, we'd get the same output.
 
@@ -20,9 +10,9 @@ A unique feature of a hash is that it's **one way**. In contrast to encryption, 
 
 A common usage for hashes is storing passwords in a database. In such case, even if the database has been breached, the passwords can never be recovered.
 
-#### B. Hash in Nodejs
+### B. Hash in Node.js
 
-##### - Step 1: createHash
+#### - Step 1: createHash
 
 How can we use hash in node?  
 We start off by importing the `createHash` function from the crypto package:
@@ -42,7 +32,7 @@ function myHash(input){
 
 The function above returns a hash string as the output.
 
-##### - Step 2: choose a hashing algorithm
+#### - Step 2: choose a hashing algorithm
 
 The next step is to define the hashing algorithm you want to use.
 
@@ -75,7 +65,7 @@ In the example code above, I'm using "sha256", which stands for "**Secure Hash A
 The algorithm you choose is important! OFor example, one of the algorithms to choose from is `md5`. As computers have become faster, and the internet more vast, the `md5` algorithm has become obsolete. Remember, cryptography is always evolving. `sha256` is a good option, but there are even better solutions like `argon2`, although it's not built-in to node's crypto.  
 Once we have our hashing algo, we can call `update` and pass in input value:
 
-##### - Step 3: call `update(input)`
+#### - Step 3: call `update(input)`
 
 The `update` method accepts an input, the input we want to be hashed:
 
@@ -86,7 +76,7 @@ function hash(value){
 }
 ```
 
-##### - Step 4: call `digest(encoding)`
+#### - Step 4: call `digest(encoding)`
 
 We return an output by invoking the `digest` method, along with the **encoding** we want to return:
 
@@ -134,9 +124,9 @@ console.log(isMatch)
 
 That's super useful, but a hash by itself isn't actually sufficient for storing a password in a database. And that brings us to our next topic - **salt**!
 
-### - Concept 2: SALT
+## 2. SALT
 
-#### A. Description
+### A. Description
 
 As mentioned above, a hash is super useful, but by itself, a hash isn't sufficient enough for storing passwords in a database. We need `salt`!
 
@@ -145,9 +135,9 @@ The fact that a hashing function always returns the same value is also a problem
 If a hacker obtains the database, and the passwords are hashed, they can often just go to something like a **rainbow table**, that has a bunch of pre-computed hashes and find a bunch of commonly used passwords.  
 A `salt` is just a random value that's added to the password before it's hashed, and therefore making it much harder to guess.
 
-#### B. Implementation in nodejs
+### B. Implementation in Node.js
 
-In nodejs, we have a function called `scryptSync` (prefer using `scrypt` instead to prevent blocking the main thread).
+In Node.js, we have a function called `scryptSync` (prefer using `scrypt` instead to prevent blocking the main thread).
 
 `scryptSync` is a built-in function in Node.js inside the `crypto` module that derives a cryptographic key from a password. It is mainly used for securely hashing passwords and generating encryption keys. `scryptSync` is a hashing function, but it's specifically **a key derivation function (KDF)** rather than just a simple hash function like SHA-256.
 
@@ -157,7 +147,7 @@ How is it different from `createHash`?
 
 - `scryptSync(password, salt, keyLength, options?)` **is slow by design** and includes a "salt" to prevent precomputed attacks (rainbow tables). It is better suited for **password hashing** because it is computationally expensive, making brute-force attacks harder.
 
-#### C. Usage Example in node
+### C. Usage Example in node
 
 In node, we can hash a password with salt by importing `scryptSync` & `randomBytes` functions from `crypto`:
 
@@ -282,9 +272,9 @@ function login(email,password){
 
 The `crypto.timingSafeEqual()` function is used to determine whether two variables are equal without exposing timing information that may allow an attacker to guess one of the values. A constant-time algorithm underpins it. That's how basic email-password authentication works on the web, but a related topic you might come across is Hashed-based Message Authentication Code (**HMAC**).
 
-### - Concept 3: HMAC
+## 3. HMAC
 
-#### A. Description
+### A. Description
 
 What is **HMAC**?
 
@@ -294,7 +284,7 @@ What is **HMAC**?
 
 An example is a Json Web Token (JWT), used for authentication on the web. When a user logs in on a trusted server, the server generates a token using a special key chosen by the developer. Then, the client and server can pass that token back and forth, and the server can trust it because it knows that only someone with the exact same secret key could have generated that hash signature.
 
-#### B. Is `scryptSync` an `HMAC`?
+### B. Is `scryptSync` an `HMAC`?
 
 No, `scryptSync` is not an `HMAC`.
 
@@ -332,7 +322,7 @@ Each `HMAC` computation should be deterministic, meaning that the same input sho
 - If you use **`HMAC` for password hashing**, it's too fast and vulnerable to brute-force.
 - If you use **`scryptSync` for message authentication**, it’s too slow and inefficient.
 
-#### C. Example usage in nodejs
+### C. Example usage in Node.js
 
 In node, we can import the `createHmac` function:
 
@@ -432,16 +422,16 @@ try {
 That's pretty cool!  
 But what happens when you want to completely scramble the text, and not just base64 it, and be able to talk to the other party secretly? You both need to share a secret key, to be able to read the original hidden message. That's where **encryption** comes in.
 
-### - Concept 4: SYMMETRIC ENCRYPTION
+## 4. SYMMETRIC ENCRYPTION
 
-#### A. Description
+### A. Description
 
 What is encryption exactly?  
 With encryption, we take a message, scramble up the bytes to make it unreadable, that's called the **Cyphertext** - an encrypted text transformed from plaintext using an encryption algorithm. Then we provide a key/password allowing somebody else to decrypt it.
 
 It's also typically randomized, so that each time you encrypt, you'd get an entirely different encrypted output, even if the key and message are the same. The first encryption example we'll look at is the Symmetric one, which means that there's a shared password between the two parties. Both the sender and the receiver of the message need to have the exact same key.
 
-#### B. Example usage in nodejs
+### B. Example usage in node.js
 
 To implement this in node, we're going to import:
 
@@ -533,7 +523,7 @@ const decryptedMessage = decipher.update(encryptedMessage, 'hex', 'utf-8') + dec
 
 And that's how you encrypt and decrypt a message in node.
 
-### - Concept 5: KEYPAIRS
+## 5. KEYPAIRS
 
 There's a big limitation to symmetric encryption, and that's the fact that both the sender and receiver of the message, need to share a password. It's just not practical for two different parties to agree upon a shared password.
 
@@ -585,7 +575,7 @@ module.exports = { privateKey, publicKey }
 
 You could also add a passphrase to your private key for added security (the cipher & passphrase options which are commented out above).
 
-### - Concept 6: ASYMMETRIC ENCRYPTION
+## 6. ASYMMETRIC ENCRYPTION
 
 And that brings us to asymmetric encryption!  
 You use asymmetric encryption any time you go to a website using an https. The browser will automatically find a public key of an SSL certificate installed on the website.
@@ -632,7 +622,7 @@ console.log(decryptedData.toString('utf-8'));
 
 This is the "unlock mailbox" operation.
 
-### - Concept 7: SIGNING
+## 7. SIGNING
 
 Now, encryption is fun, but in many cases you don't actually need to encrypt data, but rather validate that it came from a trusted party. That's where signing comes in.
 
@@ -640,22 +630,10 @@ What is a digital signature?
 
 Let's imagine you're expecting a letter in the mail, with some sensitive information. You need to be able to trust that that letter came from the right person. So you require them to sign it with blood. It also can't be tempered with, so they put a special seal on it...
 
-@@@@@@
-envelope signing image
-@@@@@@
-
 ...that if broken, will indicate that it's been tempered with.  
 Digital signatures work in the same basic way.
 
-@@@@@@
-blood image
-@@@@@@
-
 The sender of the message will use their private key to sign a hash of the original message. The private key guarantees authenticity, like blood, and the hash guarantees that the message can't be tempered with, because it would produce an entirely different signature. The recipient can then use the publicKey to validate the authenticity of the message.
-
-@@@@@@
-verify image
-@@@@@@
 
 In node, we can create a signature with the createSign function:
 
@@ -702,77 +680,3 @@ const isVerified = verifier.verify(publicKey, signature, 'hex');
 ```
 
 If the signature was forged, or the message got changed, the verifier will fail. And that gives us 7 cryptography concepts that every developer should know:
-
-@@@@@@
-all concepts image
-@@@@@@
-
-## 3. Summary
-
-### - A. Create Hash
-
-Command structure:
-
-```javascript
-function hash(value){
-  return createHash('sha256').update(value).digest('hex');
-}
-
-const password = 'hi-mom!';
-const hash1 = hash(password);
-
-console.log(hash1);
-// would print: 7a5d84e61a2234b450185fde58c237bb13e93d93d90f669b114d
-
-// compare two hashed passwords:
-const password2 = 'hi-mom!';
-const hash2 = hash(password);
-const isMatch = hash1 === hash2;
-console.log(isMatch); // would print out: true
-```
-
-#### • Algorithm:
-
-The algorithm is dependent on the available algorithms supported by the version of OpenSSL on the platform. Examples are 'sha256', 'sha512', etc. On recent releases of OpenSSL, openssl list -digest-algorithms will display the available digest algorithms.
-
-- sha256
-- sha512
-- md5
-- argon2 (not built-in to node's crypto)
-
-#### • Encoding:
-
-Here is the list of all encoding options that digest accepts:
-
-- hex (what we will use)
-- base64 (an option you'll commonly see)
-- utf8 (utf-8 is an alias)
-- utf16le (utf-16le is an alias)
-- latin1
-
-### - B. Create Salt
-
-```javascript
-const { scryptSync, randomBytes, timingSafeEqual } = require('crypto');
-
-async function signUp( email, password ){
-  const salt = randomBytes(16).toString('hex');
-  const hashedPassword = scryptSync(password, salt, 64).toString('hex');
-
-  const user = { email, hashedPassword, salt };
-  const data = await Users.register(user);
-
-  return data;
-}
-
-async function login(email,password){
-  const user = await Users.findUserByEmail(email);
-  const { salt, hashedPassword } = user;
-
-  const rawHashedPasswordBuffer = scryptSync(rawPassword, salt, 64);
-  const hashedPasswordBuffer = Buffer.from(hashedPassword, 'hex');
-  const match = timingSafeEqual(rawHashedPasswordBuffer, hashedPasswordBuffer);
-
-  return match ? 'login success!' : 'login failed...';
-}
-```
