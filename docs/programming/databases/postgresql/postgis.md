@@ -92,7 +92,7 @@ So which should you pick?
 For a typical app storing GPS points ("users", "stores", "drivers"), start with **`geography(POINT, 4326)`**. You get meters everywhere without having to think about projections.
 :::
 
-## 4. Hands-on: your first spatial table
+## 4. Create your first spatial table & index
 
 Let's create a table of places in Tel Aviv:
 
@@ -108,7 +108,7 @@ CREATE INDEX places_location_idx ON places USING GIST (location);
 
 `GEOGRAPHY(POINT, 4326)` is a **type modifier**. It restricts the column to points only, in SRID 4326. Trying to insert a polygon, or a point in a different SRID, will fail.
 
-The `GIST` index is what keeps spatial queries fast. Without it, every `ST_DWithin`, `<->`, or spatial join checks **every row** in the table. With it, PostgreSQL skips whole regions of the map that can't possibly match. See [What is GiST?](./gist.md) for how it works.
+The `places_location_idx` index is what keeps spatial queries fast. Without it, every `ST_DWithin`, `<->`, or spatial join checks **every row** in the table. With it, PostgreSQL skips whole regions of the map that can't possibly match.
 
 Now let's insert some rows. `ST_MakePoint(lng, lat)` builds a point, and `ST_SetSRID` stamps the coordinate system on it:
 
@@ -135,7 +135,7 @@ SELECT name, ST_AsText(location) FROM places;
 
 You should see location results location show up as POINT(34.7741 32.0779).
 
-## 5. Hands-on: asking spatial questions
+## 5. DB Query: Asking spatial questions
 
 **1. How far is everything from Dizengoff Square?**
 
