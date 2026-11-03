@@ -98,13 +98,17 @@ Let's create a table of places in Tel Aviv:
 
 ```sql
 CREATE TABLE places (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL,
     location GEOGRAPHY(POINT, 4326) NOT NULL
 );
+
+CREATE INDEX places_location_idx ON places USING GIST (location);
 ```
 
 `GEOGRAPHY(POINT, 4326)` is a **type modifier**. It restricts the column to points only, in SRID 4326. Trying to insert a polygon, or a point in a different SRID, will fail.
+
+The `GIST` index is what keeps spatial queries fast. Without it, every `ST_DWithin`, `<->`, or spatial join checks **every row** in the table. With it, PostgreSQL skips whole regions of the map that can't possibly match. See [What is GiST?](./gist.md) for how it works.
 
 Now let's insert some rows. `ST_MakePoint(lng, lat)` builds a point, and `ST_SetSRID` stamps the coordinate system on it:
 
@@ -176,10 +180,12 @@ Let's define a (very rough) rectangle around the city center as a polygon:
 
 ```sql
 CREATE TABLE areas (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL,
     boundary GEOGRAPHY(POLYGON, 4326) NOT NULL
 );
+
+CREATE INDEX areas_boundary_idx ON areas USING GIST (boundary);
 
 INSERT INTO areas (name, boundary) VALUES
 ('City Center (rough box)',
