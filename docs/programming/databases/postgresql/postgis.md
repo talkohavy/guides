@@ -1,8 +1,10 @@
 # What is PostGIS?
 
+## 1. What is PostGIS?
+
 **PostGIS** is an **extension** for PostgreSQL that turns it into a full [spatial database](../../../knowledge/geospatial/spatial-databases.md). It's open source, has been around since 2001, and is the de facto standard for spatial SQL.
 
-Recall that an extension is a package that plugs new capabilities into Postgres: new types, functions, operators, and index support. PostGIS adds:
+The PostGIS extension plugs new capabilities into Postgres: new types, functions, operators, and index support. PostGIS adds:
 
 - **New column types**: `geometry`, `geography`, and `raster`.
 - **Hundreds of functions**, all prefixed with `ST_` (Spatial Type), such as `ST_Distance`, `ST_Contains`, and `ST_Buffer`.
@@ -10,7 +12,7 @@ Recall that an extension is a package that plugs new capabilities into Postgres:
 - **Spatial index support**, built on top of [GiST](./gist.md).
 - **A `spatial_ref_sys` table**, a catalog of thousands of coordinate systems (every SRID) and how to convert between them.
 
-## Installing PostGIS
+## 2. Installing PostGIS
 
 On macOS:
 
@@ -47,13 +49,15 @@ You can also see which extensions are installed in the current database with the
 \dx
 ```
 
-## `geometry` vs. `geography`
+## 3. `geometry` vs. `geography`
 
 This is the first real decision you'll make with PostGIS, so it's worth understanding well.
 
 ❌ - **`geometry`** treats the world as a **flat plane** (Cartesian math). Distances are computed with the Pythagorean theorem, in whatever units the SRID uses.
 
 ✅ - **`geography`** treats the world as a **round Earth** (a spheroid). Distances are computed along the curved surface, and **always returned in meters**.
+
+If your app uses [GeoJSON](../../../knowledge/geospatial/geojson.md), then you definitely want to choose **`geography`**. GeoJSON coordinates are always longitude/latitude in WGS 84 (SRID 4326), and that's exactly the kind of data `geography` was built for. You get distances in meters with no conversions in between.
 
 Here's why it matters. Let's measure the distance between Dizengoff Square and the Azrieli Center in Tel Aviv, using SRID 4326 (degrees):
 
@@ -88,7 +92,7 @@ So which should you pick?
 For a typical app storing GPS points ("users", "stores", "drivers"), start with **`geography(POINT, 4326)`**. You get meters everywhere without having to think about projections.
 :::
 
-## Hands-on: your first spatial table
+## 4. Hands-on: your first spatial table
 
 Let's create a table of places in Tel Aviv:
 
@@ -127,7 +131,7 @@ SELECT name, ST_AsText(location) FROM places;
 
 You should see location results location show up as POINT(34.7741 32.0779).
 
-## Hands-on: asking spatial questions
+## 5. Hands-on: asking spatial questions
 
 **1. How far is everything from Dizengoff Square?**
 
@@ -207,7 +211,7 @@ Related functions you'll run into:
 As an answer, we got that only Dizengoff Square falls inside this box.  
 Now check out the `ON` part of the `JOIN`. Notice how we didn't match based on 2 IDs? What we did instead was a **spatial join**: we joined two tables on a spatial relationship.
 
-## Hands-on: GeoJSON in and out
+## 6. Hands-on: GeoJSON in and out
 
 The frontend speaks [GeoJSON](../../../knowledge/geospatial/geojson.md). The database speaks **WKB**. **4326 is the same WGS 84 that GeoJSON already uses**, so a feature can go in and come out without a reprojection.
 
@@ -253,7 +257,7 @@ FROM places AS p;
 
 That document is what you send to the frontend. Leaflet, Mapbox, and the rest already know what to do with a FeatureCollection.
 
-## The function families
+## 7. The function families
 
 You don't need to memorize hundreds of functions. They fall into a handful of families:
 
