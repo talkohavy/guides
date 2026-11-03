@@ -221,7 +221,17 @@ Now check out the `ON` part of the `JOIN`. Notice how we didn't match based on 2
 
 The frontend speaks [GeoJSON](../../../knowledge/geospatial/geojson.md). The database speaks **WKB**. **4326 is the same WGS 84 that GeoJSON already uses**, so a feature can go in and come out without a reprojection.
 
-On the way in, take the `geometry` member off the Feature and hand it over. PostGIS reads it as SRID 4326:
+On the way in, the frontend sends a full Feature:
+
+```json
+{
+  "type": "Feature",
+  "geometry": { "type": "Point", "coordinates": [34.7741, 32.0779] },
+  "properties": { "name": "Dizengoff Square" }
+}
+```
+
+The shape and the facts end up in different columns, so take the `geometry` member off the Feature and hand it to `ST_GeomFromGeoJSON`. PostGIS reads it as SRID 4326:
 
 ```sql
 SELECT ST_GeomFromGeoJSON(
