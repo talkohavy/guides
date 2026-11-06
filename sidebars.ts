@@ -258,6 +258,12 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/databases/postgresql/create-database',
+                  label: '- Create Database',
+                  key: 'postgresql-create-database',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/databases/postgresql/add-connection-password',
                   label: '- Add Role & Password',
                   key: 'postgresql-add-connection-password',

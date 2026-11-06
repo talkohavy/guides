@@ -6,31 +6,7 @@ Noticed how you weren't asked for a password when trying to connect? That's beca
 
 ---
 
-## 1. Create a Database
-
-Since we are talking about adding a password to the connection, this probably means that we're taking things to the next level security-wise. And if we're already avoiding the default no-password policy, might as well avoid the default of database is named **postgres**, which was created when we installed `postgresql`.
-
-Let's create a database with a unique name:
-
-```sql
-CREATE DATABASE nameofservice;
-```
-
-Check that it was created properly:
-
-```sql
-\list
-```
-
-or just:
-
-```sql
-\l
-```
-
----
-
-## 2. Check out the roles
+## 1. Check out the roles
 
 Run this:
 
@@ -51,7 +27,7 @@ Notice how `postgres` role is missing? When installing **postgresql** using an i
 
 ---
 
-## 3. Create a Role
+## 2. Create a Role
 
 To create a role run this command:
 
@@ -65,7 +41,7 @@ CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD '1234';
 
 The password is defined within the role.
 
-## 4. Update a Role
+## 3. Update a Role
 
 If you already have a role, and just want to update it so that it would now use a password, you can simply update it.
 
@@ -98,7 +74,7 @@ To avoid having the password show up in your `psql` history, use the interactive
 
 :::
 
-## 5. Update trust of authentication method
+## 4. Update trust of authentication method
 
 Setting a password alone **isn't enough**. Postgres still trusts local connections, so it will never ask for it. You need to change the authentication method in the `pg_hba.conf` file. Find where it lives:
 
@@ -118,7 +94,7 @@ host    all             all             ::1/128                 scram-sha-256
 
 ---
 
-## 6. Reload configuration
+## 5. Reload configuration
 
 Reload the configuration so the change takes effect:
 
@@ -140,7 +116,7 @@ Password for user talkohavy:
 
 Type `1234` and you're in.
 
-## 7. Providing a password
+## 6. Providing a password
 
 ### - A. PGPASSWORD env var
 
