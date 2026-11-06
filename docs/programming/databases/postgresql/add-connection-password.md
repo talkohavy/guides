@@ -140,13 +140,38 @@ Password for user talkohavy:
 
 Type `1234` and you're in.
 
+## 7. Providing a password
+
+### - A. PGPASSWORD env var
+
 You can also pass the password without being asked, which is useful in scripts. Either set the `PGPASSWORD` environment variable:
 
 ```bash
 PGPASSWORD=1234 psql postgres -U postgres
 ```
 
-or use a connection string:
+### - B. .pgpass file
+
+Or you can use the file `.pgpass`:
+
+```bash
+localhost:5432:*:master:1235
+localhost:5432:*:postgres:1234
+```
+
+And give it the right permissions:
+
+```bash
+chmod 600 ~/.pgpass
+```
+
+Otherwise you'll get this warning, and password will not be used:
+
+> WARNING: password file "/Users/tal.kohavy/.pgpass" has group or world access; permissions should be u=rw (0600) or less
+
+### - C. Inside the connection string
+
+Another way to pass a password is inside the connection string:
 
 ```bash
 psql "postgresql://talkohavy:1234@localhost:5432/postgres"
