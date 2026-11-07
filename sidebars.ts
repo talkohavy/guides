@@ -114,6 +114,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/how-to-design-a-rate-limiter',
+          label: '- How to design a rate limiter?',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/how-to-use-a-refresh-token',
           label: '- How to use a refresh token?',
         },
