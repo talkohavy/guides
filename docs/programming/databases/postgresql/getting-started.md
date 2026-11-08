@@ -60,3 +60,11 @@ or like this:
 ```bash
 psql -U postgres -d db_users -h localhost -p 5432
 ```
+
+## 5. Execute outside the REPL in the terminal
+
+Just add the `-c` flag to the `psql` call:
+
+```bash
+psql -U postgres -c "SELECT * FROM users;"
+```
