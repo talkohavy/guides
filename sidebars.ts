@@ -119,6 +119,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: 'knowledge/how-to-scale-a-database',
+          label: '- How to scale a database?',
+        },
+        {
+          type: 'doc',
           id: 'knowledge/how-to-use-a-refresh-token',
           label: '- How to use a refresh token?',
         },
