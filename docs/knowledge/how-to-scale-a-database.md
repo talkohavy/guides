@@ -191,3 +191,80 @@ So, how do you know which one your application needs?
 - And if a **single database server can no longer handle your storage requirements**, or WRITE traffic, sharding becomes an option.
 
 Notice that it doesn't mean every application needs all 3, so before introducing additional complexity, **you should also consider optimizing slow queries**, adding the right indexes, or upgrading your existing database server. Because scaling a database isn't about using the most complicated architecture. It's about understanding what's causing the bottleneck, and choosing the right solution.
+
+---
+
+## 7. Extra: Fetching data from multiple shards
+
+Queries, joins and transactions that need data from several shards become more complicated.
+
+So who is in charge of the join? And how does the backend get the data?
+
+Something has to:
+
+1.  send the query to each relevant shard
+2.  collect the partial results
+3.  and finally - combine them
+
+The shards themselves have no idea about each other.
+
+### Who does the combining?
+
+Answer: **the coordinator**.
+
+Who he is depends on how sharding is set up:
+
+1. **Application-level sharding**: Our backend code (often through a library) knows the shard map, meaning which customer IDs live on which shard. If a request needs data from 2 shards, the backend queries both, usually in parallel, and merges or joins the results in memory. We write and own that logic.
+2. **A routing proxy / coordinator**: The backend talks to what looks like a single database, but it's actually a layer sitting in front of the shards. For example, **Vitess** (MySQL), **Citus** (Postgres), or **mongos** (MongoDB). That layer figures out which shards to ask, fans the query out, and merges the results. This is the "routing layer" we mentioned in the Sharding section.
+3. **A natively distributed database**: Databases like **CockroachDB**, **Google Spanner**, **YugabyteDB** and **TiDB** handle sharding, cross-shard queries, and even cross-shard transactions internally. We write normal SQL, and the database pays the coordination cost behind the scenes.
+
+**In all 3 cases the work is the same. The only difference is where it lives**.
+
+### Cross-shard queries: scatter-gather
+
+Let's go back to our online store, where orders are sharded by `customer_id`. The finance team wants all orders placed in March. The query doesn't include the shard key (no `customer_id` in the query) , so March orders could be on _any_ shard.
+
+The coordinator has to:
+
+1. **Scatter**: send the query to every shard
+2. Each shard runs the query on its own data
+3. **Gather**: merge the partial results
+
+Merging takes more care than it sounds:
+
+- `ORDER BY x LIMIT 10`: each shard returns its own top 10, and the coordinator merge-sorts those (30 rows with 3 shards) and keeps the top 10.
+- `COUNT(*)`: add up the counts from each shard.
+- `AVG(total)`: we **can't** average the shards' averages. Each shard has to return its sum and its row count, and the coordinator divides at the end.
+
+There's also a performance cost. **Every shard now does work for a single request, and the response is only as fast as the slowest shard**. That's why we want most queries to include the shard key, so they go to exactly one shard.
+
+### Joins across shards
+
+Say a customer's orders are on shard 1, but related data is on shard 3. In practice, **we mostly design so that this doesn't happen**:
+
+- **Co-location**: Shard related tables by the same key. If `customers`, `orders` and `payments` are all sharded by `customer_id`, everything about one customer lives on the same shard, and joins stay local. **This is the main reason why choosing the right shard key matters so much**.
+- **Reference tables**: Small tables that rarely change, like `products` or `countries`, are copied in full to every shard. Each shard can then join against them locally.
+- **Denormalization**: Store the product name and price directly on the order row. For orders this is actually more correct anyway, because we want the price at the time of purchase.
+- **Application-side join**: When none of the above works, do it in 2 steps:
+
+```python
+orders = shard_for(customer_id).query("SELECT * FROM orders WHERE customer_id = ?", customer_id)
+product_ids = {o.product_id for o in orders}
+products = product_db.query("SELECT * FROM products WHERE id IN (?)", product_ids)
+# stitch orders + products together in code
+```
+
+- **Distributed join by the coordinator**: Some systems, like Citus or CockroachDB, can do this by moving rows between nodes. It works, but it's expensive.
+
+### Transactions across shards
+
+This is the hardest part. Imagine a buyer is on shard 1 and a seller is on shard 2, and we need to "deduct from the buyer and credit the seller", so that either both happen, or neither does. A single database guarantees that on its own, but **now 2 separate databases have to agree**. Our options:
+
+- **Avoid it by design**: co-locate the data so that most transactions only touch one shard.
+- **Two-phase commit (2PC)**: A coordinator asks every shard "can you commit?" (prepare). Only if all of them say yes does it tell them to commit. It's correct, but slower, and if the coordinator crashes mid-way, the shards can be left stuck waiting.
+- **Sagas**: Split the operation into local transactions, one per shard, each with a compensating action. For example: deduct from the buyer, then credit the seller. If the credit fails, refund the buyer. It's eventually consistent rather than atomic.
+- **Let a distributed database handle it**: This is the main selling point of Spanner and CockroachDB.
+
+### In practice
+
+Teams usually **choose the shard key so that 90% or more of requests hit a single shard**. They accept scatter-gather for the rare queries that need it. And heavy analytics, like the finance team's "all of March" report, go to a **separate copy of the data built for that purpose**, such as a **data warehouse**, instead of hammering the live shards.
