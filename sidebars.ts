@@ -301,8 +301,38 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/databases/postgresql/configuration',
+                  label: '- Configuration',
+                  key: 'postgresql-configuration',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/databases/postgresql/interactive-shell-commands',
                   label: '- Interactive Shell Commands',
+                },
+                {
+                  type: 'category',
+                  label: '- Scaling',
+                  items: [
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/replication',
+                      label: '- Replication',
+                      key: 'postgresql-replication',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/partitioning',
+                      label: '- Partitioning',
+                      key: 'postgresql-partitioning',
+                    },
+                    {
+                      type: 'doc',
+                      id: 'programming/databases/postgresql/sharding',
+                      label: '- Sharding',
+                      key: 'postgresql-sharding',
+                    },
+                  ],
                 },
                 {
                   type: 'category',
