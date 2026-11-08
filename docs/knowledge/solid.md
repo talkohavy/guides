@@ -1,18 +1,32 @@
----
-slug: solid
----
-
 # SOLID
 
 <font size="4">An acronym for <strong>5 design principles</strong> in software engineering.</font>
 
-## - `Definition`
+## 1. Why do we need SOLID?
 
-In software engineering, SOLID is an acronym for five design principles intended to make object-oriented designs more understandable, flexible, and maintainable.
+In software engineering, SOLID is actually five design principles created **to make object-oriented designs more understandable, flexible, and maintainable**.
 
-<br/>
+## 2. S
 
-## - `Breakdown of the Acronym`
+The **single-Responsibility Principle** says that **Every class should have only one responsibility.**.
+
+## 3. O
+
+The **Open-Closed Principle** says that **software should be open for extension, but closed for modification**.
+
+Basically means that **new behavior arrives as new code, and the code that already works stays untouched**.
+
+The best example I have for this is validation. I have an object of type as keys, and then a validator function attached to that key. Adding a new type just means adding a new validator function on that object, attached to that type. I can remove or add as many types as I want to that object, introduce new behavior as new code, and not touch the already existing types and their validator functions.
+
+## 4. L
+
+## 5. I
+
+## 6. D
+
+The **Dependency Inversion principle** says to **depend on an abstraction, not a concrete class**.
+
+## 7. Summary Table
 
 |                             Letter                              | Meaning                                                                                                                                                                        |
 | :-------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
