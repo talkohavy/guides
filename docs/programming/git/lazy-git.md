@@ -154,7 +154,20 @@ When on branch **A**:
 
 - <kbd>t+Enter</kbd> (on a commit): Revert that commit. Asks for confirmation before execution.
 
-### - Action 6: Move code between commits
+### - Action 6: Reorder commits
+
+You can move commits around and change their order, from within the **Commits panel**.
+
+- <kbd>Ctrl</kbd>+<kbd>J</kbd>: Move the selected commit **down**.
+- <kbd>Ctrl</kbd>+<kbd>K</kbd>: Move the selected commit **up**.
+
+This works for a single commit, or for multiple commits:
+
+1. Stand on a commit.
+2. Hold <kbd>Shift</kbd> and hit <kbd>↑</kbd> / <kbd>↓</kbd> to select multiple commits.
+3. Hit <kbd>Ctrl</kbd>+<kbd>J</kbd> or <kbd>Ctrl</kbd>+<kbd>K</kbd> to move the whole selection down or up.
+
+### - Action 7: Move code between commits
 
 To move specific changes from one commit to another:
 
