@@ -760,6 +760,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/git/git-reflog',
+              label: 'Git Ref Log',
+            },
+            {
+              type: 'doc',
               id: 'programming/git/git-push',
               label: 'Git Push',
             },
