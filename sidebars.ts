@@ -843,6 +843,12 @@ const sidebars: SidebarsConfig = {
               label: '- Data Types',
               key: 'golang-data-types',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/pointers',
+              label: '- Pointers',
+              key: 'golang-pointers',
+            },
           ],
         },
         {
