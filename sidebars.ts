@@ -805,6 +805,24 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: '- Golang',
+          link: {
+            type: 'generated-index',
+            title: 'Golang Guides',
+            description: 'Advanced concepts of Golang',
+            slug: '/golang',
+            keywords: ['golang'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/golang/motivation',
+              label: '- Motivation',
+            },
+          ],
+        },
+        {
+          type: 'category',
           label: '- Javascript',
           link: {
             type: 'generated-index',
