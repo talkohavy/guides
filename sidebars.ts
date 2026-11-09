@@ -849,6 +849,12 @@ const sidebars: SidebarsConfig = {
               label: '- Pointers',
               key: 'golang-pointers',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/loops',
+              label: '- Loops',
+              key: 'golang-loops',
+            },
           ],
         },
         {
