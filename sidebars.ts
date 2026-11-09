@@ -819,6 +819,12 @@ const sidebars: SidebarsConfig = {
               id: 'programming/golang/motivation',
               label: '- Motivation',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/getting-started',
+              label: '- Getting Started',
+              key: 'golang-getting-started',
+            },
           ],
         },
         {

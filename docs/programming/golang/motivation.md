@@ -30,7 +30,7 @@ Taking the simplicity of a high level programming language like `python`, and co
 
 - **Simple** Syntax
 - **Fast** build time, start up, and run
-- Requires fewer resoureces
+- Requires fewer resources
 - Compiled language - compiles into a single binary (machine code)
 - Cross platform
 
