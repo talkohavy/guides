@@ -825,6 +825,12 @@ const sidebars: SidebarsConfig = {
               label: '- Getting Started',
               key: 'golang-getting-started',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/printing',
+              label: '- Printing',
+              key: 'golang-printing',
+            },
           ],
         },
         {
