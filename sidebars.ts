@@ -831,6 +831,12 @@ const sidebars: SidebarsConfig = {
               label: '- Printing',
               key: 'golang-printing',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/variables',
+              label: '- Variables',
+              key: 'golang-variables',
+            },
           ],
         },
         {
