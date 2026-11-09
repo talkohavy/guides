@@ -837,6 +837,12 @@ const sidebars: SidebarsConfig = {
               label: '- Variables',
               key: 'golang-variables',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/data-types',
+              label: '- Data Types',
+              key: 'golang-data-types',
+            },
           ],
         },
         {
