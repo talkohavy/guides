@@ -51,24 +51,29 @@ request ──► rate limiter middleware ──► allowed?  ── yes ──�
 
 ---
 
-## 3. Who are we counting?
+## 3. Who & what we are limiting
 
-Before counting, we need to decide **whose** requests we count. This is our **key** (redis-wise).
+So who are we limiting?
 
-| Key            | Example             | Good for                             | Problem                                                    |
-| -------------- | ------------------- | ------------------------------------ | ---------------------------------------------------------- |
-| **IP address** | `1.2.3.4`           | Anonymous endpoints (login, sign up) | Many users behind one office / mobile network share one IP |
-| **User id**    | `user:42`           | Logged-in endpoints                  | Only works after authentication                            |
-| **API key**    | `key:sk_live_8f...` | Public APIs with plans (free / pro)  | Only works for clients that have a key                     |
+We can limit:
 
-And a rule usually limits **one key on one endpoint group**, so the Redis key looks like this:
+- A user - i.e. `user:42` (Anonymous endpoints like login or register)
+- An IP address - i.e. `1.2.3.4` (Logged-in endpoints)
+- An API key - i.e. `sk_line_8f...` (Public APIs with plans (free / pro))
+
+What are we limiting?
+
+- We are limiting different endpoints / path
+- Each endpoint could have its own rule / counter
+
+A rule usually limits **one key on one endpoint group**, so the Redis key looks like this:
 
 ```text
-rl:login:1.2.3.4      → login attempts from this IP
-rl:api:user:42        → API calls from user 42
+rate-limit:get-items:user:42        → API calls from user 42
+rate-limit:auth-login:1.2.3.4       → login attempts from this IP
 ```
 
-So user 42 can be blocked on `/api` while still being allowed to log in. Each rule has its own counter.
+With the above setup, user 42 can be blocked on `/get-items`, while still being allowed to log in (`/auth/login`). Each rule has its own counter.
 
 ---
 
@@ -78,7 +83,7 @@ So user 42 can be blocked on `/api` while still being allowed to log in. Each ru
 
 The number of replicas I have **multiplies the rate limit**.
 
-If I may only send 100 requests, but I sent 300 that got split into 3 identical servers, **my 100 limit was really 300**.
+If I'm allowed to send only 100 requests, but instead I sent 300 that got split into 3 identical servers, **my 100 limit was really 300**. My 101 request should have been blocked, but it wasn't.
 
 ```text
                        ┌──► Server A   Map: { daniel: 34 }
@@ -112,7 +117,7 @@ limit: 3 per minute
 
 12:00 ─────────────── 12:01 ─────────────── 12:02
   ✅ ✅ ✅ ❌ ❌         ✅ ✅ ✅
-  1  2  3  4  5         1  2  3
+  1  2  3 4 5         1  2  3
 ```
 
 The **key will be some prefix text, then the userId, then the window id**:
@@ -154,7 +159,7 @@ limit: 100 per minute
         window 12:00               window 12:01
 |─────────────────────────|─────────────────────────|
                      100 ▲ ▲ 100
-                12:00:59    12:01:00
+                 12:00:59   12:01:00
 ```
 
 ---
@@ -174,36 +179,9 @@ log:  12:00:10   12:00:50   12:01:05   12:01:15
 count in the last minute = 3 → ❌ reject
 ```
 
-### The script
+### The Pseudo-Code
 
-```lua
-local key = KEYS[1]
-local limit = tonumber(ARGV[1])
-local window_ms = tonumber(ARGV[2])
-local member = ARGV[3]
-
-local t = redis.call('TIME')
-local now = tonumber(t[1]) * 1000 + math.floor(tonumber(t[2]) / 1000)
-
--- 1. forget requests that left the window
-redis.call('ZREMRANGEBYSCORE', key, '-inf', now - window_ms)
-
--- 2. count what's left
-local count = redis.call('ZCARD', key)
-
-if count >= limit then
-  -- 3a. rejected: retry when the oldest request leaves the window
-  local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
-  return { 0, 0, tonumber(oldest[2]) + window_ms - now }
-end
-
--- 3b. allowed: log this request
-redis.call('ZADD', key, now, member)
-redis.call('PEXPIRE', key, window_ms)
-return { 1, limit - count - 1, 0 }
-```
-
-Step by step:
+The algorithm:
 
 1. **`ZREMRANGEBYSCORE`** removes every timestamp that is older than `now - 60s`. After this line, the set contains only the last minute.
 2. **`ZCARD`** returns how many members the set has, which is the number of requests in the last minute.
@@ -246,62 +224,19 @@ So if we now revisit the issue we had previously, about 100 requests at the 59th
 limit: 100 per minute, now = 12:01:15 (25% into the current window)
 
       previous window (12:00)        current window (12:01)
-|──────────────────────────────|──────────────────────────────|
+                                     15 seconds in
+|──────────────────────────────|─────────|─────────────────────|
             80 requests                30 requests (so far)
-                    ◄──────── last 60 seconds ────────►
-                    |  75% of the  |
-                    |  previous    |
+      ◄──────── last 60 seconds ────────►
+                |  75% of the  |
+                |  previous    |
 ```
 
-### The script
+### The Pseudo-Code
 
 We keep the 2 counters in one Redis hash: `{ window, curr, prev }`.
 
-```lua
-local key = KEYS[1]
-local limit = tonumber(ARGV[1])
-local window_ms = tonumber(ARGV[2])
-
-local t = redis.call('TIME')
-local now = tonumber(t[1]) * 1000 + math.floor(tonumber(t[2]) / 1000)
-local window = math.floor(now / window_ms)
-
--- 1. load the counters
-local data = redis.call('HMGET', key, 'window', 'curr', 'prev')
-local stored_window = tonumber(data[1]) or window
-local curr = tonumber(data[2]) or 0
-local prev = tonumber(data[3]) or 0
-
--- 2. did time move on since the last request?
-if stored_window == window - 1 then
-  prev, curr = curr, 0          -- next window: current becomes previous
-elseif stored_window < window - 1 then
-  prev, curr = 0, 0             -- idle for 2+ windows: both are empty
-end
-
--- 3. estimate the last window_ms
-local elapsed = (now % window_ms) / window_ms
-local estimate = prev * (1 - elapsed) + curr
-
-if estimate >= limit then
-  -- by default: retry when the current window ends
-  local retry_after = window_ms - (now % window_ms)
-  if curr < limit then
-    -- the previous window fades out, find when the estimate drops below the limit
-    local target = 1 - (limit - curr) / prev
-    retry_after = math.ceil((target - elapsed) * window_ms) + 1
-  end
-  return { 0, 0, retry_after }
-end
-
--- 4. allowed: count it and save
-curr = curr + 1
-redis.call('HSET', key, 'window', window, 'curr', curr, 'prev', prev)
-redis.call('PEXPIRE', key, window_ms * 2)
-return { 1, math.max(0, math.floor(limit - estimate - 1)), 0 }
-```
-
-Step by step:
+The algorithm:
 
 1. **Load** the counters. On the very first request the hash doesn't exist, so everything starts at 0.
 2. **Roll the windows**. If the last request was in the previous window, the old `curr` becomes `prev`. If the client was quiet for 2 windows or more, both are 0.
