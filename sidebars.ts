@@ -855,6 +855,12 @@ const sidebars: SidebarsConfig = {
               label: '- Loops',
               key: 'golang-loops',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/if-statements',
+              label: '- If Statements',
+              key: 'golang-if-statements',
+            },
           ],
         },
         {
