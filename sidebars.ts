@@ -873,6 +873,12 @@ const sidebars: SidebarsConfig = {
               label: '- Functions',
               key: 'golang-functions',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/package-level-variables',
+              label: '- Package Level Variables',
+              key: 'golang-package-level-variables',
+            },
           ],
         },
         {
