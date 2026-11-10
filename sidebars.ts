@@ -861,6 +861,12 @@ const sidebars: SidebarsConfig = {
               label: '- If Statements',
               key: 'golang-if-statements',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/logical-operators',
+              label: '- Logical Operators',
+              key: 'golang-logical-operators',
+            },
           ],
         },
         {
