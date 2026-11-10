@@ -867,6 +867,12 @@ const sidebars: SidebarsConfig = {
               label: '- Logical Operators',
               key: 'golang-logical-operators',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/functions',
+              label: '- Functions',
+              key: 'golang-functions',
+            },
           ],
         },
         {
