@@ -315,3 +315,56 @@ ages = map[string]int{
 
 ages["tal"] = 30;
 ```
+
+---
+
+## 9. Struct
+
+### - A. Why we need a `struct`?
+
+The problem with Maps is that **maps forces your values to be of the same type**.
+
+But **what if I want** to store **mixed types**?
+
+For that - we have `struct`.
+
+### - B. What is a `struct`?
+
+A `struct` in Go is **a user-defined composite data type** that **groups** together zero or more named **fields of different data types into a single unit**. Because Go does not have traditional classes, structs are the primary building blocks for organizing complex data and modeling real-world entities.
+
+Struct can be compared to classes in Java.
+
+### - B. How to define a `struct`
+
+```go
+type UserData struct {
+    firstName string
+    lastName string
+    email string
+    age uint
+}
+```
+
+### - C. Using the constructed `struct`
+
+Once a struct is defined, you use it like so:
+
+```go
+const firstName = "Tal";
+
+var user =  UserData {
+    // Note! you cannot write: `firstName,` as a short-hand like in JavaScript.
+    firstName: firstName,
+    lastName: "Ko",
+    email: "tal@gmail.com",
+    age: 30,
+}
+```
+
+### - D. Accessing properties on a `struct`
+
+Access by using a dot notation:
+
+```go
+fmt.Print(user.age);
+```
