@@ -879,6 +879,12 @@ const sidebars: SidebarsConfig = {
               label: '- Package Level Variables',
               key: 'golang-package-level-variables',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/packages',
+              label: '- Packages',
+              key: 'golang-packages',
+            },
           ],
         },
         {
