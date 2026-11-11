@@ -186,3 +186,132 @@ append(arr, 4);
 ---
 
 ## 8. Maps
+
+A **map** in Go is a built-in data structure (hash table) that **stores data as key-value pairs**.
+
+### - A. Declaration
+
+The keyword `map`, then the key type, then the value type:
+
+For example:
+
+```go
+myMap := map[string]int{}
+```
+
+Rules regarding Maps:
+
+- **Comparable Keys**: Keys must be unique and comparable with `==` (such as strings, integers, or floats; slices and maps cannot be keys).
+- **Reference Type**: Maps point to an underlying hash table. Assigning a map to a new variable shares the same underlying data.
+- **Unordered**: Iterating over a map does not guarantee a fixed or sorted order.
+
+**One thing to be aware of**:
+
+- **Zero Value**: A newly declared uninitialized map is `nil`. Reading from a `nil` map returns zero values safely, but writing to it causes a runtime panic.
+
+### - B. Map with initial state
+
+You can declare a map with an initial state:
+
+```go
+package main
+
+import "fmt";
+
+func sayHi(){
+    fmt.Println("Hello!");
+
+    myMap := map[string]int{
+        "apple": 1,
+        "banana": 2,
+        "cherry": 3,
+    };
+
+    fmt.Println(myMap["apple"]);
+    fmt.Println(myMap["banana"]);
+    fmt.Println(myMap["cherry"]);
+}
+```
+
+:::info
+**Commas are mandatory after values!**
+
+Without one, you'll get a compile error:
+
+```go
+myMap := map[string]int{
+    "apple": 1,
+    "banana": 2,
+    "cherry": 3 // <--- missing ',' before newline in composite literal syntax
+};
+```
+
+:::
+
+### - C. To make? Or not to make?
+
+There are 2 ways to define a map:
+
+One way is the one we saw:
+
+```go
+myMap := map[string]int{}
+```
+
+Another is is by using `make`:
+
+```go
+myMap := make(map[string]int)
+```
+
+For **_empty maps_**, there is **no functional difference between them!**
+
+Things to know about `make`:
+
+- `make` **accepts a second optional argument** to pre-allocate space. Use `make(map[string]int, 100)` when you know roughly how many items you will add to improve performance and reduce memory reallocations.
+- You **cannot pass initial values** into `make()`.
+- When creating an **empty map without a known size**, choosing between map literal and `make` comes down to **personal preference**.
+
+### - D. Pitfall of `make` with `var`
+
+Declaring a map literal with `var` is also possible:
+
+```go
+// Works! ✅
+var ages map[string]int = map[string]int{}
+
+// Also works! ✅
+var ages map[string]int = make(map[string]int)
+```
+
+The problem, or... not so the problem, but the possible runtime error, starts with the fact that **var let's you declare a variable without setting a value**.
+
+With var, you can declare a map like so:
+
+```go
+var ages map[string]int
+```
+
+With that, you may encounter a runtime error when trying to add a key to the map, before setting its value:
+
+Bad ❌:
+
+```go
+var ages map[string]int
+
+ages["tal"] = 30; // <--- panic: assignment to entry in nil map. exit status 2
+```
+
+It's up to you to make sure you set the initial value somewhere:
+
+Good ✅:
+
+```go
+var ages map[string]int
+
+ages = map[string]int{
+    "daniel": 27,
+}
+
+ages["tal"] = 30;
+```
