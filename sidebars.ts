@@ -885,6 +885,12 @@ const sidebars: SidebarsConfig = {
               label: '- Packages',
               key: 'golang-packages',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/concurrency',
+              label: '- Concurrency',
+              key: 'golang-concurrency',
+            },
           ],
         },
         {
