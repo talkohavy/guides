@@ -1165,6 +1165,11 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'programming/terminal-god/tips-and-tricks',
+              label: '- Tips and Tricks',
+            },
+            {
+              type: 'doc',
               id: 'programming/terminal-god/debug-a-running-node-server',
               label: '- Debug Node server',
             },
@@ -1197,11 +1202,6 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'programming/terminal-god/tar',
               label: '- Tar',
-            },
-            {
-              type: 'doc',
-              id: 'programming/terminal-god/terminal-god',
-              label: '- Terminal God',
             },
             {
               type: 'doc',
