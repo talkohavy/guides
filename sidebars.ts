@@ -1003,9 +1003,37 @@ const sidebars: SidebarsConfig = {
           ],
         },
         {
-          type: 'doc',
-          id: 'programming/regex',
+          type: 'category',
           label: '- Regex',
+          link: {
+            type: 'generated-index',
+            title: 'Regex Guides',
+            description: 'All about regular expressions',
+            slug: '/regex',
+            keywords: ['regex', 'regexp', 'regular expressions'],
+          },
+          items: [
+            {
+              type: 'doc',
+              id: 'programming/regex/lookaheads-and-lookbehinds',
+              label: '- Lookaheads & Lookbehinds',
+            },
+            {
+              type: 'doc',
+              id: 'programming/regex/backslash-letter-characters',
+              label: "- Backslash'ed Letter Characters",
+            },
+            {
+              type: 'doc',
+              id: 'programming/regex/special-sign-characters',
+              label: '- Special Sign Characters',
+            },
+            {
+              type: 'doc',
+              id: 'programming/regex/capture-groups',
+              label: '- Capture Groups',
+            },
+          ],
         },
         {
           type: 'doc',

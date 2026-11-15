@@ -1,13 +1,11 @@
-# Guide for Regex
-
-## Lesson 1: Positive & Negative Lookahead & Lookbehinds
+# Lookaheads & Lookbehinds
 
 `Lookaheads` & `Lookbehinds` allow you to match for patterns found **ahead**/**behind** some given _argument_.
 
 When wanting to extract B, which comes after A, without also extracting A, `lookaheads`/`lookbehinds` combined with `match` are super helpful.  
 `lookahead` & `lookbehinds` are both divided into 2 types: **positive** & **negative**.
 
-### - Type 1: Positive Look Ahead
+## - Type 1: Positive Look Ahead
 
 General form:
 
@@ -75,7 +73,7 @@ The regex above includes:
 
 <br/>
 
-### - Type 2: Negative Look Ahead
+## - Type 2: Negative Look Ahead
 
 General form:
 
@@ -101,7 +99,7 @@ exampleString.match(negativeLookaheadRegex); // returns 'pig'
 exampleString.match(positiveLookaheadRegex); // returns 'big'
 ```
 
-### - Type 3: Positive Look Behind
+## - Type 3: Positive Look Behind
 
 General form:
 
@@ -113,7 +111,7 @@ General form:
 
 You can already imagine.
 
-### - Type 4: Negative Look Behind
+## - Type 4: Negative Look Behind
 
 General form:
 
@@ -125,7 +123,7 @@ General form:
 
 You can already imagine.
 
-### - Combining Lookahead with Lookbehind
+## - Combining Lookahead with Lookbehind
 
 _Example 1: return only the filename_
 
@@ -135,115 +133,4 @@ const regex = /(?<=\/).+(?=\.d\.ts)/g
 
 regex.test(exampleString);
 exampleString.match(regex); // returns 'config'
-```
-
----
-
-## Lesson 2: Special backslash'ed Letter Characters
-
-### - \d
-
-Matches a single digit between 0-9.
-
-### - \D
-
-Matches a non-digit, which means it matches:
-
-- any letter (a-z A-Z)
-- and special character (punctuation, symbols, etc.)
-- whitespace characters (space, tab, etc.)
-
-### - \w
-
-Matches any `word` character. `word` characters include:
-
-- any letter (a-z A-Z)
-- any number (0-9)
-- an underscore (\_)
-
-### - \W
-
-Matches a non-word, which means it matches:
-
-- any letter that's not in english (e.g. א)
-- and special character (punctuation, symbols, etc.)
-- whitespace characters (space, tab, etc.)
-
-### - \s
-
-Matches any whitespace character, which means it matches:
-
-- Space character ( )
-- Tab character (\t)
-- Newline character (\n)
-- Carriage return character (\r)
-- Form feed character (\f)
-- Vertical tab character (\v)
-
-### - \S
-
-Matches any non-whitespace character.
-
----
-
-## Lesson 3: Special Sign Characters
-
-### - .
-
-A wild card that matches _any_ character (a single one).
-
-### - ?
-
-A _maybe_ sign. This character is saying "that thing _before_ me may or may not appear", both forms are correct.
-
-### - +
-
-A _multiple_ sign. This character is saying "that thing _before_ me may appear more than once but at least once".
-
-### - \*
-
-A _maybe & multiple_ sign. This character is basically the combination of '?' and '+', and is saying "that thing _before_ me may appear more than once or even not appear at all!".
-
----
-
-## Lesson 4: Capture Groups
-
-General form:
-
-```bash
-/(?=AAA)/
-```
-
-**Description**
-
-You can group things that you're searching for inside parenthesis.  
-This is great for _find & replace_ use cases.
-
-**Examples**
-
-_Example 1:_ swap between month & day in dateString
-
-```javascript
-// Original date-like string
-const dateString = '12/25/2023';
-
-// Regular expression with capture groups
-const regex = /(\d{2})\/(\d{2})\/(\d{4})/;
-
-// Use replace with capture groups to swap day and month
-const modifiedString = dateString.replace(regex, '$2/$1/$3');
-
-// Output the modified string
-console.log(modifiedString);  // Output: '25/12/2023'
-```
-
-_Example 2:_ delete everything after X
-
-```javascript
-const str = `i want everything gone after. the word gone.
-because you're gone na miss me when i'm gon.`;
-
-const strWithoutGone = str.replaceAll(/gone.+/g,'');
-
-console.log('strWithoutGone is:',strWithoutGone); // returns `"i want everything \nbecause you're `
 ```
