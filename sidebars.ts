@@ -1015,6 +1015,11 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'programming/regex/practical-guide',
+              label: '- Practical Guide',
+            },
+            {
+              type: 'doc',
               id: 'programming/regex/lookaheads-and-lookbehinds',
               label: '- Lookaheads & Lookbehinds',
             },
