@@ -17,9 +17,31 @@ name3 := "John3";
 
 Once a variable is defined using `const` keyword, it can no longer be changed later, and **if you try to change it, you'll get a compile error**. A variable set with `const` requires a value! It cannot be defined without one.
 
+**`const` does not allow for function call assignments!**
+
+This is invalid ❌:
+
+```go
+const hello string = sayHi() // <--- ❌ const hello string = sayHi() (value of type string) is not constant compiler InvalidConstInit
+
+
+func sayHi() string {
+    return "hi"
+}
+```
+
+A few **built-in** calls are the exception, `len` is one of them:
+
+```go
+const n = len("hello"); // OK, n is 5
+```
+
+But a function you wrote is never allowed.
+
 Rules when using const:
 
 - a value is required
+- that value must be known at compile time (a function call is not allowed)
 - a type is optional
 - cannot re-assign to it
 
@@ -36,7 +58,7 @@ func main(){
 }
 ```
 
-Bad ❌:define and then try to re-assign
+Bad ❌: define and then try to re-assign
 
 ```go
 package main
@@ -45,8 +67,22 @@ import "fmt"
 
 func main(){
     const name string = "John";
-    name = "Kenny"; // <--- Error! cannot assign to name2 (neither addressable nor a map index expression)compilerUnassignableOperand
+    name = "Kenny"; // <--- Error! cannot assign to name (neither addressable nor a map index expression)
     fmt.Println(name);
+}
+```
+
+Bad ❌: initialize a const from a function call
+
+```go
+package main
+
+func main(){
+    const name string = getName(); // <--- Error! getName() (value of type string) is not constant
+
+}
+func getName() string {
+    return "John";
 }
 ```
 
@@ -96,15 +132,22 @@ Rules when using `:=`:
 - The type will always be inferred from the value.
 - Can always re-assign to it.
 
-In case of a assigning from a function call, the type will be inferred from return type of the function.
+In case of assigning from a function call, the type will be inferred from the return type of the function. This is allowed here, and it is exactly what `const` rejects.
 
 ```go
 package main
 
 import "fmt"
 
+func getName() string {
+    return "John";
+}
+
 func main(){
     name := "John";
     fmt.Println(name);
+
+    fromFunction := getName(); // type is string, inferred from getName
+    fmt.Println(fromFunction);
 }
 ```
