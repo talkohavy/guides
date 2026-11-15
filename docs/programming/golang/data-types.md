@@ -316,6 +316,54 @@ ages = map[string]int{
 ages["tal"] = 30;
 ```
 
+### - E. Checking if a key exists: the "comma ok" idiom
+
+Reading a **missing key** doesn't panic or return an error. It **silently returns the zero value** of the value type:
+
+```go
+ages := map[string]int{"tal": 30}
+
+fmt.Println(ages["nobody"]) // 0
+```
+
+So how do you tell "the key is missing" apart from "the key exists and its value is `0`"?
+
+Ask for a **second return value**: a `bool` reporting whether the key exists:
+
+```go
+map1 := map[string]string{
+    "key1": "value1",
+}
+
+val1, ok1 := map1["key1"] // "value1", true
+val4, ok4 := map1["key4"] // "",       false
+```
+
+The idiomatic way is to combine it with an `if` statement's init clause, so `val` and `ok` are scoped to the `if` block:
+
+```go
+if val, ok := map1["key1"]; ok {
+    fmt.Println("found:", val)
+} else {
+    fmt.Println("not found")
+}
+```
+
+If you only care whether the key exists, discard the value with `_`:
+
+```go
+if _, ok := map1["key1"]; ok {
+    // key exists
+}
+```
+
+Things to know:
+
+- **The second value is optional.** `val := m[key]` and `val, ok := m[key]` are both valid. Go picks the form based on how many variables you assign to.
+- **`ok` is just a convention.** You can name it anything, but everyone uses `ok`.
+- **Works on `nil` maps too.** You get the zero value and `false`, with no panic.
+- **It's not unique to maps.** The same "comma ok" form shows up in type assertions (`v, ok := x.(string)`) and channel receives (`v, ok := <-ch`).
+
 ---
 
 ## 9. Struct
