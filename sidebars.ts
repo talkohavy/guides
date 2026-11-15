@@ -891,6 +891,12 @@ const sidebars: SidebarsConfig = {
               label: '- Concurrency',
               key: 'golang-concurrency',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/go-test',
+              label: '- Tests',
+              key: 'golang-tests',
+            },
           ],
         },
         {
