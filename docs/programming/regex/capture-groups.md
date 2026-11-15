@@ -3,7 +3,7 @@
 General form:
 
 ```bash
-/(?=AAA)/
+/(AAA)/
 ```
 
 **Description**
