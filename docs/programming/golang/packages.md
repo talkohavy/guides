@@ -21,7 +21,9 @@ So you can:
 
 ### - A. Same package, same folder
 
-Consider this scenario:
+Consider this scenario. You have two files.
+
+One file is:
 
 ```go title="src/helper.go"
 package main
@@ -33,6 +35,8 @@ func sayHi(){
 }
 ```
 
+And the second file is:
+
 ```go title="src/main.go"
 package main
 
@@ -41,8 +45,9 @@ func main(){
 }
 ```
 
-This works! ✅  
-The `main` file would correctly identify the `sayHi` function.
+The `helper` file defines a function named `sayHi`, and the `main` file uses that function.
+
+This works! ✅ The `main` file correctly identifies the `sayHi` function.
 
 Why it works:
 
@@ -55,17 +60,21 @@ If `helper.go` file would be nested deeper in a different folder, `main.go` woul
 
 ### - B. How to run it
 
-The only thing now is to **understand how to run it!**
+The correct way is to run it like so:
 
-Up until now you ran:
+```bash
+go run ./path-to-package
+```
+
+If you were using to running by explicitly mentioning the file name, that wouldn't work now!
+
+Would NOT work ❌:
 
 ```bash
 go run main.go
 ```
 
-But that wouldn't work now ❌
-
-You can run (not recommended) this:
+You _can_ run this (not recommended):
 
 ```bash
 go run ./src/main.go ./src/helper.go
@@ -74,12 +83,6 @@ go run ./src/main.go ./src/helper.go
 and that would work, but it's impractical. Because what if you have 10+ files?
 
 The correct answer is: **specify the path of the folder containing the package files, and not just 1 specific file.**
-
-So, for example, instead of saying: `./src/main.go`, we say `./src`
-
-```bash
-go run ./src
-```
 
 **Go is strict about it! It does not allow files belonging to the same package to be spread across different directories.**
 
