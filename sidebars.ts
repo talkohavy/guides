@@ -897,6 +897,12 @@ const sidebars: SidebarsConfig = {
               label: '- Tests',
               key: 'golang-tests',
             },
+            {
+              type: 'doc',
+              id: 'programming/golang/watch-server',
+              label: '- A Watch Server',
+              key: 'golang-watch-server',
+            },
           ],
         },
         {
