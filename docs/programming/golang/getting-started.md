@@ -44,23 +44,6 @@ Create a file at the root of the project, and call it `main.go`.
 
 Not really. **The only hard requirement is the `.go` extension.** Go doesn't care what the file is called, so `main.go`, `app.go` or `hello.go` would all work just the same. That said, **calling the file that is meant to be your entrypoint `main.go` is the common convention**, and you'll see it in almost every Go project.
 
-<!-- ### - B. Naming conventions
-
-- Use **lowercase** names: `server.go`, not `Server.go`.
-- For multiple words, use **snake_case**: `user_service.go`. Hyphens (`user-service.go`) compile just fine, but underscores are what the standard library and most Go projects use. Avoid camelCase.
-  - Careful: some underscore suffixes have a special meaning (see the table below), so `config_linux.go` won't be compiled on macOS. -->
-
-<!-- ### - C. Special file names
-
-A few file name patterns have a special meaning for the Go tool, so don't use them by accident:
-
-| Pattern                         | Meaning                                                                   |
-| ------------------------------- | ------------------------------------------------------------------------- |
-| `*_test.go`                     | A test file. Only compiled when running `go test`.                        |
-| `*_linux.go`, `*_windows.go`... | Only compiled for that operating system.                                  |
-| `*_amd64.go`, `*_arm64.go`...   | Only compiled for that CPU architecture.                                  |
-| `_*.go` or `.*.go`              | Files starting with `_` or `.` are **ignored** completely by the Go tool. | -->
-
 ---
 
 ## 4. Defining a Package
@@ -74,33 +57,6 @@ That's done using the `package` keyword followed by the package's name:
 ```go
 package main
 ```
-
-<!-- ### - A. Does the package name have to be `main`?
-
-**For an executable program, yes.** The package name `main` is special: it tells Go "this package is a program that can be run, not a library".
-
-- `package main` means Go builds an **executable binary**, and it looks for a `main()` function to start from (more on that in the next section).
-- Any other name (`package utils`, `package hello`...) means Go treats the package as a **library**, meant to be imported by other packages. Library packages can't be run on their own. Try `go run` on one and you'll get:
-
-> package nameofproject is not a main package
-
-So for our first application, the package name **must** be `main`.
-
-### - B. Package name vs. file name
-
-The package name has **nothing to do with the file name**. `main.go` could declare `package main`, and so could `app.go`. What matters is the `package` line inside the file.
-
-### - C. One package per folder
-
-All `.go` files inside the same folder **must declare the same package name**. If `main.go` says `package main` and another file in the same folder says `package utils`, Go will refuse to compile.
-
-### - D. Naming conventions for packages
-
-For packages other than `main`:
-
-- Use **short, lowercase, single-word** names: `http`, `strings`, `auth`.
-- No underscores and no camelCase: `userservice`, not `user_service` or `userService`.
-- By convention, the package name **matches the name of its folder**. -->
 
 ---
 
@@ -176,44 +132,6 @@ func main() {
 }
 ```
 
-<!-- ### - B. Import multiple packages
-
-Let's say you also need to import the "errors" package.
-
-You can write 2 `import` statements:
-
-```go
-package main
-
-import "fmt"
-import "errors"
-
-func main() {
-    fmt.Print("Hello World");
-    err := errors.New("error message")
-	fmt.Println(err)
-}
-```
-
-Or you can combine them under on `import` call:
-
-```go
-package main
-
-import (
-    "fmt"
-    "errors"
-)
-
-func main() {
-    fmt.Print("Hello World");
-    err := errors.New("error message")
-	fmt.Println(err)
-}
-```
-
-They both work! -->
-
 ---
 
 ## 7. Compile a program
@@ -275,3 +193,97 @@ Or if your main file is inside an `src` folder:
 ```go
 go run ./src
 ```
+
+---
+
+## 11. About the rules
+
+Now that we have a program that runs, let's go back over the steps we took and look at the rules behind them.
+
+### - A. File names
+
+#### Naming conventions
+
+- Use **lowercase** names: `server.go`, not `Server.go`.
+- For multiple words, the convention is to use **snake_case**.
+  - Careful: **some underscore suffixes have a special meaning!** (see the table below).
+
+#### Special file names
+
+A few file name patterns have a special meaning for the Go tool, so don't use them by accident:
+
+| Pattern                         | Meaning                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| `*_test.go`                     | A test file. Only compiled when running `go test`.                        |
+| `*_linux.go`, `*_windows.go`... | Only compiled for that operating system.                                  |
+| `*_amd64.go`, `*_arm64.go`...   | Only compiled for that CPU architecture.                                  |
+| `_*.go` or `.*.go`              | Files starting with `_` or `.` are **ignored** completely by the Go tool. |
+
+### - B. Packages
+
+#### Does the package name have to be `main`?
+
+**For an executable program, YES!** The package name `main` is special: it tells Go "this package is a program that can be run, not a library".
+
+- `package main` means Go builds an **executable binary**, and it looks for the `main()` function we wrote as its starting point.
+- Any other name (`package utils`, `package hello`...) means Go treats the package as a **library**, meant to be imported by other packages. Library packages can't be run on their own. Try `go run` on one and you'll get:
+
+> package nameofproject is not a main package
+
+So for our first application, the package name **must** be `main`.
+
+#### Package name vs. file name
+
+**The package name has nothing to do with the file name!** `main.go` could declare `package main`, and so could `app.go`. What matters is the `package` line inside the file.
+
+#### One package per folder
+
+All `.go` files inside the same folder **must declare the same package name**. If `main.go` says `package main` and another file in the same folder says `package utils`, Go will refuse to compile.
+
+#### Naming conventions for packages
+
+For packages other than `main`:
+
+- Use **short, lowercase, single-word** names: `http`, `strings`, `auth`.
+- No underscores and no camelCase: `userservice`, not `user_service` or `userService`.
+- By convention, the package name **matches the name of its folder**.
+
+### - C. Imports
+
+#### Importing multiple packages
+
+Let's say you also need to import the "errors" package.
+
+You can write 2 `import` statements:
+
+```go
+package main
+
+import "fmt"
+import "errors"
+
+func main() {
+    fmt.Print("Hello World");
+    err := errors.New("error message")
+    fmt.Println(err)
+}
+```
+
+Or you can combine them under one `import` call:
+
+```go
+package main
+
+import (
+    "fmt"
+    "errors"
+)
+
+func main() {
+    fmt.Print("Hello World");
+    err := errors.New("error message")
+    fmt.Println(err)
+}
+```
+
+They both work!
