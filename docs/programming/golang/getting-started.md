@@ -248,6 +248,8 @@ For packages other than `main`:
 - No underscores and no camelCase: `userservice`, not `user_service` or `userService`.
 - By convention, the package name **matches the name of its folder**.
 
+To see these rules in action, with code split across multiple packages, check out [Packages](./packages.md).
+
 ### - C. Imports
 
 #### Importing multiple packages

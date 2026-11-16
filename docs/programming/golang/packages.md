@@ -8,7 +8,7 @@ Well, up until now we've been working a one single file. But what will happen as
 
 - `Go` **programs are organized into packages**.
 - A package is a **collection of Go files**.
-- In a `Go` program, you already have (MUST have) a package called `main`.
+- In a `Go` program, you already have (MUST have) a package called `main` ([why?](./getting-started.md#does-the-package-name-have-to-be-main)).
 
 So you can:
 
@@ -52,7 +52,7 @@ This works! ✅ The `main` file correctly identifies the `sayHi` function.
 Why it works:
 
 1. Both files have the **same package name**
-2. Both files live **under the same folder** (IMPORTANT!)
+2. Both files live **under the same folder** (IMPORTANT! Go's rule is [one package per folder](./getting-started.md#one-package-per-folder))
 
 If `helper.go` file would be nested deeper in a different folder, `main.go` wouldn't recognize the say `sayHi`.
 
@@ -84,7 +84,7 @@ and that would work, but it's impractical. Because what if you have 10+ files?
 
 The correct answer is: **specify the path of the folder containing the package files, and not just 1 specific file.**
 
-**Go is strict about it! It does not allow files belonging to the same package to be spread across different directories.**
+**Go is strict about it! One folder is one package.** Files belonging to the same package can't be spread across different directories, and a single directory can't hold two different packages.
 
 ---
 
@@ -94,7 +94,7 @@ The correct answer is: **specify the path of the folder containing the package f
 
 Let's take the scenario from above, and all we do is **change "main" in helper.go into "helper"**:
 
-```go title="helper.go"
+```go title="src/helper.go"
 package helper
 
 import "fmt";
@@ -104,15 +104,34 @@ func sayHi(){
 }
 ```
 
-```go title="main.go"
+```go title="src/main.go"
 package main
 
 func main(){
-    sayHi(); // <--- Error! undefined: sayHi compilerUndeclaredName
+    sayHi();
 }
 ```
 
-Now we will see an error under `sayHi`, as Go tells us it doesn't know this function.
+Try to run it, and Go refuses to even compile:
+
+> found packages helper (helper.go) and main (main.go) in /path/to/nameofproject/src
+
+Remember, **one folder is one package**. Two different package names means two different folders. So let's move `helper.go` into its own folder, named after its package:
+
+```
+nameofproject/
+├── go.mod
+├── helper/
+│   └── helper.go   // package helper
+└── src/
+    └── main.go     // package main
+```
+
+Now the folder problem is solved, but we see a new error under `sayHi`:
+
+> undefined: sayHi
+
+Go tells us it doesn't know this function. `main` and `helper` are two separate packages now, so `main` can't see what's inside `helper` anymore.
 
 **So how do we import it?**
 
@@ -120,13 +139,14 @@ Now we will see an error under `sayHi`, as Go tells us it doesn't know this func
 
 Pros:
 
-- When selecting different package names, **the two files can now live under different directories**.
+- Each package **lives in its own folder**, which keeps the app organized.
 - We could make some functions hidden, and some functions visible (concept of _exporting_).
 
 Cons:
 
 - We now need to add an _import_ statement, whereas before we didn't.
-- We need to explicitly mention the path to the imported package
+- We need to explicitly mention the path to the imported package.
+- We need to prefix every use with the package name (`helper.SayHi()`).
 
 ### - C. Exporting
 
@@ -145,7 +165,7 @@ When talking about a function located in a different package inside our project,
 We need to:
 
 1. Use an `import` statement at the top of the file.
-2. Provide the _full path_ to the file.
+2. Provide the _full path_ to the **folder** of the package (not to a file! remember, one folder is one package).
 3. Add as _prefix_ the **project name**, to the full path.
 
 Adding **the project name is how we differentiate between a built-in package and a custom package**.
@@ -164,41 +184,52 @@ module nameofproject
 go 1.17
 ```
 
-So the name is "nameofproject", which means `main.go` should import `sayHi` like so:
+So the name is "nameofproject", and the folder is `helper`, which means `main.go` should import it like so:
 
-```go title="main.go"
+```go title="src/main.go"
 package main
 
 import "nameofproject/helper"
 
 func main(){
-    sayHi(); // <--- Error! undefined: sayHi compilerUndeclaredName
+    sayHi(); // <--- Error! undefined: sayHi
 }
 ```
 
-:::info
-NOTE! Standard library import paths **take precedence** over module paths when they collide.
+But we still have an error. Two things are missing:
 
-For example, if you try to override `fmt`, and then import it, the built-in `fmt` would win, and be imported.
+1. `sayHi` starts with a lowercase letter, so it's **not exported**. It's hidden inside the `helper` package.
+2. We're calling it as if it lived in our own package.
 
-In code that would be trying to:
+### - F. Using the imported package
 
-```go title="go.mod"
-module fmt
+First, export the function by renaming it to `SayHi`:
 
-go 1.26.5
+```go title="helper/helper.go"
+package helper
+
+import "fmt";
+
+func SayHi(){
+    fmt.Println("Hello!");
+}
 ```
 
-and then inside `main.go` trying to import:
+Then, call it with the **package name as a prefix**, just like we do with `fmt.Print`:
 
-```go title="main.go"
+```go title="src/main.go"
 package main
 
-import fmt;
+import "nameofproject/helper"
 
 func main(){
-    fmt.Print("hello");
+    helper.SayHi(); // <--- Works! ✅
 }
 ```
 
-:::
+Notice there are two different names at play here:
+
+- The `import` path uses the **folder** name (`nameofproject/helper`).
+- The prefix uses the **package** name (the `package helper` line inside the file).
+
+Go doesn't force the two to be the same. Go imports by folder path. If the folder name is `utils` but the package name is `helper`, the import would be `import "nameofproject/utils"` and then the call would be `helper.SayHi()`. **That's extremely confusing!** which is why the convention is that the package name matches its folder name.
