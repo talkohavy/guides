@@ -36,17 +36,77 @@ go 1.17
 
 ---
 
-## 3. Defining a Package
+## 3. Creating our First File
 
-In Go, everything is organized into packages. When we create out own application, we also have to include it in a package. And doing that is actually very very simple. At the top of our file, we use the `package` keyword, and then name of the package, which our application be part of. It looks like this:
+Create a file at the root of the project, and call it `main.go`.
+
+**Is there a naming restriction?**
+
+Not really. **The only hard requirement is the `.go` extension.** Go doesn't care what the file is called, so `main.go`, `app.go` or `hello.go` would all work just the same. That said, **calling the file that is meant to be your entrypoint `main.go` is the common convention**, and you'll see it in almost every Go project.
+
+<!-- ### - B. Naming conventions
+
+- Use **lowercase** names: `server.go`, not `Server.go`.
+- For multiple words, use **snake_case**: `user_service.go`. Hyphens (`user-service.go`) compile just fine, but underscores are what the standard library and most Go projects use. Avoid camelCase.
+  - Careful: some underscore suffixes have a special meaning (see the table below), so `config_linux.go` won't be compiled on macOS. -->
+
+<!-- ### - C. Special file names
+
+A few file name patterns have a special meaning for the Go tool, so don't use them by accident:
+
+| Pattern                         | Meaning                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| `*_test.go`                     | A test file. Only compiled when running `go test`.                        |
+| `*_linux.go`, `*_windows.go`... | Only compiled for that operating system.                                  |
+| `*_amd64.go`, `*_arm64.go`...   | Only compiled for that CPU architecture.                                  |
+| `_*.go` or `.*.go`              | Files starting with `_` or `.` are **ignored** completely by the Go tool. | -->
+
+---
+
+## 4. Defining a Package
+
+In Go, everything is organized into packages, and every `.go` file must belong to one.
+
+**At the top of each file, you must declare which package the file belongs to.**
+
+That's done using the `package` keyword followed by the package's name:
 
 ```go
 package main
 ```
 
-The standard name for the _main_ application is "main".
+<!-- ### - A. Does the package name have to be `main`?
 
-## 3. Go Entrypoint
+**For an executable program, yes.** The package name `main` is special: it tells Go "this package is a program that can be run, not a library".
+
+- `package main` means Go builds an **executable binary**, and it looks for a `main()` function to start from (more on that in the next section).
+- Any other name (`package utils`, `package hello`...) means Go treats the package as a **library**, meant to be imported by other packages. Library packages can't be run on their own. Try `go run` on one and you'll get:
+
+> package nameofproject is not a main package
+
+So for our first application, the package name **must** be `main`.
+
+### - B. Package name vs. file name
+
+The package name has **nothing to do with the file name**. `main.go` could declare `package main`, and so could `app.go`. What matters is the `package` line inside the file.
+
+### - C. One package per folder
+
+All `.go` files inside the same folder **must declare the same package name**. If `main.go` says `package main` and another file in the same folder says `package utils`, Go will refuse to compile.
+
+### - D. Naming conventions for packages
+
+For packages other than `main`:
+
+- Use **short, lowercase, single-word** names: `http`, `strings`, `auth`.
+- No underscores and no camelCase: `userservice`, not `user_service` or `userService`.
+- By convention, the package name **matches the name of its folder**. -->
+
+---
+
+## 5. Go Entrypoint
+
+When creating a _runnable go program_, go expects to see a _function_ named `main`. That is its entrypoint.
 
 If we try to write this code:
 
@@ -56,19 +116,13 @@ package main
 Print("Hello World");
 ```
 
-**We would get an error for `Print`**.
-
-The error says:
+**You'd see an error saying**.
 
 > expected declaration, found Print syntax
 
-Now you may think "Well that's because I did not say where `Print` is coming from!". That's also true, but we'll tackle that later.
-
 **The error is saying "I don't know where to start"**.
 
-That's `Go`'s way of saying: "I don't know where to start executing this application. Give me an entrypoint". And we have to declare that entrypoint of our application. Because when we run Go applications, we need the main starting point for the execution. So Go needs to know where does it start executing the code.
-
-**In Go, that entrypoint is a function called `main`!**
+`Go` requires a `main` function! It is telling you "I don't know where to start executing this application. What is the first line? Give me the _main_ entrypoint".
 
 Rules:
 
@@ -93,9 +147,7 @@ Alright, we solved the entrypoint error, but now we encounter a new error.
 
 ---
 
-## 4. Importing Packages
-
-### - A. Import a package
+## 6. Importing our first package
 
 So now we've come to a point where:
 
@@ -124,7 +176,7 @@ func main() {
 }
 ```
 
-### - B. Import multiple packages
+<!-- ### - B. Import multiple packages
 
 Let's say you also need to import the "errors" package.
 
@@ -160,11 +212,11 @@ func main() {
 }
 ```
 
-They both work!
+They both work! -->
 
 ---
 
-## 5. Compile a program
+## 7. Compile a program
 
 Basic form:
 
@@ -172,7 +224,7 @@ Basic form:
 go build src/main.go
 ```
 
-This **produces a binary file** named the same as the input file, at the directory inside which you ran the command.
+**This produces a binary file named the same as the input file**, at the directory inside which you ran the command.
 
 To **change the destination** and the **output file name**, use the `-o` flag:
 
@@ -184,7 +236,7 @@ Notice that **flags come before the path of the input file**! Reverse order woul
 
 ---
 
-## 6. Run a program
+## 8. Run a program
 
 Just execute the file:
 
@@ -196,7 +248,7 @@ depending on the compile output's destination and the filename.
 
 ---
 
-## 7. Compile & Run in a single command
+## 9. Compile & Run in a single command
 
 Run this:
 
@@ -208,7 +260,7 @@ Using the `run` command, the project is compiled in memory, which means **no out
 
 ---
 
-## 8. Using `.`
+## 10. Using `.`
 
 As you'll see in later stages when we discuss `packages`, the proper way to run a project is by using `.`.
 
@@ -223,5 +275,3 @@ Or if your main file is inside an `src` folder:
 ```go
 go run ./src
 ```
-
-**The `./` prefix is a MUST! Go doesn't understand absolute paths.**
