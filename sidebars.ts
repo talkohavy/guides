@@ -887,6 +887,12 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'programming/golang/classes',
+              label: '- Classes',
+              key: 'golang-classes',
+            },
+            {
+              type: 'doc',
               id: 'programming/golang/concurrency',
               label: '- Concurrency',
               key: 'golang-concurrency',
