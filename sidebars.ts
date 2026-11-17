@@ -892,6 +892,73 @@ const sidebars: SidebarsConfig = {
               key: 'golang-classes',
             },
             {
+              type: 'category',
+              label: '- Built-in Utils',
+              link: {
+                type: 'generated-index',
+                title: 'Go Built-in Utils',
+                description: 'The most used built-in functions and standard library packages, and when to use them',
+                slug: '/golang/built-in-utils',
+                keywords: ['golang', 'standard library'],
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/builtins',
+                  label: '- Built-in Functions',
+                  key: 'golang-builtins',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/fmt',
+                  label: '- fmt',
+                  key: 'golang-fmt',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/strings',
+                  label: '- strings',
+                  key: 'golang-strings',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/strconv',
+                  label: '- strconv',
+                  key: 'golang-strconv',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/errors',
+                  label: '- errors',
+                  key: 'golang-errors',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/time',
+                  label: '- time',
+                  key: 'golang-time',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/slices-and-maps',
+                  label: '- slices & maps',
+                  key: 'golang-slices-and-maps',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/math',
+                  label: '- math',
+                  key: 'golang-math',
+                },
+                {
+                  type: 'doc',
+                  id: 'programming/golang/built-in-utils/os',
+                  label: '- os',
+                  key: 'golang-os',
+                },
+              ],
+            },
+            {
               type: 'doc',
               id: 'programming/golang/concurrency',
               label: '- Concurrency',
