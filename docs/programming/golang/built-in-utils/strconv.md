@@ -124,7 +124,7 @@ x := 65
 fmt.Println(string(x)) // <--- "A" ❗
 ```
 
-`string(x)` treats the number as a **character code**, and `65` is the code for `"A"`. It compiles, but `go vet` warns about it:
+`string(x)` treats the number as a **character code** (a [rune](../data-types.md#4-runes-characters)), and `65` is the code for `"A"`. It compiles, but `go vet` warns about it:
 
 > conversion from int to string yields a string of one rune, not a string of digits
 

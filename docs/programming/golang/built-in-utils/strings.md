@@ -19,6 +19,8 @@ s := "hello"
 s[0] = 'H' // <--- Error! ❌ cannot assign to s[0] (neither addressable nor a map index expression)
 ```
 
+(Notice the single quotes in `'H'`. In Go, single quotes mean a single character, called a **rune**, while double quotes mean a string. See [Data Types](../data-types.md#4-runes-characters).)
+
 So instead, you build a new string:
 
 ```go

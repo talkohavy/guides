@@ -308,6 +308,35 @@ s[1]         // <--- 195 (a byte, not a character)
 string(s[1]) // <--- "Ã" ❗ (half of the "é")
 ```
 
+To get the characters as a slice you can index into, convert the string: `[]rune(s)[1]` gives you `'é'`. More on bytes vs. runes in [Data Types](../data-types.md#4-runes-characters).
+
+### - C. `"a"` vs `'a'`
+
+Unlike JS, the quotes matter in Go:
+
+- `"a"` (double quotes) is a **`string`**.
+- `'a'` (single quotes) is a **`rune`**: a single character.
+
+So when the type is `rune`, you need single quotes:
+
+```go
+vowels := map[rune]bool{"a": true} // <--- Error! ❌ cannot use "a" (untyped string constant) as rune value
+vowels := map[rune]bool{'a': true} // <--- ✅
+```
+
+This comes up all the time when looping over a string, because `range` gives you runes:
+
+```go
+count := 0
+for _, ch := range "banana" {
+    if vowels[ch] { // <--- `ch` is a rune, so the map's keys must be runes too
+        count++
+    }
+}
+```
+
+**Careful when printing a rune:** `fmt.Println('a')` prints `97`, because a rune is a number under the hood. Use `string(ch)` or `%c` to print the character. More in [Data Types](../data-types.md#4-runes-characters).
+
 ---
 
 ## 5. Slices & maps

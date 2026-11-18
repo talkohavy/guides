@@ -29,7 +29,7 @@ len("hello") // <--- 5
 len("héllo") // <--- 6 ❗
 ```
 
-Go strings are stored as UTF-8 bytes, and `é` takes 2 bytes. To count the actual characters, use `utf8.RuneCountInString("héllo")` from the `unicode/utf8` package, which returns `5`.
+Go strings are stored as UTF-8 bytes, and `é` takes 2 bytes. To count the actual characters, use `utf8.RuneCountInString("héllo")` from the `unicode/utf8` package, which returns `5`. (Go calls a single character a **rune**. See [Data Types](../data-types.md#4-runes-characters) for bytes vs. runes.)
 
 ### - B. Is `len` fast?
 

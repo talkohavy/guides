@@ -5,6 +5,7 @@
 In Go, the different types are:
 
 - string
+- rune (a single character)
 - int
 - bool
 - array
@@ -52,7 +53,106 @@ var name string = "Tal";
 
 ---
 
-## 4. Boolean
+## 4. Runes (characters)
+
+### - A. `"a"` vs `'a'`
+
+In JavaScript, `"a"` and `'a'` are the same thing. **In Go, they're two different types**:
+
+| Quotes       | Type     | Example                                  |
+| ------------ | -------- | ---------------------------------------- |
+| `"double"`   | `string` | `"a"`, `"hello"`                         |
+| `'single'`   | `rune`   | `'a'` (exactly one character)            |
+| `` `back` `` | `string` | A raw string: no escapes, can span lines |
+
+So this doesn't compile:
+
+```go
+vowels := map[rune]bool{"a": true} // <--- Error! ❌
+```
+
+> cannot use "a" (untyped string constant) as rune value in map literal
+
+The map's keys are runes, but `"a"` is a string. Use single quotes:
+
+```go
+vowels := map[rune]bool{'a': true, 'e': true} // <--- ✅
+```
+
+And since a rune is a single character, single quotes can't hold more than one:
+
+```go
+'ab' // <--- Error! ❌ more than one character in rune literal
+```
+
+### - B. What is a `rune`?
+
+A `rune` is **a single character**. Under the hood, it's just a number: the character's Unicode code point. In fact, `rune` is simply another name for `int32`:
+
+```go
+r := 'a'
+fmt.Printf("%T\n", r) // <--- int32
+fmt.Println(r)        // <--- 97 ❗ (the number, not the letter)
+```
+
+To print it as a character, use `%c`, or convert it to a string:
+
+```go
+fmt.Printf("%c\n", r) // <--- a
+string(r)             // <--- "a"
+```
+
+Since runes are numbers, you can do math with them:
+
+```go
+'a' + 1         // <--- 98
+string('a' + 1) // <--- "b"
+```
+
+### - C. What is a `byte`?
+
+A `byte` is another name for `uint8`: a number from 0 to 255. **A Go string is stored as a sequence of bytes** (in UTF-8 encoding).
+
+For plain English letters, one character is one byte. But there are other characters that take more than one byte. For example:
+
+```go
+[]byte("hé") // <--- [104 195 169] (the "é" takes 2 bytes)
+```
+
+### - D. Bytes vs. runes in a string
+
+This is where it all comes together. Some operations on a string work with **bytes**, and some work with **runes**:
+
+```go
+s := "héllo"
+
+len(s)          // <--- 6 (bytes!)
+s[1]            // <--- 195 (a byte, and only half of the "é")
+
+len([]rune(s))  // <--- 5 (characters)
+[]rune(s)[1]    // <--- 'é' (a rune)
+
+for i, ch := range s {
+    // `ch` is a rune: h, é, l, l, o
+}
+```
+
+**The rule of thumb:**
+
+- `len(s)` and `s[i]` work with **bytes**.
+- `range s` and `[]rune(s)` work with **runes** (characters).
+
+If your text is plain English (ASCII), bytes and characters are the same, and you won't notice the difference. As soon as there's an accent, an emoji, or Hebrew, use runes.
+
+**Note:** comparing a byte to a character literal works fine, because Go converts the `'h'` to a byte for you:
+
+```go
+s[0] == 'h' // <--- true
+```
+
+---
+
+## 5. Boolean
 
 The type `bool`:
 
@@ -63,7 +163,7 @@ var isEqual bool = 4 > 1;
 
 ---
 
-## 5. Casting
+## 6. Casting
 
 For the most part, you should avoid casting. But if you really must, some casting work between two different types.
 
@@ -71,7 +171,7 @@ This is very useful however when performing **arithmetic operations**.
 
 ---
 
-## 6. Arrays
+## 7. Arrays
 
 ### - A. Define an array
 
@@ -150,7 +250,7 @@ fmt.Printf("arr type is:%T\n", arr); // <--- [3]int
 
 ---
 
-## 7. Slices
+## 8. Slices
 
 `Slices` are basically an abstraction of an array, so it uses the `Array` type under the hood, but it **has a dynamic size**.
 
@@ -185,7 +285,7 @@ append(arr, 4);
 
 ---
 
-## 8. Maps
+## 9. Maps
 
 A **map** in Go is a built-in data structure (hash table) that **stores data as key-value pairs**.
 
@@ -366,7 +466,7 @@ Things to know:
 
 ---
 
-## 9. Struct
+## 10. Struct
 
 ### - A. Why we need a `struct`?
 
