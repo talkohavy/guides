@@ -904,6 +904,12 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'doc',
+                  id: 'programming/golang/built-in-utils/day-to-day',
+                  label: '- Day-to-Day Recipes',
+                  key: 'golang-day-to-day',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/golang/built-in-utils/builtins',
                   label: '- Built-in Functions',
                   key: 'golang-builtins',
