@@ -110,7 +110,7 @@ So now we've come to a point where:
 1.  Our application belongs to a package.
 2.  We have an entrypoint `main`, so Go knows where to start execution.
 
-And it see that `Print` is the first line of code it needs to execute.
+And it sees that `Print` is the first line of code it needs to execute.
 
 But again, **we see an error for `Print`**.
 
@@ -122,7 +122,7 @@ In order to use it, we have to explicitly import it.
 
 Importing syntax: use the `import` keyword, then stringified name of the package:
 
-```go
+```go title="main.go" showLineNumbers
 package main
 
 import "fmt"
