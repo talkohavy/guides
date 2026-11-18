@@ -124,7 +124,7 @@ result := sb.String()
 - **All strings, a few pieces?** Use `+`. It's the simplest and the fastest.
 - **Numbers, or other types mixed in?** Use `fmt.Sprintf`. It's Go's closest thing to JS template strings (`` `${first} is ${age} years old` ``). It's slower than `+`, but that only matters in hot loops.
 - **A slice of strings?** Use `strings.Join`.
-- **Building in a loop?** Use `strings.Builder`. Using `+=` in a loop creates a new string on every iteration.
+- **Building in a loop?** Use `strings.Builder`. With `str = str + ...` in a loop, every iteration copies everything built so far into a brand new string, which makes it O(n²). Barely noticeable with 10 items, but with 10,000 items it's about 500x slower than a `Builder` (see the [benchmark](./strings.md#8-stringsbuilder-building-a-string-piece-by-piece)).
 
 More in [fmt](./fmt.md) and [strings](./strings.md).
 

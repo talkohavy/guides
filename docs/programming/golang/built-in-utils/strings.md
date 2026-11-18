@@ -203,6 +203,21 @@ for i := 0; i < 10000; i++ {
 }
 ```
 
+**How slow?** Each `+` copies **everything built so far** into the new string. So the 1st iteration copies 1 byte, the 2nd copies 2, the 3rd copies 3, and so on. That adds up to O(n²).
+
+Here's a benchmark, joining 10-character names with `str = str + name + "\n"` vs. a `strings.Builder`:
+
+| Names  | `+` in a loop          | `strings.Builder`      |
+| ------ | ---------------------- | ---------------------- |
+| 10     | 0.27 µs                | 0.10 µs                |
+| 100    | 7 µs                   | 0.8 µs                 |
+| 1,000  | 559 µs                 | 7.9 µs                 |
+| 10,000 | 41.7 ms (582 MB alloc) | 0.08 ms (0.5 MB alloc) |
+
+With 10 items, the difference doesn't matter. With 10,000, `+` is about 500x slower, and allocates over half a gigabyte of throwaway strings to build a 110 KB result.
+
+**Coming from JavaScript?** There, `str += x` in a loop is usually fast, because JS engines secretly optimize it. Go doesn't: every `+` really copies.
+
 ### - B. Using a `Builder`
 
 A `strings.Builder` collects the pieces efficiently, and builds the final string once, at the end:
