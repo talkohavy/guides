@@ -952,6 +952,12 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: 'programming/golang/built-in-utils/json',
+                  label: '- json',
+                  key: 'golang-json',
+                },
+                {
+                  type: 'doc',
                   id: 'programming/golang/built-in-utils/math',
                   label: '- math',
                   key: 'golang-math',
