@@ -271,7 +271,7 @@ Good to know about slices:
 - Slices can be appended to (that's the whole point).
 - The initial size is set by the amount of values you provide to `{}` at the beginning.
 
-## - B. Appending to a Slice
+### - B. Appending to a Slice
 
 Using the global util function called `append`, we can append items into a slice.
 
@@ -282,6 +282,52 @@ var arr = []int{1,2,3};
 
 append(arr, 4);
 ```
+
+### - C. Slicing a Slice: `s[low:high]`
+
+You can take a part of a slice with `s[low:high]`. `low` included, `high` excludes . Either side can be omitted:
+
+```go
+nums := []int{10, 20, 30, 40, 50}
+
+nums[1:3] // <--- [20 30]
+nums[1:]  // <--- [20 30 40 50] (everything except the first)
+nums[:2]  // <--- [10 20]
+nums[:]   // <--- [10 20 30 40 50]
+```
+
+**Slicing does NOT copy the items!** It's **O(1)**, no matter how big the slice is.
+
+Remember that a slice is just a small [header](./built-in-utils/builtins.md#--b-how-a-slice-works-under-the-hood) with 3 fields (a pointer, a length, and a capacity). `nums[1:]` only creates a new header, whose pointer points at the 2nd item of the **same** underlying array:
+
+```text
+nums      → ptr ─┐  len 5, cap 5
+                 ▼
+array:         [10, 20, 30, 40, 50]
+                     ▲
+nums[1:]  → ptr ─────┘  len 4, cap 4
+```
+
+This means that skipping the first item in a loop is free. There's no reason to fall back to an index loop just to avoid `[1:]`:
+
+```go
+oldest := people[0]
+for _, p := range people[1:] { // <--- no copying, just a new header
+  if p.Age > oldest.Age {
+    oldest = p
+  }
+}
+```
+
+**The catch:** since both slices share one array, changing an item through one changes it in the other too:
+
+```go
+sub := nums[1:3]
+sub[0] = 99
+fmt.Println(nums) // <--- [10 99 30 40 50] ❗ `nums` changed too!
+```
+
+If you need an independent copy, use `slices.Clone(nums[1:3])`.
 
 ---
 
