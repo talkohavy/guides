@@ -98,6 +98,22 @@ fmt.Println(users) // <--- [{Dana 25} {Tal 30} {Avi 35}]
 
 For descending order, swap them: `cmp.Compare(b.Age, a.Age)`.
 
+**Sorting by more than one field:** say you want to sort by age, and when two users have the same age, sort them by name. Use `cmp.Or` (Go 1.22+), which returns the **first argument that isn't zero**. So if the ages are equal (`0`), it moves on to compare the names:
+
+```go
+users := []User{{"Tal", 30}, {"Dana", 25}, {"Avi", 30}, {"Bob", 25}}
+
+slices.SortFunc(users, func(a, b User) int {
+    return cmp.Or(
+        cmp.Compare(a.Age, b.Age),   // <--- first, by age
+        cmp.Compare(a.Name, b.Name), // <--- then, by name (only if ages are equal)
+    )
+})
+fmt.Println(users) // <--- [{Bob 25} {Dana 25} {Avi 30} {Tal 30}]
+```
+
+You can keep adding more fields to `cmp.Or`, and each one is only used to break a tie in the ones before it.
+
 If you know JavaScript's `arr.sort((a, b) => a.age - b.age)`, it's the same idea.
 
 ### - C. `Reverse`
